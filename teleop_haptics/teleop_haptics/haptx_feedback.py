@@ -17,6 +17,7 @@ class HaptxFeedback(Node):
 
         self.inflation = 0.0
         self.dir = 'up'
+        #test
 
     def timer_callback(self):
         """Timer function for the Haptx Feedback node."""
