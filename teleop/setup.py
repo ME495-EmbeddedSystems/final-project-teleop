@@ -15,7 +15,7 @@ setup(
     zip_safe=True,
     maintainer='rohan',
     maintainer_email='rohankota@u.northwestern.edu',
-    description='TODO: Package description',
+    description='This packages manages the teleoperation experience.',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
