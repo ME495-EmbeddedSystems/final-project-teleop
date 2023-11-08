@@ -20,6 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'haptx_feedback = teleop_haptics.haptx_feedback:main',
         ],
     },
 )
