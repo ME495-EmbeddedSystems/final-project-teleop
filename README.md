@@ -21,7 +21,7 @@ Only edit your package while on the `feature/{package_name}` branch. You can swi
 git switch feature/{package_name}
 ```
 
-Before editing, make sure you pull the changes that have been pushed to main:
+Before editing on the `feature/{package_name}` branch, make sure you pull the changes that have been pushed to main:
 ```bash
 git rebase main
 ```
