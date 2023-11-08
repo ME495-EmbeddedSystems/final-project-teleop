@@ -3,7 +3,7 @@
 <package format="3">
   <name>teleop_avatar</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>This package controls the avatar station.</description>
   <maintainer email="rohankota@u.northwestern.edu">rohan</maintainer>
   <license>TODO: License declaration</license>
 
