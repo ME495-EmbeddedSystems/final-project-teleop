@@ -8,6 +8,7 @@ Services:
 """
 import rclpy
 from rclpy.node import Node
+from teleop_interfaces import Grasp, ExecuteTrajectory
 
 
 class AvatarControl(Node):
@@ -20,8 +21,20 @@ class AvatarControl(Node):
         timer_freq = 50  # Hz
         self.timer = self.create_timer(1/timer_freq, self.timer_callback)
 
+        # Create the /grasp service
+        self.grasp = self.create_service(Grasp, "grasp", self.grasp_callback)
+
+        # Create the /execute_trajectory service
+        self.execute = self.create_service(ExecuteTrajectory, "execute_trajectory", self.execute_callback)
+
     def timer_callback(self):
         """Timer function for the Avatar Control node."""
+        pass
+
+    def grasp_callback(self, request, response):
+        pass
+
+    def execute_callback(self, request, response):
         pass
 
 
