@@ -1,0 +1,10 @@
+<launch>
+    <arg name="use_right" default="true" description="Determines whether the right HaptX glove is used"/>
+    <arg name="use_left" default="true" description="Determines whether the left HaptX glove is used"/>
+
+    <!-- HaptX Feedback Node -->
+    <node pkg="teleop_haptics" exec="haptx_feedback" name="haptx_feedback">
+        <param name="use_right" value="$(var use_right)" />
+        <param name="use_left" value="$(var use_left)" />
+    </node>
+</launch>

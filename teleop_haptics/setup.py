@@ -9,13 +9,13 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name, ['package.xml', 'launch/haptics.launch.xml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='rohan',
     maintainer_email='rohankota@u.northwestern.edu',
-    description='TODO: Package description',
+    description='This package handles all of the haptic feedback of the teleop system.',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={

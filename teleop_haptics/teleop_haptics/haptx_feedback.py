@@ -1,3 +1,16 @@
+"""
+Actuate HaptX Gloves.
+
+Subscribers:
+  + haptx/rh/tactor_group_state (haptx_interfaces/msg/TactorGroupState) - Actuate tactor groups on right glove
+  + haptx/lh/tactor_group_state (haptx_interfaces/msg/TactorGroupState) - Actuate tactor groups on left glove
+
+Parameters
+----------
+  + use_right (bool) - Determines whether right glove is being used
+  + use_left (bool) - Determines whether left glove is being used
+
+"""
 import rclpy
 from rclpy.node import Node
 from haptx_interfaces.msg import TactorGroupState
@@ -9,11 +22,22 @@ class HaptxFeedback(Node):
     def __init__(self):
         super().__init__('haptx_feedback')
 
+        # Declare and get parameters
+        self.declare_parameter('use_right', True)
+        self.declare_parameter('use_left', True)
+        self.use_right = self.get_parameter('use_right').get_parameter_value().bool_value
+        self.use_left = self.get_parameter('use_left').get_parameter_value().bool_value
+
         # Create control loop timer based on frequency parameter
         timer_freq = 50  # Hz
         self.timer = self.create_timer(1/timer_freq, self.timer_callback)
 
-        self.tactor_pub = self.create_publisher(TactorGroupState, "haptx/rh/tactor_group_state", 10)
+        # Create publishers for tactor groups
+        if self.use_right:
+            self.rh_tactor_pub = self.create_publisher(TactorGroupState, "haptx/rh/tactor_group_state", 10)
+        
+        if self.use_left:
+            self.lh_tactor_pub = self.create_publisher(TactorGroupState, "haptx/lh/tactor_group_state", 10)
 
         self.inflation = 0.0
         self.dir = 'up'
@@ -24,7 +48,7 @@ class HaptxFeedback(Node):
         msg.tactor_group = ['lh_th', 'lh_mf', 'lh_rf']
         msg.inflation = [self.inflation, self.inflation, self.inflation]
 
-        self.tactor_pub.publish(msg)
+        self.lh_tactor_pub.publish(msg)
 
         if self.dir == 'up':
             if self.inflation < 1.0:
