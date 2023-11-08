@@ -15,11 +15,12 @@ setup(
     zip_safe=True,
     maintainer='rohan',
     maintainer_email='rohankota@u.northwestern.edu',
-    description='TODO: Package description',
+    description='This package controls the avatar station.',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'avatar_control = teleop_avatar.avatar_control:main',
         ],
     },
 )
