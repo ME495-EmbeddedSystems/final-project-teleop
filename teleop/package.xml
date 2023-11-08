@@ -3,7 +3,7 @@
 <package format="3">
   <name>teleop</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>This packages manages the teleoperation experience.</description>
   <maintainer email="rohankota@u.northwestern.edu">rohan</maintainer>
   <license>TODO: License declaration</license>
 
