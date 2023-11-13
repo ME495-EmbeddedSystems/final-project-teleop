@@ -1,0 +1,17 @@
+apriltag:                 # node name
+  ros__parameters:
+    # setup (defaults)
+    image_transport: raw  # image format: "raw" or "compressed"
+    family: 16h5         # tag family name: 16h5, 25h9, 36h11
+    # 80mm black to black. rest 20 is for white border
+    size: 0.06             # default tag edge size in meter. 
+    profile: true        # print profiling information to stdout
+
+    # tuning of detection (defaults)
+
+    # (optional) list of tags
+    # If defined, 'frames' and 'sizes' must have the same length as 'ids'.
+    tag:
+      ids:    [0, 1]         # tag IDs for which to publish transform
+      frames: ["tag16H05_0", "tag16H05_1"]   # frame names
+      sizes:  [0.06, 0.045]     # tag-specific edge size, overrides the default 'size'
