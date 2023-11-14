@@ -1,0 +1,1 @@
+geometry_msgs.msg.Wrench[] FingerWrenches #The array of normal force wrenches from the finger
