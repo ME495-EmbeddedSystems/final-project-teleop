@@ -13,8 +13,10 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ObjectState.msg"
+  "msg/FingerWrenches.msg"
   "srv/Grasp.srv"
   "srv/ExecuteTrajectory.srv"
+  "srv/SetWrench.srv"
   DEPENDENCIES std_msgs geometry_msgs
 )
 
