@@ -43,7 +43,7 @@ class HaptxFeedback(Node):
         self.dir = 'up'
 
         # Center tactors
-        self.rh_th_center_tactors = [0061, 0071, 0081, 0031, 0041, 0101, 0091]
+        self.rh_th_center_tactors = [61, 71, 81, 31, 41, 101, 91]
         self.rh_ff_center_tactors = [1061, 1071, 1081, 1031, 1041, 1101, 1091]
         self.rh_mf_center_tactors = [2061, 2071, 2081, 2031, 2041, 2101, 2091]
         self.rh_rf_center_tactors = [3032, 3031, 3022, 3052]
