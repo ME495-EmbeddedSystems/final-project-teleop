@@ -3,22 +3,29 @@
     <!-- ros2 launch realsense2_camera rs_launch.py -->
     <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py">
         <arg name = "camera_name" value="D435i" />
+        depth_module.profile:=1280x720x30 pointcloud.enable:=true
 
+        <arg name="depth_module.profile" value="1280x720x30"/>
+        <arg name="pointcloud.enable" value="true"/>
         <!-- gathers closest frames of different sensors, infra red, color and depth, to be sent with the same timetag -->
         <!-- might be useful for april tag nodes-->
         <arg name = "enable_sync" value="True" />
     </include>
-    
+
+
+    <!-- Custom version of image proc remap.-->
+    <!-- <include file ="$(find-pkg-share teleop_sensing)/launch/image_proc_with_remap.launch.py"> -->
+    <include file ="./image_proc_with_remap.launch.py">
+    </include>
+
     <node pkg="apriltag_ros" exec="apriltag_node">
         <!-- <param from="$(find-pkg-share teleop_sensing)/tag36_100_config.yaml" /> -->
         <param from="../config/tag16_config.yaml"/>
-        <remap from="/image_rect" to="/D435i/color/image_raw" />
         <remap from="/camera_info" to="/D435i/color/camera_info"/>
     </node>
-
-  <!-- rviz will enable us to see the robot -->
-  <!-- <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share teleop_sensing)/view_robot.rviz"/> -->
-  <node pkg="rviz2" exec="rviz2" args="-d ../config/see-camera.rviz"/>
+    <!-- rviz will enable us to see the robot -->
+    <!-- <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share teleop_sensing)/view_robot.rviz"/> -->
+    <node pkg="rviz2" exec="rviz2" args="-d ../config/see-camera.rviz"/>
 
 
 </launch>
