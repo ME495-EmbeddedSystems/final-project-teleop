@@ -70,9 +70,12 @@ class AvatarControl(Node):
         return response
 
     def execute_callback(self, request, response):
-        # go_to(self.buffer[request.object_id][0])
+        while len(self.buffer) > 0:
+            # go_to(self.buffer[request.object_id][0])
 
-        del self.buffer[0]
+            del self.buffer[0]
+
+        response.success = True
 
         return response
     
