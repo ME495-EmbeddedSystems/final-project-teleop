@@ -46,6 +46,7 @@ class AvatarControl(Node):
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
 
         self.buffer = {}
+        self.buffer['red'] = [0,1,2,3,4,7,8,9]
 
     def timer_callback(self):
         """Timer function for the Avatar Control node."""
@@ -78,10 +79,10 @@ class AvatarControl(Node):
         return response
 
     def execute_callback(self, request, response):
-        while len(self.buffer) > 0:
+        while len(self.buffer[request.object_id]) > 0:
             # go_to(self.buffer[request.object_id][0])
 
-            del self.buffer[0]
+            del self.buffer[request.object_id][0]
 
         response.success = True
 
