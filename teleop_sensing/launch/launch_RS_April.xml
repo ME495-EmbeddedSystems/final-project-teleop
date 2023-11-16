@@ -4,16 +4,17 @@
     <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py">
         <arg name = "camera_name" value="D435i" />
         <arg name="depth_module.profile" value="1280x720x30"/>
-        <arg name="pointcloud.enable" value="true"/>
-        <!-- gathers closest frames of different sensors, infra red, color and depth, to be sent with the same timetag -->
-        <!-- might be useful for april tag nodes-->
+        <arg name="align_depth.enable" value="True"/>
+        <arg name="enable_rgbd" value="True"/>
+        <!-- <arg name="enable_color" value="True"/> -->
+        <!-- <arg name="enable_depth" value="True"/> -->
         <arg name = "enable_sync" value="True" />
+        
     </include>
 
 
     <!-- Custom version of image proc remap.-->
-    <include file ="$(find-pkg-share teleop_sensing)/launch/image_proc_with_remap.launch.py">
-    </include>
+    <include file ="$(find-pkg-share teleop_sensing)/launch/image_proc_with_remap.launch.py"/>
 
     <node pkg="apriltag_ros" exec="apriltag_node">
         <param from="$(find-pkg-share teleop_sensing)/config/tag16_config.yaml" />
