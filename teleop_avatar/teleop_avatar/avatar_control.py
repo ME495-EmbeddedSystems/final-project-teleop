@@ -13,6 +13,7 @@ from teleop_interfaces.srv import Grasp, ExecuteTrajectory
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import numpy as np
+from tf_transformations import quaternion_from_matrix, quaternion_matrix
 
 
 class AvatarControl(Node):
@@ -93,17 +94,35 @@ class AvatarControl(Node):
             else:
                 self.buffer[object_id] = [msg.pose[i]]
 
-    def grasp_pose(self, T_w_obj):
+    def grasp_pose(self, pose_w_obj):
+        """Takes in pose of object in world frame and outputs pose of hand in world frame to grasp the object"""
 
-        # Pose of object frame in hand frame while grasping
+        # Load stamped pose data as transformation matrix
+        T_w_obj = np.eye(4)
+        T_w_obj[0:3,0:3] = quaternion_matrix(pose_w_obj.pose.orientation)
+        T_w_obj[0,3] = pose_w_obj.pose.position.x
+        T_w_obj[1,3] = pose_w_obj.pose.position.y
+        T_w_obj[2,3] = pose_w_obj.pose.position.z
+
+        # State transformation of object relative to hand
         T_hand_obj = np.eye(4)
+        T_hand_obj[0:3, 0:3] = [[0,1,0],[0,0,1],[1,0,0]] # Rotation to make z of object align with y of hand
         T_hand_obj[0,3] = 0.00 # x-offset, distance above thumb for right hand and below pinky for left hand
         T_hand_obj[1,3] = -0.05 # y-offset, distance above the back of the wrist
         T_hand_obj[2,3] = 0.09 # z-offset, distance in the direction of the fingers
              
+        # Calculate transformation of hand relative to world
         T_w_hand = T_w_obj @ T_hand_obj.inv
 
-        return T_w_hand
+        # Convert transformation matrix to stamped pose data
+        pose_w_hand = PoseStamped()
+        pose_w_hand.header.stamp = pose_w_obj.header.stamp
+        pose_w_hand.pose.position.x = T_w_hand[0,3]
+        pose_w_hand.pose.position.y = T_w_hand[1,3]
+        pose_w_hand.pose.position.z = T_w_hand[2,3]
+        pose_w_hand.pose.orientation = quaternion_from_matrix(T_w_hand[0:3, 0:3])
+
+        return pose_w_hand
 
 def main(args=None):
     rclpy.init(args=args)
