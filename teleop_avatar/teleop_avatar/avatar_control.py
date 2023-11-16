@@ -8,10 +8,11 @@ Services:
 """
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, PoseStamped
 from teleop_interfaces.srv import Grasp, ExecuteTrajectory
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+import numpy as np
 
 
 class AvatarControl(Node):
@@ -27,6 +28,9 @@ class AvatarControl(Node):
         # Shadow Hand publisher
         self.shadow_pub = self.create_publisher(JointTrajectory, 'rh_trajectory_controller/command', 10)
         self.joint_names = ['rh_FFJ4', 'rh_FFJ3','rh_FFJ2', 'rh_FFJ1','rh_MFJ4','rh_MFJ3','rh_MFJ2','rh_MFJ1','rh_RFJ4','rh_RFJ3','rh_RFJ2','rh_RFJ1','rh_LFJ4','rh_LFJ3','rh_LFJ2','rh_LFJ1','rh_THJ5','rh_THJ4','rh_THJ3','rh_THJ2','rh_THJ1']
+
+        # ABB Gofa Pose publisher
+        self.abb_pub = self.create_publisher(PoseStamped, '/avatar/right_arm/target_tf', 10)
 
         # Create the /grasp service
         self.grasp = self.create_service(Grasp, "grasp", self.grasp_callback)
@@ -88,9 +92,18 @@ class AvatarControl(Node):
                 self.buffer[object_id] += [msg.pose[i]]
             else:
                 self.buffer[object_id] = [msg.pose[i]]
-            
-             
 
+    def grasp_pose(self, T_w_obj):
+
+        # Pose of object frame in hand frame while grasping
+        T_hand_obj = np.eye(4)
+        T_hand_obj[0,3] = 0.00 # x-offset, distance above thumb for right hand and below pinky for left hand
+        T_hand_obj[1,3] = -0.05 # y-offset, distance above the back of the wrist
+        T_hand_obj[2,3] = 0.09 # z-offset, distance in the direction of the fingers
+             
+        T_w_hand = T_w_obj @ T_hand_obj.inv
+
+        return T_w_hand
 
 def main(args=None):
     rclpy.init(args=args)
