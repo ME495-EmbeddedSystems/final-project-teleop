@@ -89,9 +89,6 @@ class AvatarControl(Node):
             else:
                 self.buffer[object_id] = [msg.pose[i]]
             
-             
-
-
 def main(args=None):
     rclpy.init(args=args)
 
