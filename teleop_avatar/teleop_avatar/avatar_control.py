@@ -99,15 +99,15 @@ class AvatarControl(Node):
                 self.buffer[object_id] = [p.pose]
             
 
-    def grasp_pose(self, pose_w_obj):
-        """Takes in pose of object in world frame and outputs pose of hand in world frame to grasp the object"""
+    def grasp_pose(self, pose_peg_obj):
+        """Takes in pose of ring in peg frame and outputs pose of wrist in ABB base frame to grasp the object"""
 
         # Load stamped pose data as transformation matrix
-        T_w_obj = np.eye(4)
-        T_w_obj[0:3,0:3] = quaternion_matrix(pose_w_obj.pose.orientation)
-        T_w_obj[0,3] = pose_w_obj.pose.position.x
-        T_w_obj[1,3] = pose_w_obj.pose.position.y
-        T_w_obj[2,3] = pose_w_obj.pose.position.z
+        T_peg_obj = np.eye(4)
+        T_peg_obj[0:3,0:3] = quaternion_matrix(pose_peg_obj.pose.orientation)
+        T_peg_obj[0,3] = pose_peg_obj.pose.position.x
+        T_peg_obj[1,3] = pose_peg_obj.pose.position.y
+        T_peg_obj[2,3] = pose_peg_obj.pose.position.z
 
         # State transformation of object relative to hand
         T_hand_obj = np.eye(4)
@@ -115,46 +115,51 @@ class AvatarControl(Node):
         T_hand_obj[0,3] = 0.00 # x-offset, distance above thumb for right hand and below pinky for left hand
         T_hand_obj[1,3] = -0.05 # y-offset, distance above the back of the wrist
         T_hand_obj[2,3] = 0.09 # z-offset, distance in the direction of the fingers
+
+        # Transform of ABB base in world frame
+        T_world_abb = np.eye(4)
+
+        # Transform of peg in world frame
+        T_world_peg = np.eye(4)
              
-        # Calculate transformation of hand relative to world
-        T_w_hand = T_w_obj @ T_hand_obj.inv
+        # Calculate transformation of hand relative to ABB base
+        T_abb_hand = np.linalg.inv(T_world_abb) @ T_world_peg @ T_peg_obj @ np.linalg.inv(T_hand_obj)
 
         # Convert transformation matrix to stamped pose data
-        pose_w_hand = PoseStamped()
-        pose_w_hand.header.stamp = pose_w_obj.header.stamp
-        pose_w_hand.pose.position.x = T_w_hand[0,3]
-        pose_w_hand.pose.position.y = T_w_hand[1,3]
-        pose_w_hand.pose.position.z = T_w_hand[2,3]
-        pose_w_hand.pose.orientation = quaternion_from_matrix(T_w_hand[0:3, 0:3])
+        pose_abb_hand = PoseStamped()
+        pose_abb_hand.header.stamp = self.get_clock().now().to_msg()
+        pose_abb_hand.pose.position.x = T_abb_hand[0,3]
+        pose_abb_hand.pose.position.y = T_abb_hand[1,3]
+        pose_abb_hand.pose.position.z = T_abb_hand[2,3]
+        pose_abb_hand.pose.orientation = quaternion_from_matrix(T_abb_hand[0:3, 0:3])
 
-        return pose_w_hand
+        return pose_abb_hand
 
     def check_arm_callback(self, request, response):
 
         # Command arm to first pose
-
-        pose_w_obj = PoseStamped()
-        pose_w_obj.header.stamp = self.get_clock().now().to_msg()
-        pose_w_obj.pose.position.x = 0.5
-        pose_w_obj.pose.position.y = 0.5
-        pose_w_obj.pose.position.z = 0.5
-        pose_w_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
+        pose_peg_obj = PoseStamped()
+        pose_peg_obj.header.stamp = self.get_clock().now().to_msg()
+        pose_peg_obj.pose.position.x = 0.5
+        pose_peg_obj.pose.position.y = 0.5
+        pose_peg_obj.pose.position.z = 0.5
+        pose_peg_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
         
-        pose_w_hand = self.grasp_pose(pose_w_obj)
+        pose_abb_hand = self.grasp_pose(pose_peg_obj)
 
-        self.abb_pub.publish(pose_w_hand)
+        self.abb_pub.publish(pose_abb_hand)
 
         # Command arm to second pose
-
-        pose_w_obj.header.stamp = self.get_clock().now().to_msg()
-        pose_w_obj.pose.position.x = 0.5
-        pose_w_obj.pose.position.y = -0.5
-        pose_w_obj.pose.position.z = 0.5
-        pose_w_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
+        pose_peg_obj = PoseStamped()
+        pose_peg_obj.header.stamp = self.get_clock().now().to_msg()
+        pose_peg_obj.pose.position.x = 0.5
+        pose_peg_obj.pose.position.y = -0.5
+        pose_peg_obj.pose.position.z = 0.5
+        pose_peg_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
         
-        pose_w_hand = self.grasp_pose(pose_w_obj)
+        pose_abb_hand = self.grasp_pose(pose_peg_obj)
 
-        self.abb_pub.publish(pose_w_hand)
+        self.abb_pub.publish(pose_abb_hand)
 
         return response
 
