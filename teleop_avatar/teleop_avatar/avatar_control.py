@@ -46,6 +46,7 @@ class AvatarControl(Node):
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
 
         self.buffer = {}
+        self.buffer['red'] = [0,1,2,3,4,7,8,9]
 
     def timer_callback(self):
         """Timer function for the Avatar Control node."""
@@ -78,10 +79,10 @@ class AvatarControl(Node):
         return response
 
     def execute_callback(self, request, response):
-        while len(self.buffer) > 0:
+        while len(self.buffer[request.object_id]) > 0:
             # go_to(self.buffer[request.object_id][0])
 
-            del self.buffer[0]
+            del self.buffer[request.object_id][0]
 
         response.success = True
 
@@ -96,9 +97,7 @@ class AvatarControl(Node):
                 self.buffer[object_id] += [msg.pose[i]]
             else:
                 self.buffer[object_id] = [msg.pose[i]]
-<<<<<<< HEAD
             
-=======
 
     def grasp_pose(self, pose_w_obj):
         """Takes in pose of object in world frame and outputs pose of hand in world frame to grasp the object"""
@@ -159,7 +158,6 @@ class AvatarControl(Node):
 
         return response
 
->>>>>>> 10944630140867fa4c5c5027bc9477b18349a8bc
 def main(args=None):
     rclpy.init(args=args)
 
