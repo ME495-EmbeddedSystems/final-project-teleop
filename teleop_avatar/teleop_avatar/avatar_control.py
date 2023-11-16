@@ -90,13 +90,13 @@ class AvatarControl(Node):
     
     def obj_state_callback(self, msg):
         # Loop through objects
-        for i in range(len(msg.stamp)):
-            object_id = msg.stamp[i].frame_id
+        for p in msg.pose:
+            object_id = p.header.frame_id
 
             if object_id in self.buffer:
-                self.buffer[object_id] += [msg.pose[i]]
+                self.buffer[object_id] += [p.pose]
             else:
-                self.buffer[object_id] = [msg.pose[i]]
+                self.buffer[object_id] = [p.pose]
             
 
     def grasp_pose(self, pose_w_obj):
