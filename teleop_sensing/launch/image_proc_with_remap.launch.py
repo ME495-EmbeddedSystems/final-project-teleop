@@ -75,7 +75,8 @@ def generate_launch_description():
                 ('image', 'image_color'),
                 ('camera_info', '/D435i/color/camera_info'),
                 # Publisher of rectify
-                ('image_rect', 'image_rect_color')
+                ('image_rect', 'image_rect_color'),
+                # ("/image_rect/compressed" , "/image_rect_color/compressed")
             ],
         )
     ]
