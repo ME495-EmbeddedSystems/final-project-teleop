@@ -14,7 +14,7 @@ from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import numpy as np
 from tf_transformations import quaternion_from_matrix, quaternion_matrix
-
+from std_srvs.srv import Empty
 
 class AvatarControl(Node):
     """Actuate the ABB Gofas and Shadow Hands."""
@@ -38,6 +38,9 @@ class AvatarControl(Node):
 
         # Create the /execute_trajectory service
         self.execute = self.create_service(ExecuteTrajectory, "execute_trajectory", self.execute_callback)
+
+        # Create the /check_arm service
+        self.check_arm = self.create_service(Empty, "check_arm", self.check_arm_callback)
 
         # Subscribe to poses
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
@@ -123,6 +126,33 @@ class AvatarControl(Node):
         pose_w_hand.pose.orientation = quaternion_from_matrix(T_w_hand[0:3, 0:3])
 
         return pose_w_hand
+
+    def check_arm_callback(self, request, response):
+
+        # Command arm to first pose
+
+        pose_w_obj = PoseStamped()
+        pose_w_obj.header.stamp = self.get_clock().now().to_msg()
+        pose_w_obj.pose.position.x = 0.5
+        pose_w_obj.pose.position.y = 0.5
+        pose_w_obj.pose.position.z = 0.5
+        pose_w_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
+        
+        pose_w_hand = self.grasp_pose(pose_w_obj)
+
+        self.abb_pub.publish(pose_w_hand)
+
+        # Command arm to second pose
+
+        pose_w_obj.header.stamp = self.get_clock().now().to_msg()
+        pose_w_obj.pose.position.x = 0.5
+        pose_w_obj.pose.position.y = -0.5
+        pose_w_obj.pose.position.z = 0.5
+        pose_w_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
+        
+        pose_w_hand = self.grasp_pose(pose_w_obj)
+
+        self.abb_pub.publish(pose_w_hand)
 
 def main(args=None):
     rclpy.init(args=args)
