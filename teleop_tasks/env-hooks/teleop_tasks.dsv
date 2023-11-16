@@ -1,0 +1,2 @@
+prepend-non-duplicate;IGN_GAZEBO_RESOURCE_PATH;share/<teleop_tasks>/models
+prepend-non-duplicate;IGN_GAZEBO_RESOURCE_PATH;share/<teleop_tasks>/worlds
