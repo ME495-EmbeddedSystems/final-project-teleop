@@ -14,12 +14,12 @@
             />
         </inertial>
         <visual>
-            <origin xyz="0 0 0" />
+            <origin xyz="0 0 -0.5" />
             <geometry>
                 <box size="5.0 5.0 1.0" />
             </geometry>
             <material name="">
-                <color rgba="0 1 0 0.25" />
+                <color rgba="0 1 0 1" />
             </material>
         </visual>
         <collision>
@@ -109,7 +109,7 @@
 
     <!-- Thumb joints -->
     <joint name="palm_thumb_dumb" type="continuous">
-        <origin xyz="0.0 2.5 0.0" rpy="0.0 0.0 ${radians(90.0)}" />
+        <origin xyz="0.0 2.5 -0.5" rpy="0.0 0.0 ${radians(90.0)}" />
         <axis xyz="0.0 0.0 1.0"/>
         <parent link="palm"/>
         <child link="thumb_dumb"/>
@@ -121,7 +121,7 @@
 
     <!-- Index finger joints -->
     <joint name="palm_index_dumb" type="continuous">
-        <origin xyz="2.5 2.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="2.5 2.0 -0.5" rpy="0.0 0.0 0.0" />
         <axis xyz="0.0 0.0 1.0"/>
         <parent link="palm"/>
         <child link="index_dumb"/>
@@ -134,7 +134,7 @@
 
     <!-- Middle finger joints -->
     <joint name="palm_middle_dumb" type="continuous">
-        <origin xyz="2.5 0.675 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="2.5 0.675 -0.5" rpy="0.0 0.0 0.0" />
         <axis xyz="0.0 0.0 1.0"/>
         <parent link="palm"/>
         <child link="middle_dumb"/>
@@ -147,7 +147,7 @@
     
     <!-- Ring finger joints -->
     <joint name="palm_ring_dumb" type="continuous">
-        <origin xyz="2.5 -0.675 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="2.5 -0.675 -0.5" rpy="0.0 0.0 0.0" />
         <axis xyz="0.0 0.0 1.0"/>
         <parent link="palm"/>
         <child link="ring_dumb"/>
@@ -160,7 +160,7 @@
 
     <!-- Pinky finger joints -->
     <joint name="palm_pinky_dumb" type="continuous">
-        <origin xyz="2.5 -2.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="2.5 -2.0 -0.5" rpy="0.0 0.0 0.0" />
         <axis xyz="0.0 0.0 1.0"/>
         <parent link="palm"/>
         <child link="pinky_dumb"/>

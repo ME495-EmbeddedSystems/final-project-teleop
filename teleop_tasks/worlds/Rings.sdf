@@ -66,44 +66,6 @@
       <pose>0 0 0 0 -0 0</pose>
       <self_collide>false</self_collide>
     </model>
-    <model name='Block'>
-      <link name='link'>
-        <visual name='visual'>
-          <geometry>
-            <mesh>
-              <uri>../models/Block.dae</uri>
-            </mesh>
-            <material name="BlockMaterial">
-              <color rgba="0 1 0 1" />
-            </material>
-          </geometry>
-        </visual>
-        <collision name='collision'>
-          <geometry>
-            <mesh>
-              <uri>../models/Block.dae</uri>
-            </mesh>
-          </geometry>
-        </collision>
-        <pose>0 0 0 0 -0 0</pose>
-        <inertial>
-          <pose>0 0 0 0 -0 0</pose>
-          <mass>1</mass>
-          <inertia>
-            <ixx>1</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>1</iyy>
-            <iyz>0</iyz>
-            <izz>1</izz>
-          </inertia>
-        </inertial>
-        <enable_wind>false</enable_wind>
-      </link>
-      <pose>0 0 0.9 0 -0 0</pose>
-      <static>false</static>
-      <self_collide>false</self_collide>
-    </model>
     <model name='Table'>
       <link name='link'>
         <visual name='visual'>
@@ -111,8 +73,8 @@
             <mesh>
               <uri>../models/Table.dae</uri>
             </mesh>
-            <material name="TableMaterial">
-              <color rgba="0.529411765 0.243137255 0.137254902 1.0" />
+            <material name='TableMaterial'>
+              <color rgba='0.529411765 0.243137255 0.137254902 1.0'/>
             </material>
           </geometry>
         </visual>
@@ -140,6 +102,41 @@
       </link>
       <pose>0 0 0 0 -0 0</pose>
       <static>true</static>
+      <self_collide>false</self_collide>
+    </model>
+    <model name='Post'>
+      <link name='link'>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>../models/Post.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>../models/Post.dae</uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <pose>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <mass>1</mass>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+        </inertial>
+        <enable_wind>false</enable_wind>
+      </link>
+      <pose>0 -0 0.839999 -0 -0 -0</pose>
+      <static>false</static>
       <self_collide>false</self_collide>
     </model>
     <light name='sun' type='directional'>
