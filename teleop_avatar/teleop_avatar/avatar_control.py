@@ -8,7 +8,7 @@ Services:
 """
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Pose, PoseStamped
+from geometry_msgs.msg import Pose, PoseStamped, TransformStamped
 from teleop_interfaces.srv import Grasp, ExecuteTrajectory
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
@@ -99,7 +99,7 @@ class AvatarControl(Node):
                 self.buffer[object_id] = [p.pose]
             
 
-    def grasp_pose(self, pose_peg_obj):
+    def grasp_transform(self, pose_peg_obj):
         """Takes in pose of ring in peg frame and outputs pose of wrist in ABB base frame to grasp the object"""
 
         # Load stamped pose data as transformation matrix
@@ -126,14 +126,16 @@ class AvatarControl(Node):
         T_abb_hand = np.linalg.inv(T_world_abb) @ T_world_peg @ T_peg_obj @ np.linalg.inv(T_hand_obj)
 
         # Convert transformation matrix to stamped pose data
-        pose_abb_hand = PoseStamped()
-        pose_abb_hand.header.stamp = self.get_clock().now().to_msg()
-        pose_abb_hand.pose.position.x = T_abb_hand[0,3]
-        pose_abb_hand.pose.position.y = T_abb_hand[1,3]
-        pose_abb_hand.pose.position.z = T_abb_hand[2,3]
-        pose_abb_hand.pose.orientation = quaternion_from_matrix(T_abb_hand[0:3, 0:3])
+        tf_abb_hand = TransformStamped()
+        tf_abb_hand.header.stamp = self.get_clock().now().to_msg()
+        tf_abb_hand.header.frame_id = "operator_task_ws"
+        tf_abb_hand.child_frame_id = "haptxLeft_sr_aligned" # Left arm
+        tf_abb_hand.transform.translation.x = T_abb_hand[0,3]
+        tf_abb_hand.transform.translation.y = T_abb_hand[1,3]
+        tf_abb_hand.transform.translation.z = T_abb_hand[2,3]
+        tf_abb_hand.transform.rotation = quaternion_from_matrix(T_abb_hand[0:3, 0:3])
 
-        return pose_abb_hand
+        return tf_abb_hand
 
     def check_arm_callback(self, request, response):
 
@@ -145,9 +147,9 @@ class AvatarControl(Node):
         pose_peg_obj.pose.position.z = 0.5
         pose_peg_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
         
-        pose_abb_hand = self.grasp_pose(pose_peg_obj)
+        tf_abb_hand = self.grasp_transform(pose_peg_obj)
 
-        self.abb_pub.publish(pose_abb_hand)
+        self.abb_pub.publish(tf_abb_hand)
 
         # Command arm to second pose
         pose_peg_obj = PoseStamped()
@@ -157,9 +159,9 @@ class AvatarControl(Node):
         pose_peg_obj.pose.position.z = 0.5
         pose_peg_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
         
-        pose_abb_hand = self.grasp_pose(pose_peg_obj)
+        tf_abb_hand = self.grasp_transform(pose_peg_obj)
 
-        self.abb_pub.publish(pose_abb_hand)
+        self.abb_pub.publish(tf_abb_hand)
 
         return response
 
