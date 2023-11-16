@@ -1,1 +1,1 @@
-geometry_msgs.msg.Wrench[] FingerWrenches #The array of normal force wrenches from the finger
+geometry_msgs.msg.WrenchStamped[] FingerWrenches #The array of normal force wrenches from the finger
