@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'haptx_feedback = teleop_haptics.haptx_feedback:main',
+            'force_feedback = teleop_haptics.kinesthetic_feedback:main',
         ],
     },
 )
