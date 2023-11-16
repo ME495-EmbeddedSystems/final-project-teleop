@@ -154,6 +154,8 @@ class AvatarControl(Node):
 
         self.abb_pub.publish(pose_w_hand)
 
+        return response
+
 def main(args=None):
     rclpy.init(args=args)
 
