@@ -1,2 +1,1 @@
-std_msgs/Header[] stamp
-geometry_msgs/Pose[] pose
+geometry_msgs/PoseStamped[] pose
