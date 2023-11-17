@@ -1,4 +1,0 @@
-geometry_msgs/Point[] waypoints
-float64 speed
----
-float64[] distance_segments

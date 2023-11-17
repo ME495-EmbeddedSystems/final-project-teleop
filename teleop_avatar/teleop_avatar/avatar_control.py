@@ -11,7 +11,7 @@ from rclpy.node import Node
 from geometry_msgs.msg import Pose, PoseStamped, TransformStamped
 from teleop_interfaces.srv import Grasp, ExecuteTrajectory
 from geometry_msgs.msg import Pose, PoseStamped, TransformStamped, Quaternion
-from teleop_interfaces.srv import Grasp, ExecuteTrajectory, WaypointsSpeed
+from teleop_interfaces.srv import Grasp, ExecuteTrajectory
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import numpy as np
