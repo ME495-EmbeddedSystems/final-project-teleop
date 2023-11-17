@@ -9,7 +9,7 @@ Services:
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Pose, PoseStamped, TransformStamped, Quaternion
-from teleop_interfaces.srv import Grasp, ExecuteTrajectory
+from teleop_interfaces.srv import Grasp, ExecuteTrajectory, WaypointsSpeed
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import numpy as np
@@ -83,6 +83,9 @@ class AvatarControl(Node):
 
         # Create the /check_arm service
         self.check_arm = self.create_service(Empty, "check_arm", self.check_arm_callback)
+
+        # Create the /waypoint_trajectory service
+        self.waypoint_traj = self.create_service(WaypointsSpeed, "waypoint_trajectory", self.waypoint_traj_callback)
 
         # Subscribe to poses
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
