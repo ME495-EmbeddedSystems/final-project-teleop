@@ -8,13 +8,63 @@ Services:
 """
 import rclpy
 from rclpy.node import Node
+<<<<<<< HEAD
 from geometry_msgs.msg import Pose, PoseStamped, TransformStamped
 from teleop_interfaces.srv import Grasp, ExecuteTrajectory
+=======
+from geometry_msgs.msg import Pose, PoseStamped, TransformStamped, Quaternion
+from teleop_interfaces.srv import Grasp, ExecuteTrajectory, WaypointsSpeed
+>>>>>>> 6c4466b01962fcc082f411d7395daad32b611463
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import numpy as np
 from tf_transformations import quaternion_from_matrix, quaternion_matrix
 from std_srvs.srv import Empty
+<<<<<<< HEAD
+=======
+import time
+
+def SE3toQuaternion(T):
+    """
+    Converts SE(3) matrix to quaternion.
+
+    Args:
+        T (4*4 array like) : SE(3) matrix, even for pure rotations.
+
+    Returns:
+        quat (geometry_msgs/msg/Quaternion) : Quaternion correspaonding to rotation portion of transformation.
+
+    """ 
+
+    quaternion_array = quaternion_from_matrix(T)
+
+    quat = Quaternion()
+    quat.x = quaternion_array[0]
+    quat.y = quaternion_array[1]
+    quat.z = quaternion_array[2]
+    quat.w = quaternion_array[3]
+
+    return quat
+
+def QuaterniontoSE3(quat):
+    """
+    Converts quaternion message to SE(3).
+
+    Args:
+        quat (geometry_msgs/msg/Quaternion) : Quaternion correspaonding to rotation portion of transformation.
+
+    Returns:
+        T (4*4 array like) : SE(3) matrix, even for pure rotations.
+
+    """ 
+
+    quaternion_array = [quat.x, quat.y, quat.z, quat.w]
+    T = np.array(quaternion_matrix(quaternion_array))
+
+    return T
+
+
+>>>>>>> 6c4466b01962fcc082f411d7395daad32b611463
 
 class AvatarControl(Node):
     """Actuate the ABB Gofas and Shadow Hands."""
@@ -42,6 +92,12 @@ class AvatarControl(Node):
         # Create the /check_arm service
         self.check_arm = self.create_service(Empty, "check_arm", self.check_arm_callback)
 
+<<<<<<< HEAD
+=======
+        # Create the /waypoint_trajectory service
+        self.waypoint_traj = self.create_service(WaypointsSpeed, "waypoint_trajectory", self.waypoint_traj_callback)
+
+>>>>>>> 6c4466b01962fcc082f411d7395daad32b611463
         # Subscribe to poses
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
 
@@ -112,6 +168,15 @@ class AvatarControl(Node):
         # State transformation of object relative to hand
         T_hand_obj = np.eye(4)
         T_hand_obj[0:3, 0:3] = [[0,1,0],[0,0,1],[1,0,0]] # Rotation to make z of object align with y of hand
+        T_peg_obj[0:4,0:4] = QuaterniontoSE3(pose_peg_obj.pose.orientation)
+        T_peg_obj[0,3] = pose_peg_obj.pose.position.x
+        T_peg_obj[1,3] = pose_peg_obj.pose.position.y
+        T_peg_obj[2,3] = pose_peg_obj.pose.position.z
+        self.get_logger().info("Loaded data")
+
+        # State transformation of object relative to hand
+        T_hand_obj = np.eye(4)
+        T_hand_obj[0:3, 0:3] = np.linalg.inv([[0,1,0],[0,0,1],[1,0,0]]) # Rotation to make z of object align with y of hand
         T_hand_obj[0,3] = 0.00 # x-offset, distance above thumb for right hand and below pinky for left hand
         T_hand_obj[1,3] = -0.05 # y-offset, distance above the back of the wrist
         T_hand_obj[2,3] = 0.09 # z-offset, distance in the direction of the fingers
@@ -124,6 +189,7 @@ class AvatarControl(Node):
              
         # Calculate transformation of hand relative to ABB base
         T_abb_hand = np.linalg.inv(T_world_abb) @ T_world_peg @ T_peg_obj @ np.linalg.inv(T_hand_obj)
+        self.get_logger().info("Math solved")
 
         # Convert transformation matrix to stamped pose data
         tf_abb_hand = TransformStamped()
@@ -134,6 +200,11 @@ class AvatarControl(Node):
         tf_abb_hand.transform.translation.y = T_abb_hand[1,3]
         tf_abb_hand.transform.translation.z = T_abb_hand[2,3]
         tf_abb_hand.transform.rotation = quaternion_from_matrix(T_abb_hand[0:3, 0:3])
+        tf_abb_hand.child_frame_id = "haptxRight_sr_aligned" # Left arm
+        tf_abb_hand.transform.translation.x = T_abb_hand[0,3]
+        tf_abb_hand.transform.translation.y = T_abb_hand[1,3]
+        tf_abb_hand.transform.translation.z = T_abb_hand[2,3]
+        tf_abb_hand.transform.rotation = SE3toQuaternion(T_abb_hand)
 
         return tf_abb_hand
 
@@ -147,9 +218,17 @@ class AvatarControl(Node):
         pose_peg_obj.pose.position.z = 0.5
         pose_peg_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
         
+        pose_peg_obj.pose.position.y = 0.1
+        pose_peg_obj.pose.position.z = 0.3
+        pose_peg_obj.pose.orientation = SE3toQuaternion(np.eye(4))
+
         tf_abb_hand = self.grasp_transform(pose_peg_obj)
 
         self.abb_pub.publish(tf_abb_hand)
+
+        self.get_logger().info("Published first pose")
+
+        time.sleep(2)
 
         # Command arm to second pose
         pose_peg_obj = PoseStamped()
@@ -158,10 +237,15 @@ class AvatarControl(Node):
         pose_peg_obj.pose.position.y = -0.5
         pose_peg_obj.pose.position.z = 0.5
         pose_peg_obj.pose.orientation = quaternion_from_matrix(np.eye(3))
+        pose_peg_obj.pose.position.y = -0.1
+        pose_peg_obj.pose.position.z = 0.3
+        pose_peg_obj.pose.orientation = np.eye(4)
+        pose_peg_obj.pose.orientation = SE3toQuaternion(np.eye(4))
         
         tf_abb_hand = self.grasp_transform(pose_peg_obj)
 
         self.abb_pub.publish(tf_abb_hand)
+        self.get_logger().info("Published second pose")
 
         return response
 
