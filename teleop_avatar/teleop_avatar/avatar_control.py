@@ -8,20 +8,15 @@ Services:
 """
 import rclpy
 from rclpy.node import Node
-<<<<<<< HEAD
 from geometry_msgs.msg import Pose, PoseStamped, TransformStamped
 from teleop_interfaces.srv import Grasp, ExecuteTrajectory
-=======
 from geometry_msgs.msg import Pose, PoseStamped, TransformStamped, Quaternion
 from teleop_interfaces.srv import Grasp, ExecuteTrajectory, WaypointsSpeed
->>>>>>> 6c4466b01962fcc082f411d7395daad32b611463
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import numpy as np
 from tf_transformations import quaternion_from_matrix, quaternion_matrix
 from std_srvs.srv import Empty
-<<<<<<< HEAD
-=======
 import time
 
 def SE3toQuaternion(T):
@@ -64,7 +59,6 @@ def QuaterniontoSE3(quat):
     return T
 
 
->>>>>>> 6c4466b01962fcc082f411d7395daad32b611463
 
 class AvatarControl(Node):
     """Actuate the ABB Gofas and Shadow Hands."""
@@ -92,12 +86,9 @@ class AvatarControl(Node):
         # Create the /check_arm service
         self.check_arm = self.create_service(Empty, "check_arm", self.check_arm_callback)
 
-<<<<<<< HEAD
-=======
         # Create the /waypoint_trajectory service
         self.waypoint_traj = self.create_service(WaypointsSpeed, "waypoint_trajectory", self.waypoint_traj_callback)
 
->>>>>>> 6c4466b01962fcc082f411d7395daad32b611463
         # Subscribe to poses
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
 
