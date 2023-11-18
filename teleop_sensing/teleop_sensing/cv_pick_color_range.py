@@ -65,12 +65,12 @@ class FilterBase(dataclass_wizard.JSONFileWizard):
 @dataclasses.dataclass
 class HSVFilter(FilterBase):
 
-    h_high: float = 179
+    h_high: float = 26
     h_low: float = 0
     s_high: float = 255
-    s_low: float = 60
-    v_high: float = 250
-    v_low: float = 40
+    s_low: float = 118
+    v_high: float = 255
+    v_low: float = 170
 
     # The exact names of these const are referenced later.
     H_MAX: typing.ClassVar[float] = 179
@@ -110,7 +110,7 @@ class BlobDetector(FilterBase):
     maxThreshold: int = 101
     minThreshold: int = 11
 
-    maxArea: int = 5999
+    maxArea: int = 9999
     minArea: int = 601
 
     MAXTHRESHOLD_MAX: typing.ClassVar[float] = 250
