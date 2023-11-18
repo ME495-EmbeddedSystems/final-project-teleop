@@ -136,6 +136,29 @@ class ImageProcesser(RosNode):
         for name, time in named_time.items():
             print(f"{name} , {time-base_time}")
 
+        """
+        
+        Conclusion with all the different route of getting image and depth 
+
+        Getting aligned image: 
+        The rectified output from image_proc nodes produced the same output as 
+        Using camera info and feed raw image through PinholeCameraModel.  
+        With added benefit of no need to rectify entire image, can rect only a point.
+
+        Getting space xyz from pixel uv - aka de-projection:
+        Converting the camera info into Realsense library intrinsics give the 
+        same result as PinholeCameraModel (projectPixelTo3dRay * depth)
+
+        Regardless of the method chosen from the above methods. The resulted space xyz 
+        point is still offset to the side. After applying the same offset as 
+        realsense_optical to realsense_depth frames, the offset is gone.
+
+        Note: however the depth gathered from that point is still at the offseted location, 
+        Which mean applying the fix offset at the end is kinda a hack
+
+        Maybe the rs_ros library labeled the frame backwords?  
+        """
+
         raw_img = self.raw_image_deque[0]
         raw_ci = self.raw_cam_info_deque[0]
         depth_img = self.depth_image_deque[0]
@@ -206,10 +229,15 @@ class ImageProcesser(RosNode):
         color_depth_ts.transform.translation.y,
         color_depth_ts.transform.translation.z,]
         
-        
         offset_raw_rect_ph_sxyz = [x1 + x2 for x1,x2 in zip(raw_rect_ph_sxyz , color_depth_offset)]
-
         self.publish_circle_tf(depth_img.header,"raw_rect_ph_offset" , offset_raw_rect_ph_sxyz)
+
+        # Can't get this to work, the re-worked math result in pixel outside boundary.
+        # offseted_raw_rect_ph_pxy = depth_pin_model.project3dToPixel(offset_raw_rect_ph_sxyz)
+        # offseted_raw_rect_depth = depth_rect_img_cv[int(offseted_raw_rect_ph_pxy[1]), int(offseted_raw_rect_ph_pxy[0]) ]
+        # re_cal_raw_rect_sxyz = [v*offseted_raw_rect_depth / 1000  for v in  raw_pin_model.projectPixelTo3dRay(offseted_raw_rect_ph_pxy)]
+        # self.publish_circle_tf(depth_img.header,"re_cal_raw_rect_sxyz" , re_cal_raw_rect_sxyz)
+        
 
     def find_donute_process(self , bgr_image:np.ndarray):
 
