@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot name="left_hand" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- World frame the palm moves around -->
-    <!--link name="world">
+    <link name="world">
         <visual>
             <origin xyz="0 0 0.0" />
             <geometry>
@@ -11,7 +11,7 @@
                 <color rgba="0 1 0 0" />
             </material>
         </visual>
-    </link-->
+    </link>
 
     <!-- The palm -->
     <link name="palm">
@@ -42,6 +42,13 @@
             </geometry>
         </collision>
     </link>
+
+    <!-- World to palm joints -->
+    <joint name="world_palm" type="floating">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="world"/>
+        <child link="palm"/>
+    </joint>
 
     <!-- Macro for the fingers -->
     <xacro:macro name="finger" params="name length color">
@@ -100,15 +107,6 @@
     <xacro:finger name="thumb_1" length="1.5" color="1 0 0 1"/>
     <xacro:finger name="thumb_2" length="1.5" color="0 1 0 1"/>
     <xacro:finger name="thumb_tip" length="0.0001" color="0 0 0 0"/>
-
-    <!-- World to palm joint -->
-    <!--joint name="world_palm" type="floating">
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
-        <parent link="world"/>
-        <child link="palm"/>
-        <calibration rising="0.0"/>
-        <dynamics damping="0.0" friction="0.0"/>
-    </joint-->
 
     <!-- Finger joint macro -->
     <xacro:macro name="finger_joint" params="parent child length">
