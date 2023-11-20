@@ -1,3 +1,2 @@
-geometry_msgs.msg.Wrench # The wrench to be set
 geometry_msgs/Wrench wrench # The wrench to be set
 ---
