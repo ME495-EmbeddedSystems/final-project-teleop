@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<robot name="right_hand" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- The palm -->
+    <link name="palm">
+        <inertial>
+            <mass value="1" />
+            <inertia
+                ixx="${(1/12)*1*(0.6**2 + 0.2**2)}"
+                ixy="0.0"
+                ixz="0.0"
+                iyy="${(1/12)*1*(2.5**2 + 0.2**2)}"
+                iyz="0.0"
+                izz="${(1/12)*1*(0.6**2 + 2.5**2)}"
+            />
+        </inertial>
+        <visual>
+            <origin xyz="0 0 -0.5" />
+            <geometry>
+                <box size="5.0 5.0 1.0" />
+            </geometry>
+            <material name="">
+                <color rgba="0 1 0 1" />
+            </material>
+        </visual>
+        <collision>
+            <origin xyz="0 0 -0.5" />
+            <geometry>
+                <box size="5.0 5.0 2.0" />
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- Macro for the fingers -->
+    <xacro:macro name="finger" params="name length color">
+        <link name="${name}">
+            <inertial>
+                <mass value="0.1" />
+                <inertia
+                    ixx="${(1/12)*0.1*(0.6**2 + 0.2**2)}"
+                    ixy="0.0"
+                    ixz="0.0"
+                    iyy="${(1/12)*0.1*(2.5**2 + 0.2**2)}"
+                    iyz="0.0"
+                    izz="${(1/12)*0.1*(0.6**2 + 2.5**2)}"
+                />
+            </inertial>
+            <visual>
+                <origin xyz="${length/2} 0 0" />
+                <geometry>
+                    <box size="${length} 1.0 1.0"/>
+                </geometry>
+                <material name="">
+                    <color rgba="${color}"/>  
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="${length/2} 0 0" />
+                <geometry>
+                    <box size="${length} 1.0 1.0"/>
+                </geometry>
+            </collision>
+        </link>
+    </xacro:macro>
+
+    <!-- Creating each finger -->
+    <xacro:finger name="index_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="index_1" length="${5.0/3}" color="1 0 0 1"/>
+    <xacro:finger name="index_2" length="${5.0/3}" color="0 1 0 1"/>
+    <xacro:finger name="index_3" length="${5.0/3}" color="0 0 1 1"/>
+    <xacro:finger name="index_tip" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="middle_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="middle_1" length="${5.0/3}" color="1 0 0 1"/>
+    <xacro:finger name="middle_2" length="${5.0/3}" color="0 1 0 1"/>
+    <xacro:finger name="middle_3" length="${5.0/3}" color="0 0 1 1"/>
+    <xacro:finger name="middle_tip" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="ring_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="ring_1" length="${5.0/3}" color="1 0 0 1"/>
+    <xacro:finger name="ring_2" length="${5.0/3}" color="0 1 0 1"/>
+    <xacro:finger name="ring_3" length="${5.0/3}" color="0 0 1 1"/>
+    <xacro:finger name="ring_tip" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="pinky_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="pinky_1" length="1.0" color="1 0 0 1"/>
+    <xacro:finger name="pinky_2" length="1.0" color="0 1 0 1"/>
+    <xacro:finger name="pinky_3" length="1.0" color="0 0 1 1"/>
+    <xacro:finger name="pinky_tip" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="thumb_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="thumb_1" length="1.5" color="1 0 0 1"/>
+    <xacro:finger name="thumb_2" length="1.5" color="0 1 0 1"/>
+    <xacro:finger name="thumb_tip" length="0.0" color="0 0 0 0"/>
+
+    <!-- Finger joint macro -->
+    <xacro:macro name="finger_joint" params="parent child length">
+        <joint name="${parent}_${child}" type="continuous">
+            <origin xyz="${length} 0.0 0" rpy="0.0 0.0 0.0" />
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+            <axis xyz="0.0 -1.0 0.0"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- Fingertip joint macro -->
+    <xacro:macro name="fingertip_joint" params="parent child length">
+        <joint name="${parent}_${child}" type="fixed">
+            <origin xyz="${length} 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <parent link="${parent}"/>
+            <child link="${child}"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- Thumb joints -->
+    <joint name="palm_thumb_dumb" type="continuous">
+        <origin xyz="0.0 -2.5 -0.5" rpy="0.0 0.0 ${radians(-90.0)}" />
+        <axis xyz="0.0 0.0 1.0"/>
+        <parent link="palm"/>
+        <child link="thumb_dumb"/>
+    </joint>
+
+    <xacro:finger_joint parent="thumb_dumb" child="thumb_1" length="0.0"/>
+    <xacro:finger_joint parent="thumb_1" child="thumb_2" length="1.5"/>
+    <xacro:fingertip_joint parent="thumb_2" child="thumb_tip" length="1.5"/>
+
+    <!-- Index finger joints -->
+    <joint name="palm_index_dumb" type="continuous">
+        <origin xyz="2.5 -2.0 -0.5" rpy="0.0 0.0 0.0" />
+        <axis xyz="0.0 0.0 1.0"/>
+        <parent link="palm"/>
+        <child link="index_dumb"/>
+    </joint>
+
+    <xacro:finger_joint parent="index_dumb" child="index_1" length="0.0"/>
+    <xacro:finger_joint parent="index_1" child="index_2" length="${5.0/3}"/>
+    <xacro:finger_joint parent="index_2" child="index_3" length="${5.0/3}"/>
+    <xacro:fingertip_joint parent="index_3" child="index_tip" length="${5.0/3}"/>
+
+    <!-- Middle finger joints -->
+    <joint name="palm_middle_dumb" type="continuous">
+        <origin xyz="2.5 -0.675 -0.5" rpy="0.0 0.0 0.0" />
+        <axis xyz="0.0 0.0 1.0"/>
+        <parent link="palm"/>
+        <child link="middle_dumb"/>
+    </joint>
+
+    <xacro:finger_joint parent="middle_dumb" child="middle_1" length="0.0"/>
+    <xacro:finger_joint parent="middle_1" child="middle_2" length="${5.0/3}"/>
+    <xacro:finger_joint parent="middle_2" child="middle_3" length="${5.0/3}"/>
+    <xacro:fingertip_joint parent="middle_3" child="middle_tip" length="${5.0/3}"/>
+    
+    <!-- Ring finger joints -->
+    <joint name="palm_ring_dumb" type="continuous">
+        <origin xyz="2.5 0.675 -0.5" rpy="0.0 0.0 0.0" />
+        <axis xyz="0.0 0.0 1.0"/>
+        <parent link="palm"/>
+        <child link="ring_dumb"/>
+    </joint>
+
+    <xacro:finger_joint parent="ring_dumb" child="ring_1" length="0.0"/>
+    <xacro:finger_joint parent="ring_1" child="ring_2" length="${5.0/3}"/>
+    <xacro:finger_joint parent="ring_2" child="ring_3" length="${5.0/3}"/>
+    <xacro:fingertip_joint parent="ring_3" child="ring_tip" length="${5.0/3}"/>
+
+    <!-- Pinky finger joints -->
+    <joint name="palm_pinky_dumb" type="continuous">
+        <origin xyz="2.5 2.0 -0.5" rpy="0.0 0.0 0.0" />
+        <axis xyz="0.0 0.0 1.0"/>
+        <parent link="palm"/>
+        <child link="pinky_dumb"/>
+    </joint>
+
+    <xacro:finger_joint parent="pinky_dumb" child="pinky_1" length="0.0"/>
+    <xacro:finger_joint parent="pinky_1" child="pinky_2" length="1.0"/>
+    <xacro:finger_joint parent="pinky_2" child="pinky_3" length="1.0"/>
+    <xacro:fingertip_joint parent="pinky_3" child="pinky_tip" length="1.0"/>
+
+</robot>
