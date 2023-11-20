@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'avatar_control = teleop_avatar.avatar_control:main',
+            'random = teleop_avatar.random:main',
         ],
     },
 )
