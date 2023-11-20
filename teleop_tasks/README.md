@@ -1,3 +1,6 @@
+To run the blocks simulation run "ros2 launch teleop_tasks rings.launch.xml"
+To run the blocks simulation run "ros2 launch teleop_tasks blocks.launch.xml"
+
 Frames of the desired objects
 Block frames: childID -> block
 Ring frames: childID -> ring_red, ring_orange, ring_yellow
