@@ -1,5 +1,18 @@
 <?xml version="1.0"?>
-<robot name="ddrive" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="left_hand" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- World frame the palm moves around -->
+    <!--link name="world">
+        <visual>
+            <origin xyz="0 0 0.0" />
+            <geometry>
+                <sphere radius="0.5"/>
+            </geometry>
+            <material name="">
+                <color rgba="0 1 0 0" />
+            </material>
+        </visual>
+    </link-->
+
     <!-- The palm -->
     <link name="palm">
         <inertial>
@@ -23,7 +36,7 @@
             </material>
         </visual>
         <collision>
-            <origin xyz="0 0 0" />
+            <origin xyz="0 0 -0.5" />
             <geometry>
                 <box size="5.0 5.0 2.0" />
             </geometry>
@@ -53,7 +66,7 @@
                     <color rgba="${color}"/>  
                 </material>
             </visual>
-            <collision>
+            <collision name="${name}_collision">
                 <origin xyz="${length/2} 0 0" />
                 <geometry>
                     <box size="${length} 1.0 1.0"/>
@@ -63,30 +76,39 @@
     </xacro:macro>
 
     <!-- Creating each finger -->
-    <xacro:finger name="index_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="index_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="index_1" length="${5.0/3}" color="1 0 0 1"/>
     <xacro:finger name="index_2" length="${5.0/3}" color="0 1 0 1"/>
     <xacro:finger name="index_3" length="${5.0/3}" color="0 0 1 1"/>
-    <xacro:finger name="index_tip" length="0.0" color="0 0 0 0"/>
-    <xacro:finger name="middle_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="index_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger name="middle_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="middle_1" length="${5.0/3}" color="1 0 0 1"/>
     <xacro:finger name="middle_2" length="${5.0/3}" color="0 1 0 1"/>
     <xacro:finger name="middle_3" length="${5.0/3}" color="0 0 1 1"/>
-    <xacro:finger name="middle_tip" length="0.0" color="0 0 0 0"/>
-    <xacro:finger name="ring_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="middle_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger name="ring_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="ring_1" length="${5.0/3}" color="1 0 0 1"/>
     <xacro:finger name="ring_2" length="${5.0/3}" color="0 1 0 1"/>
     <xacro:finger name="ring_3" length="${5.0/3}" color="0 0 1 1"/>
-    <xacro:finger name="ring_tip" length="0.0" color="0 0 0 0"/>
-    <xacro:finger name="pinky_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="ring_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger name="pinky_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="pinky_1" length="1.0" color="1 0 0 1"/>
     <xacro:finger name="pinky_2" length="1.0" color="0 1 0 1"/>
     <xacro:finger name="pinky_3" length="1.0" color="0 0 1 1"/>
-    <xacro:finger name="pinky_tip" length="0.0" color="0 0 0 0"/>
-    <xacro:finger name="thumb_dumb" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="pinky_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger name="thumb_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="thumb_1" length="1.5" color="1 0 0 1"/>
     <xacro:finger name="thumb_2" length="1.5" color="0 1 0 1"/>
-    <xacro:finger name="thumb_tip" length="0.0" color="0 0 0 0"/>
+    <xacro:finger name="thumb_tip" length="0.0001" color="0 0 0 0"/>
+
+    <!-- World to palm joint -->
+    <!--joint name="world_palm" type="floating">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <parent link="world"/>
+        <child link="palm"/>
+        <calibration rising="0.0"/>
+        <dynamics damping="0.0" friction="0.0"/>
+    </joint-->
 
     <!-- Finger joint macro -->
     <xacro:macro name="finger_joint" params="parent child length">
@@ -101,7 +123,7 @@
     <!-- Fingertip joint macro -->
     <xacro:macro name="fingertip_joint" params="parent child length">
         <joint name="${parent}_${child}" type="fixed">
-            <origin xyz="${length} 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <origin xyz="${length/2} 0.0 0.5" rpy="0.0 0.0 0.0" />
             <parent link="${parent}"/>
             <child link="${child}"/>
         </joint>
@@ -117,7 +139,11 @@
 
     <xacro:finger_joint parent="thumb_dumb" child="thumb_1" length="0.0"/>
     <xacro:finger_joint parent="thumb_1" child="thumb_2" length="1.5"/>
-    <xacro:fingertip_joint parent="thumb_2" child="thumb_tip" length="1.5"/>
+    <joint name="thumb_2_thumb_tip" type="fixed">
+            <origin xyz="0.75 0.0 0.5" rpy="0.0 0.0 ${radians(-90.0)}" />
+            <parent link="thumb_2"/>
+            <child link="thumb_tip"/>
+    </joint>
 
     <!-- Index finger joints -->
     <joint name="palm_index_dumb" type="continuous">
@@ -170,5 +196,87 @@
     <xacro:finger_joint parent="pinky_1" child="pinky_2" length="1.0"/>
     <xacro:finger_joint parent="pinky_2" child="pinky_3" length="1.0"/>
     <xacro:fingertip_joint parent="pinky_3" child="pinky_tip" length="1.0"/>
+
+
+    <!-- Gazebo force macro -->
+    <gazebo reference="thumb_2_thumb_tip">
+        <provideFeedback>true</provideFeedback>
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <sensor name="force_torque_sensor" type="force_torque">
+        <pose>0 0 0 0 -0 0</pose>
+        <topic>force_torque</topic>
+        <update_rate>100</update_rate>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <force_torque>
+            <frame>sensor</frame>
+            <measure_direction>parent_to_child</measure_direction>
+        </force_torque>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="index_3_index_tip">
+        <provideFeedback>true</provideFeedback>
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <sensor name="force_torque_sensor" type="force_torque">
+        <pose>0 0 0 0 -0 0</pose>
+        <topic>force_torque</topic>
+        <update_rate>100</update_rate>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <force_torque>
+            <frame>sensor</frame>
+            <measure_direction>parent_to_child</measure_direction>
+        </force_torque>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="middle_3_middle_tip">
+        <provideFeedback>true</provideFeedback>
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <sensor name="force_torque_sensor" type="force_torque">
+        <pose>0 0 0 0 -0 0</pose>
+        <topic>force_torque</topic>
+        <update_rate>100</update_rate>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <force_torque>
+            <frame>sensor</frame>
+            <measure_direction>parent_to_child</measure_direction>
+        </force_torque>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="ring_3_ring_tip">
+        <provideFeedback>true</provideFeedback>
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <sensor name="force_torque_sensor" type="force_torque">
+        <pose>0 0 0 0 -0 0</pose>
+        <topic>force_torque</topic>
+        <update_rate>100</update_rate>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <force_torque>
+            <frame>sensor</frame>
+            <measure_direction>parent_to_child</measure_direction>
+        </force_torque>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="pinky_3_pinky_tip">
+        <provideFeedback>true</provideFeedback>
+        <preserveFixedJoint>true</preserveFixedJoint>
+        <sensor name="force_torque_sensor" type="force_torque">
+        <pose>0 0 0 0 -0 0</pose>
+        <topic>force_torque</topic>
+        <update_rate>100</update_rate>
+        <always_on>true</always_on>
+        <visualize>true</visualize>
+        <force_torque>
+            <frame>sensor</frame>
+            <measure_direction>parent_to_child</measure_direction>
+        </force_torque>
+        </sensor>
+    </gazebo>
 
 </robot>

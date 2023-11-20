@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Pose, TransformStamped
+from geometry_msgs.msg import Pose, TransformStamped, WrenchStamped
 from tf2_msgs.msg import TFMessage
 
 class Objects(Node):

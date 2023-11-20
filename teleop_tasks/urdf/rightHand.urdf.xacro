@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="ddrive" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="right_hand" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- The palm -->
     <link name="palm">
         <inertial>
@@ -23,7 +23,7 @@
             </material>
         </visual>
         <collision>
-            <origin xyz="0 0 0" />
+            <origin xyz="0 0 -0.5" />
             <geometry>
                 <box size="5.0 5.0 2.0" />
             </geometry>
@@ -121,7 +121,7 @@
 
     <!-- Index finger joints -->
     <joint name="palm_index_dumb" type="continuous">
-        <origin xyz="2.5 -2.0 0.5" rpy="0.0 0.0 0.0" />
+        <origin xyz="2.5 -2.0 -0.5" rpy="0.0 0.0 0.0" />
         <axis xyz="0.0 0.0 1.0"/>
         <parent link="palm"/>
         <child link="index_dumb"/>
