@@ -1,9 +1,5 @@
 import rclpy
-<<<<<<< HEAD
-from rclpy.node import node
-=======
 from rclpy.node import Node
->>>>>>> 9009e4b710a044e9a3d931d8036081d98f2ffbaf
 
 from geometry_msgs.msg import Wrench
 from teleop_interfaces.msg import FingerWrenches
@@ -41,11 +37,7 @@ class KinestheticFeedbackNode(Node):
             self.contact_wrench += i
     
     def applied_wrench_set_callback(self, req, response):
-<<<<<<< HEAD
-        self.contact_wrench = req
-=======
         self.contact_wrench = req.wrench
->>>>>>> 9009e4b710a044e9a3d931d8036081d98f2ffbaf
         return response
 
 def main(args=None):
