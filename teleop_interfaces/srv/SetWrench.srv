@@ -1,6 +1,2 @@
-<<<<<<< HEAD
-geometry_msgs.msg.Wrench # The wrench to be set
-=======
 geometry_msgs/Wrench wrench # The wrench to be set
->>>>>>> 9009e4b710a044e9a3d931d8036081d98f2ffbaf
 ---
