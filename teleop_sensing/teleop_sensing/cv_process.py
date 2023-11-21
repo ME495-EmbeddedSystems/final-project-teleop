@@ -41,6 +41,13 @@ def main(args=None):
     print(f'Starting at main of turtle control, given args: {args}')
     rclpy.init(args=args)
     image_processer = ImageProcesser()
+    for name, f in image_processer.color_filter_map.items():
+        print(f"{name} param: \n{f.to_json()}")
+        
+    print(f"SV filter param: \n{image_processer.sv_filter.to_json()}")
+    print(f"Blob detector param: \n{image_processer.blob_detector.to_json()}")
+
+
     rclpy.spin(image_processer)
     rclpy.shutdown()
 
@@ -58,7 +65,6 @@ class ColoredFilter():
     filter:HOnlyFilter
 
 class ImageProcesser(RosNode):
-    SHARED_BAR_WINDOW = "Shared params"
 
 
     def __init__(self) -> None:
@@ -71,23 +77,19 @@ class ImageProcesser(RosNode):
         # Setup the user tuned filters
         # TODO(LEO) Take param to decide on seeing the trackbar
         self.trackbar_helper = TrackBarHelper()
-        self.sv_filter = HSVFilter_SVBase(255,118,255,170)
-        self.blob_detector = BlobDetector()
+        self.sv_filter = HSVFilter_SVBase(255,50,255,150)
+        self.blob_detector = BlobDetector(maxArea=6000 , minArea=50)
 
         self.trackbar_helper.setup_cv_trackbar(self.sv_filter ,"S V shared for all")
         self.trackbar_helper.setup_cv_trackbar(self.blob_detector ,"Blob param")
 
-
-        cv2.imshow(self.SHARED_BAR_WINDOW , np.zeros((1,1,3), np.uint8))
-        cv2.waitKey(1)
-
         # red have to sets of bars, which we took union of
         self.color_filter_map :dict[Color ,HOnlyFilter|RedHFilter] = {
-            Color.RED : RedHFilter(170,20),
-            Color.GREEN: HOnlyFilter(70,50),
-            Color.BLUE: HOnlyFilter(100,120),
-            Color.ORANGE: HOnlyFilter(30,10),
-            Color.YELLOW: HOnlyFilter(30,50),
+            Color.RED : RedHFilter(170,2),
+            Color.GREEN: HOnlyFilter(85,50),
+            Color.BLUE: HOnlyFilter(100,85),
+            Color.ORANGE: HOnlyFilter(20,8),
+            Color.YELLOW: HOnlyFilter(30,18),
         }
 
         # Go through all colors and setup trackbar
@@ -137,6 +139,7 @@ class ImageProcesser(RosNode):
         for name , queue in self.named_queue.items():
             if len(queue) <1:
                 # No item in the queue
+                # print(f"{name} queue doesn't have data to use!")
                 return
             # peek left
             obj = queue[0]
@@ -144,11 +147,15 @@ class ImageProcesser(RosNode):
 
         base_name , base_time = list(named_time.items())[0]
 
-        print(f"Comparing to {base_name} at {base_time}")
+        # print(f"Comparing to {base_name} at {base_time}")
 
         # TODO (LEO) Only operate at prefect timing, which actually should be common
         for name, time in named_time.items():
-            print(f"{name} , {time-base_time}")
+            d_time = time-base_time
+            if d_time > (1/20):
+                print(f"{name} is {d_time} behind {base_name}! Above the 1 / 20(fps) limit Skipping cycle due to this")
+                return 
+            # print(f"{name} , {time-base_time}")
 
         """
         
@@ -211,6 +218,7 @@ class ImageProcesser(RosNode):
             raw_rect_pxy = raw_pin_model.rectifyPoint(raw_pxy)
             raw_rect_pxy = [int(x) for x in raw_rect_pxy]
             raw_rect_depth = depth_img_cv[raw_rect_pxy[1], raw_rect_pxy[0] ]
+            print(f"Color {c.name} depth {raw_rect_depth}")
             raw_rect_ph_sxyz = [v*raw_rect_depth / 1000  for v in  raw_pin_model.projectPixelTo3dRay(raw_rect_pxy)]
             print(f"Color {c.name} at xyz {raw_rect_ph_sxyz[0]:.5f} {raw_rect_ph_sxyz[1]:.5f} {raw_rect_ph_sxyz[2]:.5f} ")
 

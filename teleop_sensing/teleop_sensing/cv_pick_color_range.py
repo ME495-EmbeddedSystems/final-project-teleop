@@ -16,7 +16,7 @@ import dataclass_wizard
 
 
 @dataclasses.dataclass
-class FilterBase(dataclass_wizard.JSONFileWizard):
+class FilterBase(dataclass_wizard.JSONWizard):
 
     def get_field_range(self, field_name: str) -> tuple[float, float]:
         """Get the possible min and max of a field
@@ -208,10 +208,10 @@ class BlobDetector(FilterBase):
     MINTHRESHOLD_MIN: typing.ClassVar[float] = 2
 
     MAXAREA_MAX: typing.ClassVar[float] = 10000
-    MAXAREA_MIN: typing.ClassVar[float] = 1500
+    MAXAREA_MIN: typing.ClassVar[float] = 500
 
     MINAREA_MAX: typing.ClassVar[float] = 3000
-    MINAREA_MIN: typing.ClassVar[float] = 100
+    MINAREA_MIN: typing.ClassVar[float] = 50
 
     # Overriding init for dataclass is bad
     def __post_init__(self):
@@ -332,7 +332,7 @@ class TrackBarHelper():
     def setup_cv_trackbar(self, filter: FilterBase , window_name:str ="trackbars" ):
 
         default_value_map = {}
-        cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+        cv2.namedWindow(window_name)
 
         for field in dataclasses.fields(filter):
             name = field.name
