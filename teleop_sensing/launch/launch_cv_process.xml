@@ -12,15 +12,13 @@
         
         <!-- Point cloud is purely for visual debugging in rviz -->
         <arg name="pointcloud.enable" value="true"/>
-    </include>
 
-    <node pkg="teleop_sensing" exec="cv_process" output="screen"/>
+    </include>
 
 
     <!-- Custom version of image proc remap.-->
     <include file ="$(find-pkg-share teleop_sensing)/launch/image_proc_with_remap.launch.py"/>
 
-    
     <node pkg="apriltag_ros" exec="apriltag_node">
         <param from="$(find-pkg-share teleop_sensing)/config/tag16_config.yaml" />
         <remap from="/camera_info" to="/D435i/color/camera_info"/>
@@ -28,5 +26,8 @@
     <!-- rviz will enable us to see the robot -->
     <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share teleop_sensing)/config/see-frame.rviz"/>
 
+    <!-- Have problem doing include other launch file -->
+
+    <node pkg="teleop_sensing" exec="cv_process" output="screen"/>
 
 </launch>
