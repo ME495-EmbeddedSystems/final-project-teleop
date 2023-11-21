@@ -102,6 +102,10 @@ class Random(Node):
         # msg.points = [point]
 
         # self.shadow_wr_pub.publish(msg)
+        if self.tf_buffer.can_transform('cmd/gofa2_base', 'cmd/avatar_task_ws', rclpy.time.Time()):
+            abb_avatarws_tf = self.tf_buffer.lookup_transform(
+                    'cmd/gofa2_base', 'cmd/avatar_task_ws', rclpy.time.Time())
+            self.get_logger().info(str(abb_avatarws_tf))
 
     def callback_func(self, request, response):
         point = JointTrajectoryPoint()
