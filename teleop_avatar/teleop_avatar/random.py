@@ -14,6 +14,7 @@ from geometry_msgs.msg import Pose, PoseStamped, TransformStamped, Quaternion
 from teleop_interfaces.srv import Grasp, ExecuteTrajectory
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from tf2_ros import StaticTransformBroadcaster
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
 import numpy as np
@@ -88,6 +89,15 @@ class Random(Node):
 
         # world_peg_tf = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_10', rclpy.time.Time())
         # T_world_peg = self.transform_to_SE3(world_peg_tf)
+
+        self.static_broadcaster = StaticTransformBroadcaster(self)
+
+        # Transform for brick's location in world
+        operator_to_avatar = TransformStamped()
+        operator_to_avatar.header.frame_id = "operator_task_ws"
+        operator_to_avatar.child_frame_id = "cmd/avatar_task_ws"
+
+        self.static_broadcaster.sendTransform(operator_to_avatar)
 
     def timer_callback(self):
         """Timer function for the Avatar Control node."""

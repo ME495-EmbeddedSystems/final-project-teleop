@@ -95,10 +95,13 @@ class AvatarControl(Node):
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
 
         # Transform of ring in hand frame
-        self.T_hand_ring = np.eye(4)
+        self.T_hand_obj = np.eye(4)
 
         # Transform of abb base in world frame
-        self.T_world_abb = np.eye(4)
+        self.T_world_aws = np.eye(4)
+
+        # Transform of ring of interest in world frame
+        self.T_world_obj = np.eye(4)
 
         self.buffer = {}
         self.buffer['red'] = [0,1,2,3,4,7,8,9]
@@ -110,16 +113,13 @@ class AvatarControl(Node):
     def grasp_callback(self, request, response):
 
         # Get necessary transforms
-        world_peg_tf = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_10', rclpy.time.Time())
-        T_world_peg = self.transform_to_SE3(world_peg_tf)
-
-        peg_obj_tf = self.tf_buffer.lookup_transform('tag16H05_10', 'red_ring', rclpy.time.Time())
-        T_peg_obj = self.transform_to_SE3(peg_obj_tf)
+        world_obj_tf = self.tf_buffer.lookup_transform('tag16H05_3', 'red_ring', rclpy.time.Time())
+        self.T_world_obj = self.transform_to_SE3(world_obj_tf)
 
         # Calculate transformation of hand relative to ABB base
-        T_abb_hand = np.linalg.inv(self.T_world_abb) @ T_world_peg @ T_peg_obj @ np.linalg.inv(self.T_hand_obj)
-
-        abb_msg = self.SE3_to_transform_stamped(T_abb_hand)
+        T_aws_hand = np.linalg.inv(self.T_world_aws) @ self.T_world_obj @ np.linalg.inv(self.T_hand_obj)
+        
+        abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
         self.abb_pub.publish(abb_msg)
 
         point = JointTrajectoryPoint()
@@ -150,8 +150,20 @@ class AvatarControl(Node):
         return response
 
     def execute_callback(self, request, response):
+
+        # Get necessary transforms
+        world_peg_tf = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_10', rclpy.time.Time())
+        T_world_peg = self.transform_to_SE3(world_peg_tf)
+
+
         while len(self.buffer[request.object_id]) > 0:
-            # go_to(self.buffer[request.object_id][0])
+            T_peg_obj = self.transform_to_SE3(self.buffer[request.object_id][0])
+
+            # Calculate transformation of hand relative to avatar_ws
+            T_aws_hand = np.linalg.inv(self.T_world_aws) @ T_world_peg @ T_peg_obj @ np.linalg.inv(self.T_hand_obj)
+        
+            abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
+            self.abb_pub.publish(abb_msg)
 
             del self.buffer[request.object_id][0]
 
