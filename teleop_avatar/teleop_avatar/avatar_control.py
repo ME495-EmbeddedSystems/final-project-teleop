@@ -14,6 +14,7 @@ from geometry_msgs.msg import Pose, PoseStamped, TransformStamped, Quaternion
 from teleop_interfaces.srv import Grasp, ExecuteTrajectory
 from teleop_interfaces.msg import ObjectState
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+import tf2_ros
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
 import numpy as np
@@ -91,6 +92,9 @@ class AvatarControl(Node):
         # Create the /check_arm service
         self.check_arm = self.create_service(Empty, "check_arm", self.check_arm_callback)
 
+        # Create the /move_to_april service
+        self.move_to_april = self.create_service(Empty, "move_to_april", self.move_to_april_callback)
+
         # Subscribe to poses
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
 
@@ -99,6 +103,10 @@ class AvatarControl(Node):
 
         # Transform of abb base in world frame
         self.T_world_abb = np.eye(4)
+
+        # Transform from avatar workspace to abb table april tag
+        self.T_aws_abbAT = [[1, 0, 0, 0.4], [0, 1, 0, -0.585], [0, 0, 1, 0.01], [0, 0, 0, 1]]
+        self.targetStandoffHeight = 0.1
 
         self.buffer = {}
         self.buffer['red'] = [0,1,2,3,4,7,8,9]
@@ -266,6 +274,55 @@ class AvatarControl(Node):
 
         return response
     
+    def move_to_april_callback(self, request, response):
+
+        tag_detected = False
+        timedout = False
+        startTime = time.time()
+        currentTime = startTime
+        timeoutmillis = 5000
+        while(not tag_detected and not timedout):
+        
+            currentTime = time.time()
+            if currentTime - startTime > timeoutmillis:
+                timedout = True
+
+            try:
+                # get the latest transform from abb table april tag to workspace table april tag.
+                T_abbAT_wsAT = self.transform_to_SE3(self.tf_buffer.lookup_transform("tag16H05_3", "tag16H05_2", rclpy.time.Time()))
+                tag_detected = True
+                self.get_logger().info("TRANSFORM RECORDED")
+                # self.get_logger().info(f"{(not tag_detected) and (not timedout)}")
+
+            except tf2_ros.LookupException as e:
+                # the frames don't exist yet
+                self.get_logger().info(f"Frames don't exist yet: {e}")
+            except tf2_ros.ConnectivityException as e:
+                # the tf tree has a disconnection
+                self.get_logger().info(f"Connectivity exception: {e}")
+            except tf2_ros.ExtrapolationException as e:
+                # the times are two far apart to extrapolate
+                self.get_logger().info(f"Extrapolation exception: {e}")
+
+        T_aws_wsAT = self.T_aws_abbAT @ T_abbAT_wsAT
+
+        T_aws_hand = np.eye(4)
+        T_aws_hand[:,:] = T_aws_wsAT[:,:]
+        T_aws_hand[0:3, 0:3] = np.array([[0,1,0],[0,0,1],[1,0,0]]) 
+
+        tf_aws_hand = self.SE3_to_transform_stamped(T_aws_hand)
+
+        # Give standoff position above tag
+        tf_aws_hand.transform.translation.z = self.targetStandoffHeight
+
+        self.abb_pub.publish(tf_aws_hand)
+
+        self.get_logger().info("Published Tag transform")
+
+        time.sleep(5)
+
+        return response
+    
     def transform_to_SE3(self, transform):
         """
         Converts a geometry_msgs/Transform message to an SE(3) transformation matrix.
@@ -279,7 +336,8 @@ class AvatarControl(Node):
         """ 
 
         T = np.eye(4)
-        T[0:3,0:3] = quaternion_matrix(transform.transform.rotation)
+        # T[0:3,0:3] = quaternion_matrix(transform.transform.rotation)
+        T[:,:] = QuaterniontoSE3(transform.transform.rotation)
         T[0,3] = transform.transform.translation.x
         T[1,3] = transform.transform.translation.y
         T[2,3] = transform.transform.translation.z
@@ -306,7 +364,8 @@ class AvatarControl(Node):
         tf.transform.translation.x = T[0,3]
         tf.transform.translation.y = T[1,3]
         tf.transform.translation.z = T[2,3]
-        tf.transform.rotation = quaternion_from_matrix(T[0:3, 0:3])
+        # tf.transform.rotation = quaternion_from_matrix(T[0:3, 0:3])
+        tf.transform.rotation = SE3toQuaternion(T[:, :])
 
         return tf
 
