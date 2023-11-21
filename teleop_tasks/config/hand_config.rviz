@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
-        - /RobotModel1/Status1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz_common/Selection
@@ -67,12 +66,52 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        index:
+        index_1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        middle:
+        index_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_tip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -82,17 +121,102 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        pinky:
+        pinky_1:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        ring:
+        pinky_2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        thumb:
+        pinky_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_6:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -105,10 +229,24 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz_default_plugins/TF
+      Enabled: false
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: false
+      Tree:
+        {}
+      Update Interval: 0
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: palm
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
@@ -151,7 +289,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 12.968384742736816
+      Distance: 0.4671274423599243
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -166,10 +304,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.405398428440094
+      Pitch: 0.9053981304168701
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.2853972911834717
+      Yaw: 2.3953986167907715
     Saved: ~
 Window Geometry:
   Displays:

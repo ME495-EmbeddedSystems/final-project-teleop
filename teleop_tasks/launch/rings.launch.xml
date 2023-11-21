@@ -1,12 +1,20 @@
 <launch>
-    <arg name="world" default="$(find-pkg-share teleop_tasks)/worlds/Rings.sdf"/>
+    <arg name="real_rings" default="true"/>
+    <group if="$(eval '\'$(var real_rings)\' == \'true\'')">
+        <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+            <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/Rings.sdf"/>
+        </include>
+    </group>
+    <group if="$(eval '\'$(var real_rings)\' == \'false\'')">
+        <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+            <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/SimpleRings.sdf"/>
+        </include>
+    </group>
 
     <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml"/>
         <!-- <remap from="/tf" to="/left_hand/tf" /> -->
 
-    <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
-        <arg name="gz_args" value="-r $(var world)"/>
-    </include>
+    <include file="$(find-pkg-share teleop_tasks)/launch/rightHandTest.launch.xml"/>
 
     <node pkg="ros_gz_sim" exec="create" args="-topic /robot_description -z 1.0" />
 
@@ -16,6 +24,7 @@
               /world/Blocks/model/LeftHand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
               /force_torque@geometry_msgs/msg/WrenchStamped[gz.msgs.Wrench">
         <remap from="/world/Blocks/pose/info" to="/object/poses" />
+        <remap from="/force_torque" to="/fingertip/force_torque" />
     </node>
 
     <node pkg="teleop_tasks" exec="objects" name="objects"/>

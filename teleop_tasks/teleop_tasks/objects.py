@@ -10,10 +10,22 @@ class Objects(Node):
         self.timer = self.create_timer(1/100, self.timer_callback)
         
         # Subscriber for the object pose topic
-        self.objSub = self.create_subscription(TFMessage, "/object/poses", self.getObjPose, 10)       
+        self.objSub = self.create_subscription(TFMessage, "/object/poses", self.getObjPose, 10)
+        
+        # Subscriber to get the wrenches
+        self.objSub = self.create_subscription(WrenchStamped, "/force_torque", self.getWrenches, 10)   
         
         # Publisher for a obejcts topic
         self.locationPub = self.create_publisher(Pose, "/objects", 10)
+        self.locationPub = self.create_publisher(WrenchStamped, "/left_hand/fingertip_wrenches", 10)
+        self.locationPub = self.create_publisher(WrenchStamped, "/right_hand/fingertip_wrenches", 10)
+        
+        # Global wrench arrays that get reset after being published
+        self.leftWrenchArray = []
+        self.rightWrenchArray = []
+        
+    def getWrenches(self, msg):
+        self.get_logger().info(msg)
         
     def getObjPose(self, msg):
         print(msg.transforms[1])
