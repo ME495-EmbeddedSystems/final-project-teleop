@@ -275,7 +275,7 @@
         </sensor>
     </gazebo>
 
-    <!-- <gazebo reference="index_3_index_tip">
+    <gazebo reference="index_3_index_tip">
         <provideFeedback>true</provideFeedback>
         <preserveFixedJoint>true</preserveFixedJoint>
         <sensor name="force_torque_sensor" type="force_torque">
@@ -337,6 +337,6 @@
             <measure_direction>parent_to_child</measure_direction>
         </force_torque>
         </sensor>
-    </gazebo> -->
+    </gazebo>
 
 </robot>

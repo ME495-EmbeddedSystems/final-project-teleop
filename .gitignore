@@ -9,3 +9,7 @@
 
 __pycache__
 *.urdf
+
+TODO.txt
+
+.gitignore

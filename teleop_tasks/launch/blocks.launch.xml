@@ -1,8 +1,9 @@
 <launch>
     <arg name="world" default="$(find-pkg-share teleop_tasks)/worlds/Blocks.sdf"/>
 
-    <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml"/>
-        <!-- <remap from="/tf" to="/left_hand/tf" /> -->
+    <group>
+        <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml"/>
+    </group>
 
     <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
         <arg name="gz_args" value="-r $(var world)"/>
