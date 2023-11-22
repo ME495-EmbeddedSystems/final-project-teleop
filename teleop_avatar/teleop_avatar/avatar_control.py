@@ -221,10 +221,13 @@ class AvatarControl(Node):
         # State transformation of object relative to hand
         T_hand_obj = np.eye(4)
         T_hand_obj[0:3, 0:3] = [[-1,0,0],[0,0,1],[0,1,0]] # Rotation to make z of object align with y of hand
-        T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.866, -0.5], [0, 0.5, 0.866]])
+        # T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.909, -0.417], [0, 0.417, 0.909]])
+        # T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.9063, -0.4226], [0, 0.4226, 0.9063]]) # 25
+        T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.8829, -0.4695], [0, 0.4695, 0.8829]]) # 28
+        # T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.866, -0.5], [0, 0.5, 0.866]]) # 30
         T_hand_obj[0,3] = 0.00 # x-offset, distance above thumb for right hand and below pinky for left hand
-        T_hand_obj[1,3] = -0.07 # y-offset, distance above the back of the wrist
-        T_hand_obj[2,3] = 0.14 # z-offset, distance in the direction of the fingers
+        T_hand_obj[1,3] = -0.075 # y-offset, distance above the back of the wrist
+        T_hand_obj[2,3] = 0.12 # z-offset, distance in the direction of the fingers
              
         # Calculate transformation of hand relative to ABB base
         T_aws_hand = T_aws_obj @ np.linalg.inv(T_hand_obj)
