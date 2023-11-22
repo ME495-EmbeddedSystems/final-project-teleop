@@ -27,7 +27,7 @@ def SE3toQuaternion(T):
     Converts SE(3) matrix to quaternion.
 
     Args:
-        T (4*4 array like) : SE(3) matrix, even for pure rotations.
+        T (4x4 array like) : SE(3) matrix, even for pure rotations.
 
     Returns:
         quat (geometry_msgs/msg/Quaternion) : Quaternion correspaonding to rotation portion of transformation.
@@ -52,7 +52,7 @@ def QuaterniontoSE3(quat):
         quat (geometry_msgs/msg/Quaternion) : Quaternion correspaonding to rotation portion of transformation.
 
     Returns:
-        T (4*4 array like) : SE(3) matrix, even for pure rotations.
+        T (4x4 array like) : SE(3) matrix, even for pure rotations.
 
     """ 
 
@@ -104,7 +104,7 @@ class AvatarControl(Node):
         # Transform of abb base in world frame
         self.T_world_abb = np.eye(4)
 
-        # Transform from avatar workspace to abb table april tag
+        # Transform from avatar_task_ws to abb table april tag
         self.T_aws_abbAT = [[1, 0, 0, 0.4], [0, 1, 0, -0.585], [0, 0, 1, 0.01], [0, 0, 0, 1]]
         self.targetStandoffHeight = 0.1
 
@@ -178,60 +178,61 @@ class AvatarControl(Node):
                 self.buffer[object_id] = [p.pose]
             
 
-    def grasp_transform(self, pose_peg_obj):
-        """Takes in pose of ring in peg frame and outputs pose of wrist in ABB base frame to grasp the object"""
+    def grasp_transform(self, object_frame_id):
+        """ 
+        Takes in id of transform representing object and outputs transform of palm to grasp the object.
+        All transforms are in avatar_task_ws frame.
 
-        # Load stamped pose data as transformation matrix
-        T_peg_obj = np.eye(4)
-        T_peg_obj[0:3,0:3] = quaternion_matrix(pose_peg_obj.pose.orientation)
-        T_peg_obj[0,3] = pose_peg_obj.pose.position.x
-        T_peg_obj[1,3] = pose_peg_obj.pose.position.y
-        T_peg_obj[2,3] = pose_peg_obj.pose.position.z
+        """
+
+        # TF Listener
+
+        tf_detected = False # Flag for transform being recorded successfully
+        timedout = False # Flag for time out condition
+        startTime = time.time() 
+        currentTime = startTime
+        timeoutmillis = 5000 # Timeout time
+
+        while(not tf_detected and not timedout):
+        
+            currentTime = time.time()
+            if currentTime - startTime > timeoutmillis:
+                timedout = True
+
+            try:
+                # get the latest transform from abb table april tag to object_frame_id.
+                T_abbAT_obj = self.transform_to_SE3(self.tf_buffer.lookup_transform("tag16H05_3", object_frame_id, rclpy.time.Time()))
+                tf_detected = True
+                self.get_logger().info("TRANSFORM RECORDED")
+
+            except tf2_ros.LookupException as e:
+                # the frames don't exist yet
+                self.get_logger().info(f"Frames don't exist yet: {e}")
+            except tf2_ros.ConnectivityException as e:
+                # the tf tree has a disconnection
+                self.get_logger().info(f"Connectivity exception: {e}")
+            except tf2_ros.ExtrapolationException as e:
+                # the times are two far apart to extrapolate
+                self.get_logger().info(f"Extrapolation exception: {e}")
+
+        # Transform from avatar_task_ws to workspace table april tag.
+        T_aws_obj = self.T_aws_abbAT @ T_abbAT_obj
 
         # State transformation of object relative to hand
         T_hand_obj = np.eye(4)
-        T_hand_obj[0:3, 0:3] = [[0,1,0],[0,0,1],[1,0,0]] # Rotation to make z of object align with y of hand
-        T_peg_obj[0:4,0:4] = QuaterniontoSE3(pose_peg_obj.pose.orientation)
-        T_peg_obj[0,3] = pose_peg_obj.pose.position.x
-        T_peg_obj[1,3] = pose_peg_obj.pose.position.y
-        T_peg_obj[2,3] = pose_peg_obj.pose.position.z
-        self.get_logger().info("Loaded data")
-
-        # State transformation of object relative to hand
-        T_hand_obj = np.eye(4)
-        T_hand_obj[0:3, 0:3] = np.linalg.inv([[0,1,0],[0,0,1],[1,0,0]]) # Rotation to make z of object align with y of hand
+        T_hand_obj[0:3, 0:3] = [[-1,0,0],[0,0,1],[0,1,0]] # Rotation to make z of object align with y of hand
+        T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.866, -0.5], [0, 0.5, 0.866]])
         T_hand_obj[0,3] = 0.00 # x-offset, distance above thumb for right hand and below pinky for left hand
-        T_hand_obj[1,3] = -0.05 # y-offset, distance above the back of the wrist
-        T_hand_obj[2,3] = 0.09 # z-offset, distance in the direction of the fingers
-
-        # Transform of peg in world frame
-        world_peg_tf = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_10', rclpy.time.Time())
-        T_world_peg = np.eye(4)
-        T_peg_obj[0:3,0:3] = quaternion_matrix(world_peg_tf.transform.rotation)
-        T_peg_obj[0,3] = world_peg_tf.transform.translation.x
-        T_peg_obj[1,3] = world_peg_tf.transform.translation.y
-        T_peg_obj[2,3] = world_peg_tf.transform.translation.z
+        T_hand_obj[1,3] = -0.07 # y-offset, distance above the back of the wrist
+        T_hand_obj[2,3] = 0.14 # z-offset, distance in the direction of the fingers
              
         # Calculate transformation of hand relative to ABB base
-        T_abb_hand = np.linalg.inv(self.T_world_abb) @ T_world_peg @ T_peg_obj @ np.linalg.inv(T_hand_obj)
+        T_aws_hand = T_aws_obj @ np.linalg.inv(T_hand_obj)
         self.get_logger().info("Math solved")
 
-        # Convert transformation matrix to stamped pose data
-        tf_abb_hand = TransformStamped()
-        tf_abb_hand.header.stamp = self.get_clock().now().to_msg()
-        tf_abb_hand.header.frame_id = "operator_task_ws"
-        tf_abb_hand.child_frame_id = "haptxLeft_sr_aligned" # Left arm
-        tf_abb_hand.transform.translation.x = T_abb_hand[0,3]
-        tf_abb_hand.transform.translation.y = T_abb_hand[1,3]
-        tf_abb_hand.transform.translation.z = T_abb_hand[2,3]
-        tf_abb_hand.transform.rotation = quaternion_from_matrix(T_abb_hand[0:3, 0:3])
-        tf_abb_hand.child_frame_id = "haptxRight_sr_aligned" # Left arm
-        tf_abb_hand.transform.translation.x = T_abb_hand[0,3]
-        tf_abb_hand.transform.translation.y = T_abb_hand[1,3]
-        tf_abb_hand.transform.translation.z = T_abb_hand[2,3]
-        tf_abb_hand.transform.rotation = SE3toQuaternion(T_abb_hand)
+        tf_aws_hand = self.SE3_to_transform_stamped(T_aws_hand)
 
-        return tf_abb_hand
+        return tf_aws_hand
 
     def check_arm_callback(self, request, response):
 
@@ -275,49 +276,23 @@ class AvatarControl(Node):
         return response
     
     def move_to_april_callback(self, request, response):
+        """Moves to a standoff position above the april tag"""
 
-        tag_detected = False
-        timedout = False
-        startTime = time.time()
-        currentTime = startTime
-        timeoutmillis = 5000
-        while(not tag_detected and not timedout):
-        
-            currentTime = time.time()
-            if currentTime - startTime > timeoutmillis:
-                timedout = True
+        tf_aws_hand = self.grasp_transform("tag16H05_2")
+        tf_aws_hand.transform.translation.z = tf_aws_hand.transform.translation.z + self.targetStandoffHeight
 
-            try:
-                # get the latest transform from abb table april tag to workspace table april tag.
-                T_abbAT_wsAT = self.transform_to_SE3(self.tf_buffer.lookup_transform("tag16H05_3", "tag16H05_2", rclpy.time.Time()))
-                tag_detected = True
-                self.get_logger().info("TRANSFORM RECORDED")
-                # self.get_logger().info(f"{(not tag_detected) and (not timedout)}")
-
-            except tf2_ros.LookupException as e:
-                # the frames don't exist yet
-                self.get_logger().info(f"Frames don't exist yet: {e}")
-            except tf2_ros.ConnectivityException as e:
-                # the tf tree has a disconnection
-                self.get_logger().info(f"Connectivity exception: {e}")
-            except tf2_ros.ExtrapolationException as e:
-                # the times are two far apart to extrapolate
-                self.get_logger().info(f"Extrapolation exception: {e}")
-
-        T_aws_wsAT = self.T_aws_abbAT @ T_abbAT_wsAT
-
-        T_aws_hand = np.eye(4)
-        T_aws_hand[:,:] = T_aws_wsAT[:,:]
-        T_aws_hand[0:3, 0:3] = np.array([[0,1,0],[0,0,1],[1,0,0]]) 
-
-        tf_aws_hand = self.SE3_to_transform_stamped(T_aws_hand)
-
-        # Give standoff position above tag
-        tf_aws_hand.transform.translation.z = self.targetStandoffHeight
-
+        # Publish standoff position
         self.abb_pub.publish(tf_aws_hand)
 
-        self.get_logger().info("Published Tag transform")
+        self.get_logger().info("Published Hand transform - standoff")
+        time.sleep(5)
+
+        tf_aws_hand.transform.translation.z = tf_aws_hand.transform.translation.z - self.targetStandoffHeight
+
+        # Publish standoff position
+        self.abb_pub.publish(tf_aws_hand)
+
+        self.get_logger().info("Published Hand transform - grasp")
 
         time.sleep(5)
 
@@ -336,7 +311,6 @@ class AvatarControl(Node):
         """ 
 
         T = np.eye(4)
-        # T[0:3,0:3] = quaternion_matrix(transform.transform.rotation)
         T[:,:] = QuaterniontoSE3(transform.transform.rotation)
         T[0,3] = transform.transform.translation.x
         T[1,3] = transform.transform.translation.y
@@ -364,7 +338,6 @@ class AvatarControl(Node):
         tf.transform.translation.x = T[0,3]
         tf.transform.translation.y = T[1,3]
         tf.transform.translation.z = T[2,3]
-        # tf.transform.rotation = quaternion_from_matrix(T[0:3, 0:3])
         tf.transform.rotation = SE3toQuaternion(T[:, :])
 
         return tf
