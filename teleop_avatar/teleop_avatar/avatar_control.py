@@ -52,7 +52,7 @@ def QuaterniontoSE3(quat):
         quat (geometry_msgs/msg/Quaternion) : Quaternion correspaonding to rotation portion of transformation.
 
     Returns:
-        T (4x4 array like) : SE(3) matrix, even for pure rotations.
+        T (4x4 numpy array) : SE(3) matrix, even for pure rotations.
 
     """ 
 
@@ -180,8 +180,14 @@ class AvatarControl(Node):
 
     def grasp_transform(self, object_frame_id):
         """ 
-        Takes in id of transform representing object and outputs transform of palm to grasp the object.
+        Gives transform of the right palm to grasp a specific object.
         All transforms are in avatar_task_ws frame.
+
+        Args:
+            object_frame_id (str) : Frame id of the transform of the object to be grasped.
+
+        Returns:
+            tf_aws_hand (geometry_msgs/TransformStamped) : Tf message of the right hand to achieve grasping.
 
         """
 
@@ -222,9 +228,9 @@ class AvatarControl(Node):
         T_hand_obj = np.eye(4)
         T_hand_obj[0:3, 0:3] = [[-1,0,0],[0,0,1],[0,1,0]] # Rotation to make z of object align with y of hand
         # T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.909, -0.417], [0, 0.417, 0.909]])
-        # T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.9063, -0.4226], [0, 0.4226, 0.9063]]) # 25
-        T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.8829, -0.4695], [0, 0.4695, 0.8829]]) # 28
-        # T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.866, -0.5], [0, 0.5, 0.866]]) # 30
+        # T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.9063, -0.4226], [0, 0.4226, 0.9063]]) # 25 degrees
+        T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.8829, -0.4695], [0, 0.4695, 0.8829]]) # 28 degrees
+        # T_hand_obj[0:3,0:3] = np.array([[-1,0,0],[0,0,1],[0,1,0]]) @ np.array([[1, 0, 0], [0, 0.866, -0.5], [0, 0.5, 0.866]]) # 30 degrees
         T_hand_obj[0,3] = 0.00 # x-offset, distance above thumb for right hand and below pinky for left hand
         T_hand_obj[1,3] = -0.075 # y-offset, distance above the back of the wrist
         T_hand_obj[2,3] = 0.12 # z-offset, distance in the direction of the fingers
@@ -279,7 +285,7 @@ class AvatarControl(Node):
         return response
     
     def move_to_april_callback(self, request, response):
-        """Moves to a standoff position above the april tag"""
+        """Moves to a standoff position above the april tag and then to a grasp position."""
 
         tf_aws_hand = self.grasp_transform("tag16H05_2")
         tf_aws_hand.transform.translation.z = tf_aws_hand.transform.translation.z + self.targetStandoffHeight
@@ -309,7 +315,7 @@ class AvatarControl(Node):
             transform (geometry_msgs/Transform): A transform object
 
         Returns:
-            A numpy array representing the transform as a 4x4 SE(3) matrix
+            T (4x4 numpy array) : Transform as a 4x4 SE(3) matrix
 
         """ 
 
@@ -326,10 +332,10 @@ class AvatarControl(Node):
         Converts an SE(3) transformation matrix to a geometry_msgs/TransformStamped message.
 
         Args:
-            T (numpy array): A 4x4 SE(3) transformation matrix
+            T (4x4 array like): A 4x4 SE(3) transformation matrix
 
         Returns:
-            A geometry_msgs/TransformStamped message to move the right ABB arm
+            tf (geometry_msgs/TransformStamped) : tf message to move the right ABB arm
 
         """ 
 
