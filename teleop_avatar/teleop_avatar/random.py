@@ -90,14 +90,14 @@ class Random(Node):
         # world_peg_tf = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_10', rclpy.time.Time())
         # T_world_peg = self.transform_to_SE3(world_peg_tf)
 
-        self.static_broadcaster = StaticTransformBroadcaster(self)
+        # self.static_broadcaster = StaticTransformBroadcaster(self)
 
-        # Transform for brick's location in world
-        operator_to_avatar = TransformStamped()
-        operator_to_avatar.header.frame_id = "operator_task_ws"
-        operator_to_avatar.child_frame_id = "cmd/avatar_task_ws"
+        # # Transform for brick's location in world
+        # operator_to_avatar = TransformStamped()
+        # operator_to_avatar.header.frame_id = "operator_task_ws"
+        # operator_to_avatar.child_frame_id = "cmd/avatar_task_ws"
 
-        self.static_broadcaster.sendTransform(operator_to_avatar)
+        # self.static_broadcaster.sendTransform(operator_to_avatar)
 
     def timer_callback(self):
         """Timer function for the Avatar Control node."""
@@ -112,14 +112,28 @@ class Random(Node):
         # msg.points = [point]
 
         # self.shadow_wr_pub.publish(msg)
-        if self.tf_buffer.can_transform('cmd/gofa2_base', 'cmd/avatar_task_ws', rclpy.time.Time()):
-            abb_avatarws_tf = self.tf_buffer.lookup_transform(
-                    'cmd/gofa2_base', 'cmd/avatar_task_ws', rclpy.time.Time())
-            self.get_logger().info(str(abb_avatarws_tf))
+        # if self.tf_buffer.can_transform('cmd/gofa2_base', 'cmd/avatar_task_ws', rclpy.time.Time()):
+        #     abb_avatarws_tf = self.tf_buffer.lookup_transform(
+        #             'cmd/gofa2_base', 'cmd/avatar_task_ws', rclpy.time.Time())
+        #     self.get_logger().info(str(abb_avatarws_tf))
+        pass
 
     def callback_func(self, request, response):
         point = JointTrajectoryPoint()
-        point.positions = [0.027, 0.091, 0.0, 0.0, 0.147, 0.098, 0.0, 0.0, -0.216, 0.152, 0.0, 0.0, 0.0, -0.349, 0.024, 0.248, 0.0, 0.3, 0.8, 0.05, 0.15, -0.025]
+        point.positions = [0.027, 0.091, 0.0, 0.0, 0.147, 0.098, 0.0, 0.0, -0.216, 0.152, 0.0, 0.0, 0.0, -0.349, 0.024, 0.248, 0.0, 0.1, 1.2, 0.05, 0.15, -0.025]
+        point.velocities = [0.0] * len(self.joint_names)
+        point.time_from_start.nanosec = 100000000 #50000000
+
+        msg = JointTrajectory()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.joint_names = self.joint_names
+        msg.points = [point]
+
+        self.shadow_pub.publish(msg)
+
+        time.sleep(2)
+
+        point.positions = [0.027, 0.091, 0.148, 0.88, 0.147, 0.098, 0.148, 0.88, -0.216, 0.152, 0.148, 0.88, 0.0, -0.349, 0.024, 0.148, 0.88, 0.3, 1.2, 0.05, 0.15, -0.025]
         point.velocities = [0.0] * len(self.joint_names)
         point.time_from_start.nanosec = 100000000 #50000000
 
