@@ -14,22 +14,27 @@
     </group>
 
     <group>
-        
+        <push-ros-namespace namespace="left_hand"/>
+        <node pkg="ros_gz_sim" exec="create" args="-topic /left_hand/robot_description -x 0.25 -z 1.0" />
         <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml">
             <arg name="view_only" value="false"/>
         </include>
     </group>
 
-    <!-- <include file="$(find-pkg-share teleop_tasks)/launch/rightHandTest.launch.xml">
-        <arg name="view_only" value="false"/>
-    </include> -->
-
-    <node pkg="ros_gz_sim" exec="create" args="-topic /robot_description -z 1.0" />
+    <group>
+        <push-ros-namespace namespace="right_hand"/>
+        <node pkg="ros_gz_sim" exec="create" args="-topic /right_hand/robot_description -x -0.25 -z 1.0" />
+        <include file="$(find-pkg-share teleop_tasks)/launch/rightHandTest.launch.xml">
+            <arg name="view_only" value="false"/>
+        </include>
+    </group>
 
     <node pkg="ros_gz_bridge" exec="parameter_bridge"
         args="/model/left_hand/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
+              /model/right_hand/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
               /world/Blocks/pose/info@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
-              /world/Blocks/model/LeftHand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
+              /world/Blocks/model/left_hand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
+              /world/Blocks/model/right_hand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
               /force_torque@geometry_msgs/msg/WrenchStamped[gz.msgs.Wrench">
         <remap from="/world/Blocks/pose/info" to="/object/poses" />
         <remap from="/force_torque" to="/fingertip/force_torque" />

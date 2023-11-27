@@ -1,18 +1,18 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Pose, WrenchStamped
+from geometry_msgs.msg import Pose, WrenchStamped, Vector3
 from teleop_interfaces.msg import FingerWrenches
 from tf2_msgs.msg import TFMessage
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
-import rclpy
 import numpy as np
+import math
 
 class Objects(Node):
     def __init__(self):
         super().__init__("objects")
         # Creating a timer for this node
-        self.timer = self.create_timer(1/100, self.timer_callback)
+        self.timer = self.create_timer(1/75, self.timer_callback)
         
         # TF listener
         self.tf_buffer = Buffer()
@@ -35,6 +35,9 @@ class Objects(Node):
         self.rightWrenchArray = []
         self.rightFingerWrenches = FingerWrenches()
         
+        # Defining deafult finger link mass
+        self.fingerLinkMass = 0.1
+        
     def getWrenches(self, msg=WrenchStamped):
         # Adds wrenches to buffers that are then published as an array with all
         # other forces belonging to that hand
@@ -56,9 +59,9 @@ class Objects(Node):
         j = TransformStamped()
         for i in msg.transforms:
             j = i
-            print(counter)
-            print(j)
-            print()
+            self.get_logger().info(counter)
+            self.get_logger().info(j)
+            self.get_logger().info()
             counter += 1"""
         
     def timer_callback(self):
@@ -89,17 +92,19 @@ class Objects(Node):
         curFingerTip = getFingertipFrameName(msg)
         
         # Grab the transform from world to the msg frame
-        Tfw = self.tf_buffer.lookup_transform(curFingerTip, "world", rclpy.time.Time()).transform.rotation
+        TfwQuat = self.tf_buffer.lookup_transform(curFingerTip, "world", rclpy.time.Time()).transform.rotation
         
         # Convert Tfw from quaternians to euler angles
-        #self.get_logger().info(Tfw)
+        Rfw = quatToRot(TfwQuat.x, TfwQuat.y, TfwQuat.z, TfwQuat.w)
         
-        # gw -> gf
-        # Tfw*gw = gf
-        # msg.forces - m*gf = msgNoGrav
-        gw = np.array([0.0, 0.0, -9.8])
-        #gf = Tfw @ gw
-        #self.get_logger().info(f"{curFingerTip}: {msg.wrench.force}")
+        Fgw = self.fingerLinkMass*np.array([0.0, 0.0, -9.8])
+        Fgf = (Rfw @ Fgw)
+        print(Rfw)
+        gfVec = Vector3(x=Fgf[0], y=Fgf[1], z=Fgf[2])
+        
+        msgNoGrav.wrench.force.x = msg.wrench.force.x - gfVec.x
+        msgNoGrav.wrench.force.y = msg.wrench.force.y - gfVec.y
+        msgNoGrav.wrench.force.z = msg.wrench.force.z - gfVec.z
         
         return msgNoGrav   
     
@@ -132,6 +137,29 @@ def getFingertipFrameName(Wrenchmsg=WrenchStamped):
                 return "pinky_tip"
          
     return ""
+
+def quatToRot(q0, q1, q2, q3):     
+    # First row of the rotation matrix
+    r00 = 2 * (q0 * q0 + q1 * q1) - 1
+    r01 = 2 * (q1 * q2 - q0 * q3)
+    r02 = 2 * (q1 * q3 + q0 * q2)
+     
+    # Second row of the rotation matrix
+    r10 = 2 * (q1 * q2 + q0 * q3)
+    r11 = 2 * (q0 * q0 + q2 * q2) - 1
+    r12 = 2 * (q2 * q3 - q0 * q1)
+     
+    # Third row of the rotation matrix
+    r20 = 2 * (q1 * q3 - q0 * q2)
+    r21 = 2 * (q2 * q3 + q0 * q1)
+    r22 = 2 * (q0 * q0 + q3 * q3) - 1
+     
+    # 3x3 rotation matrix
+    rot_matrix = np.array([[r00, r01, r02],
+                           [r10, r11, r12],
+                           [r20, r21, r22]])
+                            
+    return rot_matrix
 
 def main(args=None):
     """Objects' main function."""

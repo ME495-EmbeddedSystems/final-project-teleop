@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="left_hand" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="right_hand" xmlns:xacro="http://www.ros.org/wiki/xacro">
     <!-- World frame the palm moves around -->
     <link name="world">
         <visual>
@@ -30,7 +30,7 @@
             <visual>
                 <origin xyz="0 0 0.0" />
                 <geometry>
-                    <sphere radius="0.5"/>
+                    <box size="0.1 0.1 0.1 0.1"/>
                 </geometry>
                 <material name="">
                     <color rgba="0 1 0 0" />
@@ -148,31 +148,56 @@
         </link>
     </xacro:macro>
 
+    <xacro:macro name="finger_dumb" params="name length color">
+        <link name="${name}">
+            <inertial>
+                <mass value="0.1" />
+                <inertia
+                    ixx="${(1/12)*0.1*(0.6**2 + 0.2**2)}"
+                    ixy="0.0"
+                    ixz="0.0"
+                    iyy="${(1/12)*0.1*(2.5**2 + 0.2**2)}"
+                    iyz="0.0"
+                    izz="${(1/12)*0.1*(0.6**2 + 2.5**2)}"
+                />
+            </inertial>
+            <visual>
+                <origin xyz="${length/2} 0 0" />
+                <geometry>
+                    <box size="${length} 0.01905 0.01905"/>
+                </geometry>
+                <material name="">
+                    <color rgba="${color}"/>  
+                </material>
+            </visual>
+        </link>
+    </xacro:macro>
+
     <!-- Creating each finger -->
-    <xacro:finger name="index_dumb" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="index_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="index_1" length="${0.0762/3}" color="1 0 0 1"/>
     <xacro:finger name="index_2" length="${0.0762/3}" color="0 1 0 1"/>
     <xacro:finger name="index_3" length="${0.0762/3}" color="0 0 1 1"/>
-    <xacro:finger name="index_tip" length="0.0001" color="0 0 0 0"/>
-    <xacro:finger name="middle_dumb" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="index_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="middle_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="middle_1" length="${0.0889/3}" color="1 0 0 1"/>
     <xacro:finger name="middle_2" length="${0.0889/3}" color="0 1 0 1"/>
     <xacro:finger name="middle_3" length="${0.0889/3}" color="0 0 1 1"/>
-    <xacro:finger name="middle_tip" length="0.0001" color="0 0 0 0"/>
-    <xacro:finger name="ring_dumb" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="middle_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="ring_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="ring_1" length="${0.0762/3}" color="1 0 0 1"/>
     <xacro:finger name="ring_2" length="${0.0762/3}" color="0 1 0 1"/>
     <xacro:finger name="ring_3" length="${0.0762/3}" color="0 0 1 1"/>
-    <xacro:finger name="ring_tip" length="0.0001" color="0 0 0 0"/>
-    <xacro:finger name="pinky_dumb" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="ring_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="pinky_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="pinky_1" length="${0.0635/3}" color="1 0 0 1"/>
     <xacro:finger name="pinky_2" length="${0.0635/3}" color="0 1 0 1"/>
     <xacro:finger name="pinky_3" length="${0.0635/3}" color="0 0 1 1"/>
-    <xacro:finger name="pinky_tip" length="0.0001" color="0 0 0 0"/>
-    <xacro:finger name="thumb_dumb" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="pinky_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="thumb_dumb" length="0.0001" color="0 0 0 0"/>
     <xacro:finger name="thumb_1" length="${0.0635/2}" color="1 0 0 1"/>
     <xacro:finger name="thumb_2" length="${0.0635/2}" color="0 1 0 1"/>
-    <xacro:finger name="thumb_tip" length="0.0001" color="0 0 0 0"/>
+    <xacro:finger_dumb name="thumb_tip" length="0.0001" color="0 0 0 0"/>
 
     <!-- Finger joint macro -->
     <xacro:macro name="finger_joint" params="parent child length">
