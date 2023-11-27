@@ -1,6 +1,6 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Pose, WrenchStamped, Vector3
+from geometry_msgs.msg import WrenchStamped, Vector3
 from teleop_interfaces.msg import FingerWrenches
 from tf2_msgs.msg import TFMessage
 from tf2_ros.transform_listener import TransformListener
@@ -13,7 +13,7 @@ class Objects(Node):
     def __init__(self):
         super().__init__("objects")
         # Creating a timer for this node
-        self.timer = self.create_timer(1/75, self.timer_callback)
+        self.timer = self.create_timer(1/100, self.timer_callback)
         
         # TF listener
         self.tf_buffer = Buffer()
@@ -26,10 +26,10 @@ class Objects(Node):
         self.objSub = self.create_subscription(TFMessage, "/object/poses", self.getObjPose, 10)
         
         # Subscriber to get the wrenches
-        self.objSub = self.create_subscription(WrenchStamped, "/fingertip/force_torque", self.getWrenches, 10)   
+        self.wrenchSub = self.create_subscription(WrenchStamped, "/fingertip/force_torque", self.getWrenches, 10)   
         
         # Publisher for a obejcts topic
-        self.locationPub = self.create_publisher(Pose, "/objects", 10)
+        self.locationPub = self.create_publisher(TransformStamped, "/objects", 10)
         self.leftWrenchPub = self.create_publisher(FingerWrenches, "/left_hand/fingertip_wrenches", 10)
         self.rightWrenchPub = self.create_publisher(FingerWrenches, "/right_hand/fingertip_wrenches", 10)
         
@@ -55,20 +55,36 @@ class Objects(Node):
                 self.rightWrenchArray.append(self.removeGravity(msg))
         
         
-    def getObjPose(self, msg):
-        print(msg.transforms[1])
+    def getObjPose(self, msg):        
+        #This code is used to find out which of the transforms is the block
+        # counter = 0
+        # j = TransformStamped()
+        # for i in msg.transforms:
+        #     j = i
+        #     print(counter)
+        #     print(j)
+        #     print()
+        #     counter += 1
         
-        """ This code is used to find out which of the transforms is the block
-        counter = 0
-        j = TransformStamped()
-        for i in msg.transforms:
-            j = i
-            self.get_logger().info(counter)
-            self.get_logger().info(j)
-            self.get_logger().info()
-            counter += 1"""
+        # Publish opject poses to a topic
+        # For rings world, ring objects are in position 3, 4, 5
+        ring0T = msg.transforms[3]
+        ring0T.header.frame_id = "world"
+        ring0T.child_frame_id = "ring_0"
         
-    def timer_callback(self):
+        ring1T = msg.transforms[4]
+        ring1T.header.frame_id = "world"
+        ring1T.child_frame_id = "ring_1"
+        
+        ring2T = msg.transforms[5]
+        ring2T.header.frame_id = "world"
+        ring2T.child_frame_id = "ring_2"
+        
+        self.locationPub.publish(ring0T)
+        self.locationPub.publish(ring1T)
+        self.locationPub.publish(ring2T)
+            
+    def publishWorld(self):
         # Need to braodcast world so right and left hands have a fixed frame
         lh_world = TransformStamped()
 
@@ -100,10 +116,8 @@ class Objects(Node):
 
         self.tf_broadcaster.sendTransform(rh_world)
         
-        # Get the location of the object from the gazebo topic
-        
-        # Publish the location of the object in question at the rate required
-        #self.locationPub.publish()
+    def timer_callback(self):
+        self.publishWorld()
         
         # Once the Wrench arrays get to length 5 publish them
         if len(self.leftWrenchArray) == 5:
@@ -134,7 +148,6 @@ class Objects(Node):
         
         Fgw = self.fingerLinkMass*np.array([0.0, 0.0, -9.8])
         Fgf = (Rfw @ Fgw)
-        print(Rfw)
         gfVec = Vector3(x=Fgf[0], y=Fgf[1], z=Fgf[2])
         
         msgNoGrav.wrench.force.x = msg.wrench.force.x - gfVec.x

@@ -31,11 +31,11 @@
 
     <node pkg="ros_gz_bridge" exec="parameter_bridge"
         args="/model/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
-              /world/Blocks/pose/info@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
-              /world/Blocks/model/left_hand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
-              /world/Blocks/model/right_hand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
+              /world/Rings/pose/info@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
+              /world/Rings/model/left_hand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
+              /world/Rings/model/right_hand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
               /force_torque@geometry_msgs/msg/WrenchStamped[gz.msgs.Wrench">
-        <remap from="/world/Blocks/pose/info" to="/object/poses" />
+        <remap from="/world/Rings/pose/info" to="/object/poses" />
         <remap from="/force_torque" to="/fingertip/force_torque" />
     </node>
 
