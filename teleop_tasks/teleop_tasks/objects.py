@@ -4,6 +4,7 @@ from geometry_msgs.msg import Pose, WrenchStamped, Vector3
 from teleop_interfaces.msg import FingerWrenches
 from tf2_msgs.msg import TFMessage
 from tf2_ros.transform_listener import TransformListener
+from tf2_ros.transform_broadcaster import TransformStamped, TransformBroadcaster
 from tf2_ros.buffer import Buffer
 import numpy as np
 import math
@@ -17,6 +18,9 @@ class Objects(Node):
         # TF listener
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
+        
+        # TF broadcaster
+        self.tf_broadcaster = TransformBroadcaster(self)
         
         # Subscriber for the object pose topic
         self.objSub = self.create_subscription(TFMessage, "/object/poses", self.getObjPose, 10)
@@ -65,6 +69,37 @@ class Objects(Node):
             counter += 1"""
         
     def timer_callback(self):
+        # Need to braodcast world so right and left hands have a fixed frame
+        lh_world = TransformStamped()
+
+        lh_world.header.stamp = self.get_clock().now().to_msg()
+        lh_world.header.frame_id = 'world'
+        lh_world.child_frame_id = 'left_hand/world'
+        lh_world.transform.translation.x = 0.0
+        lh_world.transform.translation.y = 0.0
+        lh_world.transform.translation.z = 0.0
+        lh_world.transform.rotation.x = 0.0
+        lh_world.transform.rotation.y = 0.0
+        lh_world.transform.rotation.z = 0.0
+        lh_world.transform.rotation.w = 1.0
+
+        self.tf_broadcaster.sendTransform(lh_world)
+        
+        rh_world = TransformStamped()
+
+        rh_world.header.stamp = self.get_clock().now().to_msg()
+        rh_world.header.frame_id = 'world'
+        rh_world.child_frame_id = 'right_hand/world'
+        rh_world.transform.translation.x = 0.0
+        rh_world.transform.translation.y = 0.0
+        rh_world.transform.translation.z = 0.0
+        rh_world.transform.rotation.x = 0.0
+        rh_world.transform.rotation.y = 0.0
+        rh_world.transform.rotation.z = 0.0
+        rh_world.transform.rotation.w = 1.0
+
+        self.tf_broadcaster.sendTransform(rh_world)
+        
         # Get the location of the object from the gazebo topic
         
         # Publish the location of the object in question at the rate required
@@ -113,28 +148,28 @@ def getFingertipFrameName(Wrenchmsg=WrenchStamped):
         # Left hand frame check index 10 for finger name
         match Wrenchmsg.header.frame_id[10]:
             case 't':
-                return "thumb_tip"
+                return "left_hand/thumb_tip"
             case 'i':
-                return "index_tip"
+                return "left_hand/index_tip"
             case 'm':
-                return "middle_tip"
+                return "left_hand/middle_tip"
             case 'r':
-                return "ring_tip"
+                return "left_hand/ring_tip"
             case 'p':
-                return "pinky_tip"
+                return "left_hand/pinky_tip"
     if Wrenchmsg.header.frame_id[0] == 'r':
         # Left hand frame check index 11 for finger name
         match Wrenchmsg.header.frame_id[11]:
             case 't':
-                return "thumb_tip"
+                return "right_hand/thumb_tip"
             case 'i':
-                return "index_tip"
+                return "right_hand/index_tip"
             case 'm':
-                return "middle_tip"
+                return "right_hand/middle_tip"
             case 'r':
-                return "ring_tip"
+                return "right_hand/ring_tip"
             case 'p':
-                return "pinky_tip"
+                return "right_hand/pinky_tip"
          
     return ""
 
