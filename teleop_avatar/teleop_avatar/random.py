@@ -87,6 +87,14 @@ class Random(Node):
         self.shadow_pub = self.create_publisher(JointTrajectory, 'rh_trajectory_controller/command', 10)
         self.joint_names = ['rh_FFJ4', 'rh_FFJ3','rh_FFJ2', 'rh_FFJ1','rh_MFJ4','rh_MFJ3','rh_MFJ2','rh_MFJ1','rh_RFJ4','rh_RFJ3','rh_RFJ2','rh_RFJ1','rh_LFJ5', 'rh_LFJ4','rh_LFJ3','rh_LFJ2','rh_LFJ1','rh_THJ5','rh_THJ4','rh_THJ3','rh_THJ2','rh_THJ1']
 
+        self.static_broadcaster = StaticTransformBroadcaster(self)
+
+        tf = TransformStamped()
+        tf.header.stamp = self.get_clock().now().to_msg()
+        tf.header.frame_id = "operator_task_ws"
+        tf.child_frame_id = "cmd/avatar_task_ws" # Right arm
+
+        self.static_broadcaster.sendTransform(tf)
         # world_peg_tf = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_10', rclpy.time.Time())
         # T_world_peg = self.transform_to_SE3(world_peg_tf)
 
@@ -112,10 +120,10 @@ class Random(Node):
         # msg.points = [point]
 
         # self.shadow_wr_pub.publish(msg)
-        # if self.tf_buffer.can_transform('cmd/gofa2_base', 'cmd/avatar_task_ws', rclpy.time.Time()):
-        #     abb_avatarws_tf = self.tf_buffer.lookup_transform(
-        #             'cmd/gofa2_base', 'cmd/avatar_task_ws', rclpy.time.Time())
-        #     self.get_logger().info(str(abb_avatarws_tf))
+        if self.tf_buffer.can_transform('cmd/avatar_task_ws', 'cmd/gofa2_base', rclpy.time.Time()):
+            abb_avatarws_tf = self.tf_buffer.lookup_transform(
+                    'cmd/avatar_task_ws', 'cmd/gofa2_base', rclpy.time.Time())
+            self.get_logger().info(str(abb_avatarws_tf))
         pass
 
     def callback_func(self, request, response):

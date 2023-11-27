@@ -51,9 +51,6 @@ class AvatarControl(Node):
         # Create the /execute_trajectory service
         self.execute = self.create_service(ExecuteTrajectory, "execute_trajectory", self.execute_callback)
 
-        # Create the /check_arm service
-        self.check_arm = self.create_service(Empty, "check_arm", self.check_arm_callback)
-
         # Subscribe to poses
         self.obj_state_subscription = self.create_subscription(ObjectState, 'object_state', self.obj_state_callback, 10)
 
@@ -88,6 +85,10 @@ class AvatarControl(Node):
 
         # Get necessary transforms
         world_obj_tf = self.tf_buffer.lookup_transform('tag16H05_3', object_frame, rclpy.time.Time())
+        world_obj_tf.transform.rotation.x = 0.023263087438040456
+        world_obj_tf.transform.rotation.y = -0.012624678671690372
+        world_obj_tf.transform.rotation.z = -0.15317466259220655
+        world_obj_tf.transform.rotation.w = 0.9878446077147206
         self.T_world_obj = self.transform_to_SE3(world_obj_tf)
 
         # Calculate transformation of hand relative to the avatar_ws
@@ -118,6 +119,8 @@ class AvatarControl(Node):
         abb_msg.transform.translation.z -= self.graspStandoff
         
         self.abb_pub.publish(abb_msg)
+
+        time.sleep(5)
 
         # Close hand
         point.positions = [0.027, 0.091, 0.148, 0.88, 0.147, 0.098, 0.148, 0.88, -0.216, 0.152, 0.148, 0.88, 0.0, -0.349, 0.024, 0.148, 0.88, 0.3, 1.2, 0.05, 0.15, -0.025]
@@ -177,8 +180,12 @@ class AvatarControl(Node):
 
         """ 
 
-        T = np.eye(4)
-        T[0:3,0:3] = quaternion_matrix(transform.transform.rotation)
+        x = transform.transform.rotation.x
+        y = transform.transform.rotation.y
+        z = transform.transform.rotation.z
+        w = transform.transform.rotation.w
+
+        T = np.array(quaternion_matrix([x,y,z,w]))
         T[0,3] = transform.transform.translation.x
         T[1,3] = transform.transform.translation.y
         T[2,3] = transform.transform.translation.z
@@ -195,7 +202,14 @@ class AvatarControl(Node):
         Returns:
             A geometry_msgs/TransformStamped message to move the right ABB arm
 
-        """ 
+        """
+        quaternion_array = quaternion_from_matrix(T)
+
+        quat = Quaternion()
+        quat.x = quaternion_array[0]
+        quat.y = quaternion_array[1]
+        quat.z = quaternion_array[2]
+        quat.w = quaternion_array[3]
 
         # Convert transformation matrix to stamped pose data
         tf = TransformStamped()
@@ -205,7 +219,7 @@ class AvatarControl(Node):
         tf.transform.translation.x = T[0,3]
         tf.transform.translation.y = T[1,3]
         tf.transform.translation.z = T[2,3]
-        tf.transform.rotation = quaternion_from_matrix(T[0:3, 0:3])
+        tf.transform.rotation = quat
 
         return tf
 
