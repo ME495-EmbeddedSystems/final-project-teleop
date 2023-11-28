@@ -62,11 +62,11 @@ class Rings(Node):
         self.world_to_red.transform.translation.x = -0.9
         self.world_to_red.transform.translation.y = -0.5
 
-        self.object_frame_map = {'blue_ring': 'tag16H05_2',
-                                 'green_ring': 'tag16H05_2',
-                                 'yellow_ring': 'tag16H05_2',
-                                 'orange_ring': 'tag16H05_2',
-                                 'red_ring': 'tag16H05_2'}
+        self.object_frame_map = {'blue_ring': 'blue_center',
+                                 'green_ring': 'green_center',
+                                 'yellow_ring': 'yellow_center',
+                                 'orange_ring': 'orange_center',
+                                 'red_ring': 'red_center'}
         
     def timer_callback(self):
         # If the ring's transform exists, update it
