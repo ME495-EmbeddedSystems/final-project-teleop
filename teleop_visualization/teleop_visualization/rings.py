@@ -62,50 +62,24 @@ class Rings(Node):
         self.world_to_red.transform.translation.x = -0.5
         self.world_to_red.transform.translation.x = -0.9
 
-        # Transform for abb base in world
-        world_to_abb = TransformStamped()
-        world_to_abb.header.frame_id = "world"
-        world_to_abb.child_frame_id = "avatar_right/gofa2_base"
-        world_to_abb.transform.translation.x = -0.064
-        world_to_abb.transform.translation.y = -0.385
-        world_to_abb.transform.translation.z = 0.073
-        world_to_abb.transform.rotation.x = 0.2588190714169043
-        world_to_abb.transform.rotation.y = -0.00020610460516567008
-        world_to_abb.transform.rotation.z = 0.9659254909850248
-        world_to_abb.transform.rotation.w = 0.0007691925129359764
-        self.static_broadcaster.sendTransform(world_to_abb)
-
-        # Subscribe to avatar joint states
-        self.gofa_js_subscription = self.create_subscription(JointState, 'avatar/right_arm/gofa2/joint_states', self.gofa_callback, 10)
-        self.shadow_js_subscription = self.create_subscription(JointState, 'joint_states', self.shadow_callback, 10)
-
-        # Publish joint states for avatar robot
-        self.joint_pub = self.create_publisher(JointState, 'avatar_right/joint_states', 10)
-
-        # Variables to hold latest joint states
-        self.gofa_joint_names = ['gofa2_joint_1', 'gofa2_joint_2', 'gofa2_joint_3', 'gofa2_joint_4', 'gofa2_joint_5', 'gofa2_joint_6'] 
-        self.gofa_js = [-1.570799, 0.174, 0.523, 0.0, -0.697, -0.523]
-        self.shadow_joint_names = ['rh_FFJ4', 'rh_FFJ3','rh_FFJ2', 'rh_FFJ1','rh_MFJ4','rh_MFJ3','rh_MFJ2','rh_MFJ1','rh_RFJ4','rh_RFJ3','rh_RFJ2','rh_RFJ1','rh_LFJ5', 'rh_LFJ4','rh_LFJ3','rh_LFJ2','rh_LFJ1','rh_THJ5','rh_THJ4','rh_THJ3','rh_THJ2','rh_THJ1', 'rh_WRJ1', 'rh_WRJ2']
-        self.shadow_js = 24*[0.0]
+        self.object_frame_map = {'blue_ring': 'tag16H05_2',
+                                 'green_ring': 'tag16H05_2',
+                                 'yellow_ring': 'tag16H05_2',
+                                 'orange_ring': 'tag16H05_2',
+                                 'red_ring': 'tag16H05_2'}
         
     def timer_callback(self):
-        self.avatar_js = JointState()
-        self.avatar_js.header.stamp = self.get_clock().now().to_msg()
-        self.avatar_js.name = self.gofa_joint_names + self.shadow_joint_names
-        self.avatar_js.position = self.gofa_js + self.shadow_js
-        self.joint_pub.publish(self.avatar_js)
-
-
-        if self.tf_buffer.can_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()):
-            self.world_to_blue.transform = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()).transform
-        if self.tf_buffer.can_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()):
-            self.world_to_green.transform = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()).transform
-        if self.tf_buffer.can_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()):
-            self.world_to_yellow.transform = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()).transform
-        if self.tf_buffer.can_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()):
-            self.world_to_orange.transform = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()).transform
-        if self.tf_buffer.can_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()):
-            self.world_to_red.transform = self.tf_buffer.lookup_transform('tag16H05_3', 'tag16H05_2', rclpy.time.Time()).transform
+        # If the ring's transform exists, update it
+        if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['blue_ring'], rclpy.time.Time()):
+            self.world_to_blue.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['blue_ring'], rclpy.time.Time()).transform
+        if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['green_ring'], rclpy.time.Time()):
+            self.world_to_green.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['green_ring'], rclpy.time.Time()).transform
+        if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['yellow_ring'], rclpy.time.Time()):
+            self.world_to_yellow.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['yellow_ring'], rclpy.time.Time()).transform
+        if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['orange_ring'], rclpy.time.Time()):
+            self.world_to_orange.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['orange_ring'], rclpy.time.Time()).transform
+        if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['red_ring'], rclpy.time.Time()):
+            self.world_to_red.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['red_ring'], rclpy.time.Time()).transform
             
         self.broadcaster.sendTransform(self.world_to_blue)
         self.broadcaster.sendTransform(self.world_to_green)

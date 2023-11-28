@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'rings = teleop_visualization.rings:main'
+            'rings = teleop_visualization.rings:main',
+            'scene = teleop_visualization.scene:main'
         ],
     },
 )
