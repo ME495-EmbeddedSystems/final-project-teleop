@@ -71,7 +71,11 @@ class AvatarControl(Node):
         
         self.graspStandoff = 0.1
 
-        self.object_frame_map = {'red_ring': 'tag16H05_2'}
+        self.object_frame_map = {'blue_ring': 'blue_center',
+                                 'green_ring': 'green_center',
+                                 'yellow_ring': 'yellow_center',
+                                 'orange_ring': 'orange_center',
+                                 'red_ring': 'red_center'}
 
         self.buffer = {}
 
