@@ -35,6 +35,9 @@
         <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=red')" />
     </node>
     
-    <!-- TF Broadcaster -->
+    <!-- Ring TF Broadcaster -->
     <node pkg="teleop_visualization" exec="rings" name="rings"/>
+
+    <!-- Node To Set Up Scene -->
+    <node pkg="teleop_visualization" exec="scene" name="scene"/>
 </launch>

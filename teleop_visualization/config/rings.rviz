@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 549
@@ -48,6 +47,19 @@ Visualization Manager:
       Plane: XY
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Marker
+      Namespaces:
+        "": true
+      Topic:
+        Depth: 5
+        Durability Policy: Transient Local
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /visualization_marker
       Value: true
     - Alpha: 1
       Class: rviz_default_plugins/RobotModel
@@ -507,290 +519,16 @@ Visualization Manager:
           Value: false
         avatar_right/rh_wrist:
           Value: false
-        cmd/avatar_task_ws:
+        blue/center:
           Value: false
-        cmd/gofa1_base:
-          Value: false
-        cmd/gofa1_base_link:
-          Value: false
-        cmd/gofa1_link_6:
-          Value: false
-        cmd/gofa1_tool0:
-          Value: false
-        cmd/gofa1_workspace:
-          Value: false
-        cmd/gofa2_base:
-          Value: false
-        cmd/gofa2_base_link:
-          Value: false
-        cmd/gofa2_link_1:
-          Value: false
-        cmd/gofa2_link_2:
-          Value: false
-        cmd/gofa2_link_3:
-          Value: false
-        cmd/gofa2_link_4:
-          Value: false
-        cmd/gofa2_link_5:
-          Value: false
-        cmd/gofa2_link_6:
-          Value: false
-        cmd/gofa2_tool0:
-          Value: false
-        cmd/gofa2_workspace:
-          Value: false
-        cmd/gofas_midpoint:
-          Value: false
-        cmd/lh_ffdistal:
-          Value: false
-        cmd/lh_fftip:
-          Value: false
-        cmd/lh_forearm:
-          Value: false
-        cmd/lh_imu:
-          Value: false
-        cmd/lh_lfdistal:
-          Value: false
-        cmd/lh_lftip:
-          Value: false
-        cmd/lh_manipulator:
-          Value: false
-        cmd/lh_mfdistal:
-          Value: false
-        cmd/lh_mftip:
-          Value: false
-        cmd/lh_palm:
-          Value: false
-        cmd/lh_rfdistal:
-          Value: false
-        cmd/lh_rftip:
-          Value: false
-        cmd/lh_thdistal:
-          Value: false
-        cmd/lh_thtip:
-          Value: false
-        cmd/neck_cam_assm:
-          Value: false
-        cmd/neck_cam_assm_mount:
-          Value: false
-        cmd/neck_cam_left_eye:
-          Value: false
-        cmd/neck_cam_right_eye:
-          Value: false
-        cmd/rh_ffdistal:
-          Value: false
-        cmd/rh_ffknuckle:
-          Value: false
-        cmd/rh_ffmiddle:
-          Value: false
-        cmd/rh_ffproximal:
-          Value: false
-        cmd/rh_fftip:
-          Value: false
-        cmd/rh_forearm:
-          Value: false
-        cmd/rh_imu:
-          Value: false
-        cmd/rh_lfdistal:
-          Value: false
-        cmd/rh_lfknuckle:
-          Value: false
-        cmd/rh_lfmetacarpal:
-          Value: false
-        cmd/rh_lfmiddle:
-          Value: false
-        cmd/rh_lfproximal:
-          Value: false
-        cmd/rh_lftip:
-          Value: false
-        cmd/rh_manipulator:
-          Value: false
-        cmd/rh_mfdistal:
-          Value: false
-        cmd/rh_mfknuckle:
-          Value: false
-        cmd/rh_mfmiddle:
-          Value: false
-        cmd/rh_mfproximal:
-          Value: false
-        cmd/rh_mftip:
-          Value: false
-        cmd/rh_palm:
-          Value: false
-        cmd/rh_rfdistal:
-          Value: false
-        cmd/rh_rfknuckle:
-          Value: false
-        cmd/rh_rfmiddle:
-          Value: false
-        cmd/rh_rfproximal:
-          Value: false
-        cmd/rh_rftip:
-          Value: false
-        cmd/rh_thbase:
-          Value: false
-        cmd/rh_thdistal:
-          Value: false
-        cmd/rh_thhub:
-          Value: false
-        cmd/rh_thmiddle:
-          Value: false
-        cmd/rh_thproximal:
-          Value: false
-        cmd/rh_thtip:
-          Value: false
-        cmd/rh_wrist:
-          Value: false
-        cmd/world:
-          Value: false
-        cmd/xarm6_link6:
-          Value: false
-        cmd/xarm6_link_base:
-          Value: false
-        cmd/xarm6_workspace:
-          Value: false
-        fts_link:
-          Value: false
-        lh_ffdistal:
-          Value: false
-        lh_ffknuckle:
-          Value: false
-        lh_ffmiddle:
-          Value: false
-        lh_ffproximal:
-          Value: false
-        lh_fftip:
-          Value: false
-        lh_forearm:
-          Value: false
-        lh_imu:
-          Value: false
-        lh_lfdistal:
-          Value: false
-        lh_lfknuckle:
-          Value: false
-        lh_lfmetacarpal:
-          Value: false
-        lh_lfmiddle:
-          Value: false
-        lh_lfproximal:
-          Value: false
-        lh_lftip:
-          Value: false
-        lh_manipulator:
-          Value: false
-        lh_mfdistal:
-          Value: false
-        lh_mfknuckle:
-          Value: false
-        lh_mfmiddle:
-          Value: false
-        lh_mfproximal:
-          Value: false
-        lh_mftip:
-          Value: false
-        lh_palm:
-          Value: false
-        lh_rfdistal:
-          Value: false
-        lh_rfknuckle:
-          Value: false
-        lh_rfmiddle:
-          Value: false
-        lh_rfproximal:
-          Value: false
-        lh_rftip:
-          Value: false
-        lh_thbase:
-          Value: false
-        lh_thdistal:
-          Value: false
-        lh_thhub:
-          Value: false
-        lh_thmiddle:
-          Value: false
-        lh_thproximal:
-          Value: false
-        lh_thtip:
-          Value: false
-        lh_wrist:
-          Value: false
-        new/cmd/gofa2cmd/rh_palm:
-          Value: false
-        new/cmd/haptx:
+        green/center:
           Value: false
         orange/center:
           Value: false
         red/center:
           Value: false
-        rh_ffdistal:
-          Value: false
-        rh_ffknuckle:
-          Value: false
-        rh_ffmiddle:
-          Value: false
-        rh_ffproximal:
-          Value: false
-        rh_fftip:
-          Value: false
-        rh_forearm:
-          Value: false
-        rh_imu:
-          Value: false
-        rh_lfdistal:
-          Value: false
-        rh_lfknuckle:
-          Value: false
-        rh_lfmetacarpal:
-          Value: false
-        rh_lfmiddle:
-          Value: false
-        rh_lfproximal:
-          Value: false
-        rh_lftip:
-          Value: false
-        rh_manipulator:
-          Value: false
-        rh_mfdistal:
-          Value: false
-        rh_mfknuckle:
-          Value: false
-        rh_mfmiddle:
-          Value: false
-        rh_mfproximal:
-          Value: false
-        rh_mftip:
-          Value: false
-        rh_palm:
-          Value: false
-        rh_rfdistal:
-          Value: false
-        rh_rfknuckle:
-          Value: false
-        rh_rfmiddle:
-          Value: false
-        rh_rfproximal:
-          Value: false
-        rh_rftip:
-          Value: false
-        rh_thbase:
-          Value: false
-        rh_thdistal:
-          Value: false
-        rh_thhub:
-          Value: false
-        rh_thmiddle:
-          Value: false
-        rh_thproximal:
-          Value: false
-        rh_thtip:
-          Value: false
-        rh_wrist:
-          Value: false
-        tool_mount_link:
-          Value: false
         world:
-          Value: false
+          Value: true
         yellow/center:
           Value: false
       Marker Scale: 1
@@ -847,155 +585,14 @@ Visualization Manager:
                                         avatar_right/rh_thdistal:
                                           avatar_right/rh_thtip:
                                             {}
-          cmd/world:
-            cmd/gofa1_workspace:
-              cmd/gofa1_base_link:
-                cmd/gofa1_base:
-                  {}
-              cmd/gofa2_workspace:
-                cmd/gofa2_base_link:
-                  cmd/gofa2_base:
-                    cmd/gofa2_link_1:
-                      cmd/gofa2_link_2:
-                        cmd/gofa2_link_3:
-                          cmd/gofa2_link_4:
-                            cmd/gofa2_link_5:
-                              cmd/gofa2_link_6:
-                                cmd/gofa2_tool0:
-                                  cmd/rh_forearm:
-                                    cmd/rh_wrist:
-                                      cmd/rh_palm:
-                                        cmd/rh_ffknuckle:
-                                          cmd/rh_ffproximal:
-                                            cmd/rh_ffmiddle:
-                                              cmd/rh_ffdistal:
-                                                cmd/rh_fftip:
-                                                  {}
-                                        cmd/rh_imu:
-                                          {}
-                                        cmd/rh_lfmetacarpal:
-                                          cmd/rh_lfknuckle:
-                                            cmd/rh_lfproximal:
-                                              cmd/rh_lfmiddle:
-                                                cmd/rh_lfdistal:
-                                                  cmd/rh_lftip:
-                                                    {}
-                                        cmd/rh_manipulator:
-                                          {}
-                                        cmd/rh_mfknuckle:
-                                          cmd/rh_mfproximal:
-                                            cmd/rh_mfmiddle:
-                                              cmd/rh_mfdistal:
-                                                cmd/rh_mftip:
-                                                  {}
-                                        cmd/rh_rfknuckle:
-                                          cmd/rh_rfproximal:
-                                            cmd/rh_rfmiddle:
-                                              cmd/rh_rfdistal:
-                                                cmd/rh_rftip:
-                                                  {}
-                                        cmd/rh_thbase:
-                                          cmd/rh_thproximal:
-                                            cmd/rh_thhub:
-                                              cmd/rh_thmiddle:
-                                                cmd/rh_thdistal:
-                                                  cmd/rh_thtip:
-                                                    {}
-                                        new/cmd/haptx:
-                                          {}
-              cmd/gofas_midpoint:
-                {}
-              cmd/xarm6_workspace:
-                cmd/avatar_task_ws:
-                  new/cmd/gofa2cmd/rh_palm:
-                    {}
-                cmd/xarm6_link_base:
-                  {}
-          fts_link:
-            tool_mount_link:
-              {}
+          blue/center:
+            {}
+          green/center:
+            {}
           orange/center:
             {}
           red/center:
             {}
-          rh_forearm:
-            lh_forearm:
-              lh_wrist:
-                lh_palm:
-                  lh_ffknuckle:
-                    lh_ffproximal:
-                      lh_ffmiddle:
-                        lh_ffdistal:
-                          lh_fftip:
-                            {}
-                  lh_imu:
-                    {}
-                  lh_lfmetacarpal:
-                    lh_lfknuckle:
-                      lh_lfproximal:
-                        lh_lfmiddle:
-                          lh_lfdistal:
-                            lh_lftip:
-                              {}
-                  lh_manipulator:
-                    {}
-                  lh_mfknuckle:
-                    lh_mfproximal:
-                      lh_mfmiddle:
-                        lh_mfdistal:
-                          lh_mftip:
-                            {}
-                  lh_rfknuckle:
-                    lh_rfproximal:
-                      lh_rfmiddle:
-                        lh_rfdistal:
-                          lh_rftip:
-                            {}
-                  lh_thbase:
-                    lh_thproximal:
-                      lh_thhub:
-                        lh_thmiddle:
-                          lh_thdistal:
-                            lh_thtip:
-                              {}
-            rh_wrist:
-              rh_palm:
-                rh_ffknuckle:
-                  rh_ffproximal:
-                    rh_ffmiddle:
-                      rh_ffdistal:
-                        rh_fftip:
-                          {}
-                rh_imu:
-                  {}
-                rh_lfmetacarpal:
-                  rh_lfknuckle:
-                    rh_lfproximal:
-                      rh_lfmiddle:
-                        rh_lfdistal:
-                          rh_lftip:
-                            {}
-                rh_manipulator:
-                  {}
-                rh_mfknuckle:
-                  rh_mfproximal:
-                    rh_mfmiddle:
-                      rh_mfdistal:
-                        rh_mftip:
-                          {}
-                rh_rfknuckle:
-                  rh_rfproximal:
-                    rh_rfmiddle:
-                      rh_rfdistal:
-                        rh_rftip:
-                          {}
-                rh_thbase:
-                  rh_thproximal:
-                    rh_thhub:
-                      rh_thmiddle:
-                        rh_thdistal:
-                          rh_thtip:
-                            {}
           yellow/center:
             {}
       Update Interval: 0
@@ -1046,7 +643,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.3408076763153076
+      Distance: 2.373767375946045
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -1061,10 +658,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.0403977632522583
+      Pitch: 0.8353979587554932
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.4503977298736572
+      Yaw: 1.6553975343704224
     Saved: ~
 Window Geometry:
   Displays:
@@ -1082,5 +679,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 70
-  Y: 60
+  X: 1338
+  Y: 115

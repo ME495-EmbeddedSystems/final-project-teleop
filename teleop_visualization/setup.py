@@ -9,7 +9,7 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml', 'launch/rings.launch.xml', 'config/rings.rviz', 'urdf/ring.urdf.xacro', 'meshes/ring.stl', 'meshes/ring.dae', 'meshes/toroid.stl']),
+        ('share/' + package_name, ['package.xml', 'launch/rings.launch.xml', 'config/rings.rviz', 'urdf/ring.urdf.xacro', 'meshes/ring.stl', 'meshes/measured_ring.stl', 'meshes/toroid.stl']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'rings = teleop_visualization.rings:main'
+            'rings = teleop_visualization.rings:main',
+            'scene = teleop_visualization.scene:main'
         ],
     },
 )
