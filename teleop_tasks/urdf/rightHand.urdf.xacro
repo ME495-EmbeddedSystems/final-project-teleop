@@ -364,4 +364,6 @@
         </sensor>
     </gazebo>
 
+
+    <xacro:include filename="$(find teleop_tasks)/urdf/rightHand.gazebo.xacro"/>
 </robot>

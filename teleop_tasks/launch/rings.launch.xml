@@ -32,8 +32,8 @@
     <node pkg="ros_gz_bridge" exec="parameter_bridge"
         args="/model/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
               /world/Rings/pose/info@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
-              /world/Rings/model/left_hand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
-              /world/Rings/model/right_hand/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model
+              /left_hand/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model
+              /right_hand/joint_states@sensor_msgs/msg/JointState[gz.msgs.Model
               /force_torque@geometry_msgs/msg/WrenchStamped[gz.msgs.Wrench">
         <remap from="/world/Rings/pose/info" to="/object/poses" />
         <remap from="/force_torque" to="/fingertip/force_torque" />

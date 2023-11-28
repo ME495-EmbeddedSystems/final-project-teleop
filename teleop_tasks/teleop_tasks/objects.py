@@ -141,18 +141,21 @@ class Objects(Node):
         curFingerTip = getFingertipFrameName(msg)
         
         # Grab the transform from world to the msg frame
-        TfwQuat = self.tf_buffer.lookup_transform(curFingerTip, "world", rclpy.time.Time()).transform.rotation
-        
-        # Convert Tfw from quaternians to euler angles
-        Rfw = quatToRot(TfwQuat.x, TfwQuat.y, TfwQuat.z, TfwQuat.w)
-        
-        Fgw = self.fingerLinkMass*np.array([0.0, 0.0, -9.8])
-        Fgf = (Rfw @ Fgw)
-        gfVec = Vector3(x=Fgf[0], y=Fgf[1], z=Fgf[2])
-        
-        msgNoGrav.wrench.force.x = msg.wrench.force.x - gfVec.x
-        msgNoGrav.wrench.force.y = msg.wrench.force.y - gfVec.y
-        msgNoGrav.wrench.force.z = msg.wrench.force.z - gfVec.z
+        try:
+            TfwQuat = self.tf_buffer.lookup_transform(curFingerTip, "world", rclpy.time.Time()).transform.rotation
+            
+            # Convert Tfw from quaternians to euler angles
+            Rfw = quatToRot(TfwQuat.x, TfwQuat.y, TfwQuat.z, TfwQuat.w)
+            
+            Fgw = self.fingerLinkMass*np.array([0.0, 0.0, -9.8])
+            Fgf = (Rfw @ Fgw)
+            gfVec = Vector3(x=Fgf[0], y=Fgf[1], z=Fgf[2])
+            
+            msgNoGrav.wrench.force.x = msg.wrench.force.x - gfVec.x
+            msgNoGrav.wrench.force.y = msg.wrench.force.y - gfVec.y
+            msgNoGrav.wrench.force.z = msg.wrench.force.z - gfVec.z
+        except:
+            pass
         
         return msgNoGrav   
     
