@@ -39,7 +39,7 @@ class Scene(Node):
         markerQoS = QoSProfile(depth=10, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
         self.marker_pub = self.create_publisher(Marker, "visualization_marker", markerQoS)
 
-        # Publish table
+        # Publish table marker
         table = Marker()
         table.header.stamp = self.get_clock().now().to_msg()
         table.header.frame_id = 'world'
