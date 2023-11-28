@@ -45,7 +45,7 @@ class Scene(Node):
         table.header.frame_id = 'world'
         table.type = table.CUBE
         table.action = table.ADD
-        table.pose.position.z = -0.25
+        table.pose.position.z = -0.2655
         table.scale.x = 2.0
         table.scale.y = 2.0
         table.scale.z = 0.5

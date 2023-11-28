@@ -31,36 +31,36 @@ class Rings(Node):
         self.world_to_blue = TransformStamped()
         self.world_to_blue.header.frame_id = "world"
         self.world_to_blue.child_frame_id = "blue/center"
-        self.world_to_blue.transform.translation.x = -0.5
-        self.world_to_blue.transform.translation.x = -0.5
+        self.world_to_blue.transform.translation.x = -0.3
+        self.world_to_blue.transform.translation.y = -0.5
 
         # Transform for green ring in world
         self.world_to_green = TransformStamped()
         self.world_to_green.header.frame_id = "world"
         self.world_to_green.child_frame_id = "green/center"
-        self.world_to_green.transform.translation.x = -0.5
-        self.world_to_green.transform.translation.x = -0.6
+        self.world_to_green.transform.translation.x = -0.45
+        self.world_to_green.transform.translation.y = -0.5
 
         # Transform for yellow ring in world
         self.world_to_yellow = TransformStamped()
         self.world_to_yellow.header.frame_id = "world"
         self.world_to_yellow.child_frame_id = "yellow/center"
-        self.world_to_yellow.transform.translation.x = -0.5
-        self.world_to_yellow.transform.translation.x = -0.7
+        self.world_to_yellow.transform.translation.x = -0.6
+        self.world_to_yellow.transform.translation.y = -0.5
 
         # Transform for orange ring in world
         self.world_to_orange = TransformStamped()
         self.world_to_orange.header.frame_id = "world"
         self.world_to_orange.child_frame_id = "orange/center"
-        self.world_to_orange.transform.translation.x = -0.5
-        self.world_to_orange.transform.translation.x = -0.8
+        self.world_to_orange.transform.translation.x = -0.75
+        self.world_to_orange.transform.translation.y = -0.5
 
         # Transform for red ring in world
         self.world_to_red = TransformStamped()
         self.world_to_red.header.frame_id = "world"
         self.world_to_red.child_frame_id = "red/center"
-        self.world_to_red.transform.translation.x = -0.5
         self.world_to_red.transform.translation.x = -0.9
+        self.world_to_red.transform.translation.y = -0.5
 
         self.object_frame_map = {'blue_ring': 'tag16H05_2',
                                  'green_ring': 'tag16H05_2',
