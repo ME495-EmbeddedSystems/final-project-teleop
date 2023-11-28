@@ -22,6 +22,7 @@ setup(
         'console_scripts': [
             'haptx_feedback = teleop_haptics.haptx_feedback:main',
             'force_feedback = teleop_haptics.kinesthetic_feedback:main',
+            'hand_position = teleop_haptics.hand_position:main',
         ],
     },
 )

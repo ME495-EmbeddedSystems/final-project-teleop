@@ -12,6 +12,8 @@ from tf2_ros import TransformBroadcaster
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 
+from rcl_interfaces.msg import ParameterDescriptor
+
 class KinestheticFeedbackNode(Node):
     """
     This node takes in an array of wrench contact forces and produces joint torques provided to recreate the feedback. 
@@ -21,10 +23,11 @@ class KinestheticFeedbackNode(Node):
         super().__init__("kinesthetic_feedback")
 
         self.contact_wrench = Wrench()
+        self.finger_wrenches = FingerWrenches()
 
-        self.contact_wrench_sub = self.create_subscription(FingerWrenches, "~/force_torque", self.contact_wrench_callback, 10)
-        self.applied_wrench_set = self.create_service(SetWrench, "~/set_applied_wrench", self.applied_wrench_set_callback)
-        self.applied_wrench_pub = self.create_publisher(Wrench, "~/applied_wrench", 10)
+        self.contact_wrench_sub = self.create_subscription(FingerWrenches, "force_torque", self.contact_wrench_callback, 10)
+        self.applied_wrench_set = self.create_service(SetWrench, "set_applied_wrench", self.applied_wrench_set_callback)
+        self.applied_wrench_pub = self.create_publisher(Wrench, "applied_wrench", 10)
 
         self.tmr = self.create_timer(0.01, self.timer_callback)
 
@@ -32,11 +35,12 @@ class KinestheticFeedbackNode(Node):
         self.applied_wrench_pub.publish(self.contact_wrench)
 
     def contact_wrench_callback(self, msg):
-        self.contact_wrench = WrenchStamped()
-        for i in msg:
-            self.contact_wrench += i
-        
+        self.finger_wrenches = msg
         self.limit_wrench()
+    
+    #def convertAndSumWrenches(self):
+    #    for i in self.finger_wrenches.finger_wrenches:
+    #        
     
     def applied_wrench_set_callback(self, req, response):
         self.contact_wrench = req.wrench
