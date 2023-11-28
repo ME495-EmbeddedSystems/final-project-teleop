@@ -89,6 +89,7 @@ class AvatarControl(Node):
 
         # Get necessary transforms
         world_obj_tf = self.tf_buffer.lookup_transform('tag16H05_3', object_frame, rclpy.time.Time())
+        world_obj_tf.transform.translation.z = 0
         world_obj_tf.transform.rotation.x = 0.023263087438040456
         world_obj_tf.transform.rotation.y = -0.012624678671690372
         world_obj_tf.transform.rotation.z = -0.15317466259220655

@@ -71,15 +71,25 @@ class Rings(Node):
     def timer_callback(self):
         # If the ring's transform exists, update it
         if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['blue_ring'], rclpy.time.Time()):
-            self.world_to_blue.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['blue_ring'], rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['blue_ring'], rclpy.time.Time()).transform
+            self.world_to_blue.transform.translation.x = tf.translation.x
+            self.world_to_blue.transform.translation.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['green_ring'], rclpy.time.Time()):
-            self.world_to_green.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['green_ring'], rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['green_ring'], rclpy.time.Time()).transform
+            self.world_to_green.transform.translation.x = tf.translation.x
+            self.world_to_green.transform.translation.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['yellow_ring'], rclpy.time.Time()):
-            self.world_to_yellow.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['yellow_ring'], rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['yellow_ring'], rclpy.time.Time()).transform
+            self.world_to_yellow.transform.translation.x = tf.translation.x
+            self.world_to_yellow.transform.translation.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['orange_ring'], rclpy.time.Time()):
-            self.world_to_orange.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['orange_ring'], rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['orange_ring'], rclpy.time.Time()).transform
+            self.world_to_orange.transform.translation.x = tf.translation.x
+            self.world_to_orange.transform.translation.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', self.object_frame_map['red_ring'], rclpy.time.Time()):
-            self.world_to_red.transform = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['red_ring'], rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', self.object_frame_map['red_ring'], rclpy.time.Time()).transform
+            self.world_to_red.transform.translation.x = tf.translation.x
+            self.world_to_red.transform.translation.y = tf.translation.y
             
         self.broadcaster.sendTransform(self.world_to_blue)
         self.broadcaster.sendTransform(self.world_to_green)
