@@ -1,7 +1,7 @@
 <launch>
     
     <!-- Rviz -->
-    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share rviz_rings)/rings.rviz"/>
+    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share teleop_visualization)/rings.rviz"/>
 
     <!-- Robot State Publisher for Avatar Robot -->
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="avatar_right">
@@ -16,25 +16,25 @@
         
     <!-- Robot State Publisher for Rings -->
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="blue">
-        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share rviz_rings)/ring.urdf.xacro ring_color:=blue')" />
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=blue')" />
     </node>
 
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="green">
-        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share rviz_rings)/ring.urdf.xacro ring_color:=green')" />
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=green')" />
     </node>
 
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="yellow">
-        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share rviz_rings)/ring.urdf.xacro ring_color:=yellow')" />
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=yellow')" />
     </node>
 
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="orange">
-        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share rviz_rings)/ring.urdf.xacro ring_color:=orange')" />
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=orange')" />
     </node>
 
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="red">
-        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share rviz_rings)/ring.urdf.xacro ring_color:=red')" />
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=red')" />
     </node>
     
     <!-- TF Broadcaster -->
-    <node pkg="rviz_rings" exec="rings" name="rings"/>
+    <node pkg="teleop_visualization" exec="rings" name="rings"/>
 </launch>

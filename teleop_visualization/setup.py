@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'rviz_rings'
+package_name = 'teleop_visualization'
 
 setup(
     name=package_name,
@@ -20,7 +20,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'rings = rviz_rings.rings:main'
+            'rings = teleop_visualization.rings:main'
         ],
     },
 )

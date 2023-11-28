@@ -14,7 +14,7 @@
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
             <geometry>
-                <mesh filename="file://$(find rviz_rings)/toroid.stl" scale="1.0 1.0 1.0" />
+                <mesh filename="file://$(find teleop_visualization)/toroid.stl" scale="1.0 1.0 1.0" />
             </geometry>
             <material name="Cyan">
                 <color rgba="${$(arg ring_color)}"/>
