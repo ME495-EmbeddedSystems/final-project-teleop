@@ -58,3 +58,8 @@ An additional launch file is created
 ```
 ros2 launch teleop_sensing launch_cv_process.xml
 ```
+
+To not show the cv2 window that allows live tuning of filter parameters: 
+```
+ros2 launch launch_cv_process.xml debug:=False
+```
