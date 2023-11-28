@@ -1,5 +1,4 @@
 import rclpy
-from rclpy.node import node
 from rclpy.node import Node
 
 from geometry_msgs.msg import Wrench
@@ -13,6 +12,8 @@ from tf2_ros import TransformBroadcaster
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 
+from rcl_interfaces.msg import ParameterDescriptor
+
 class KinestheticFeedbackNode(Node):
     """
     This node takes in an array of wrench contact forces and produces joint torques provided to recreate the feedback. 
@@ -22,8 +23,9 @@ class KinestheticFeedbackNode(Node):
         super().__init__("kinesthetic_feedback")
 
         self.contact_wrench = Wrench()
+        self.finger_wrenches = FingerWrenches()
 
-        self.contact_wrench_sub = self.create_subscription(FingerWrenches, "contact_wrenches", self.contact_wrench_callback, 10)
+        self.contact_wrench_sub = self.create_subscription(FingerWrenches, "force_torque", self.contact_wrench_callback, 10)
         self.applied_wrench_set = self.create_service(SetWrench, "set_applied_wrench", self.applied_wrench_set_callback)
         self.applied_wrench_pub = self.create_publisher(Wrench, "applied_wrench", 10)
 
@@ -33,14 +35,31 @@ class KinestheticFeedbackNode(Node):
         self.applied_wrench_pub.publish(self.contact_wrench)
 
     def contact_wrench_callback(self, msg):
-        self.contact_wrench = Wrench()
-        for i in msg:
-            self.contact_wrench += i
+        self.finger_wrenches = msg
+        self.limit_wrench()
+    
+    #def convertAndSumWrenches(self):
+    #    for i in self.finger_wrenches.finger_wrenches:
+    #        
     
     def applied_wrench_set_callback(self, req, response):
-        self.contact_wrench = req
         self.contact_wrench = req.wrench
+        self.limit_wrench()
         return response
+    
+    def limit_wrench(self):
+        force_mag = np.sqrt(self.contact_wrench.force.x**2 + self.contact_wrench.force.y**2 + self.contact_wrench.force.z**2)
+        if(force_mag > 40):
+            self.contact_wrench.force.x *force_mag / 40
+            self.contact_wrench.force.y *force_mag / 40
+            self.contact_wrench.force.z *force_mag / 40
+        
+        torque_mag = np.sqrt(self.contact_wrench.torque.x**2 + self.contact_wrench.torque.y**2 + self.contact_wrench.torque.z**2)
+        if(torque_mag > 5):
+            self.contact_wrench.torque.x *torque_mag / 5
+            self.contact_wrench.torque.y *torque_mag / 5
+            self.contact_wrench.torque.z *torque_mag / 5
+
 
 def main(args=None):
     """Run kinesthetic feedback node."""

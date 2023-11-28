@@ -9,7 +9,9 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml', 'launch/haptics.launch.xml']),
+        ('share/' + package_name, ['package.xml',
+                                   'launch/haptics.launch.xml',
+                                   'launch/force.launch.xml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -22,6 +24,7 @@ setup(
         'console_scripts': [
             'haptx_feedback = teleop_haptics.haptx_feedback:main',
             'force_feedback = teleop_haptics.kinesthetic_feedback:main',
+            'hand_position = teleop_haptics.hand_position:main',
         ],
     },
 )
