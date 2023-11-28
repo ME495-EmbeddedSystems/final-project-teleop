@@ -30,7 +30,6 @@ class Rings(Node):
         self.world_to_blue = TransformStamped()
         self.world_to_blue.header.frame_id = "world"
         self.world_to_blue.child_frame_id = "blue/center"
-        # self.static_broadcaster.sendTransform(world_to_blue)
 
         time.sleep(0.5)
 
@@ -40,7 +39,6 @@ class Rings(Node):
         self.world_to_green.child_frame_id = "green/center"
         self.world_to_green.transform.translation.x = 0.2
         self.world_to_green.transform.translation.y = 0.3
-        # self.static_broadcaster.sendTransform(world_to_green)
 
         time.sleep(0.5)
 
@@ -50,7 +48,6 @@ class Rings(Node):
         self.world_to_yellow.child_frame_id = "yellow/center"
         self.world_to_yellow.transform.translation.x = -0.1
         self.world_to_yellow.transform.translation.y = 0.15
-        # self.broadcaster.sendTransform(self.world_to_yellow)
 
         time.sleep(0.5)
 
@@ -60,7 +57,6 @@ class Rings(Node):
         self.world_to_orange.child_frame_id = "orange/center"
         self.world_to_orange.transform.translation.x = 0.1
         self.world_to_orange.transform.translation.y = -0.3
-        # self.static_broadcaster.sendTransform(world_to_orange)
 
         time.sleep(0.5)
 
@@ -70,7 +66,6 @@ class Rings(Node):
         self.world_to_red.child_frame_id = "red/center"
         self.world_to_red.transform.translation.x = -0.05
         self.world_to_red.transform.translation.y = -0.2
-        # self.static_broadcaster.sendTransform(world_to_red)
 
         time.sleep(0.5)
 
