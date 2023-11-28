@@ -234,7 +234,7 @@ class ImageProcesser(RosNode):
             raw_rect_ph_sxyz = [v*raw_rect_depth / 1000  for v in  raw_pin_model.projectPixelTo3dRay(raw_rect_pxy)]
             print(f"Color {c.name} at xyz {raw_rect_ph_sxyz[0]:.5f} {raw_rect_ph_sxyz[1]:.5f} {raw_rect_ph_sxyz[2]:.5f} ")
 
-            self.publish_circle_tf(depth_img.header,f"{c.name}_center" , raw_rect_ph_sxyz)
+            self.publish_circle_tf(depth_img.header,f"{c.name.lower()}_center" , raw_rect_ph_sxyz)
 
 
     def find_donute_with_color_mask(self,bgr_image , color_mask):
