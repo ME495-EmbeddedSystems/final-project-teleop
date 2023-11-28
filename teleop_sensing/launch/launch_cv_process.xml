@@ -1,5 +1,9 @@
 <launch>
 
+    <arg name="debug" default="True"
+        description="Enable or disable cv process debug windows" />
+
+
     <!-- ros2 launch realsense2_camera rs_launch.py -->
     <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py">
         <arg name = "camera_name" value="D435i" />
@@ -28,6 +32,8 @@
 
     <!-- Have problem doing include other launch file -->
 
-    <node pkg="teleop_sensing" exec="cv_process" output="screen"/>
+    <node pkg="teleop_sensing" exec="cv_process" output="screen">
+        <param name="debug" value="$(var debug)" />
+    </node>
 
 </launch>
