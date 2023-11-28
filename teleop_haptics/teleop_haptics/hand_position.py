@@ -25,8 +25,13 @@ class HandPositionNode(Node):
 
         self.EE_transform = np.eye(4)
 
-        self.z  = 0
-        self.yaw = 0
+        self.declare_parameter("z_offset", 0.0,
+                               ParameterDescriptor(description="The z offset for the end effector"))
+        self.z = self.get_parameter("z_offset").get_parameter_value().double_value
+
+        self.declare_parameter("yaw_offset", 0.0,
+                               ParameterDescriptor(description="The yaw offset for the end effector"))
+        self.yaw = self.get_parameter("yaw_offset").get_parameter_value().double_value
 
         c = np.cos(self.yaw)
         s = np.sin(self.yaw)
