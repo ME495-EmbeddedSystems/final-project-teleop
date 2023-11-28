@@ -1,0 +1,23 @@
+<launch>
+
+    <!-- ros2 launch realsense2_camera rs_launch.py -->
+    <include file="$(find-pkg-share realsense2_camera)/launch/rs_launch.py">
+        <arg name = "camera_name" value="D435i" />
+
+        <!-- gathers closest frames of different sensors, infra red, color and depth, to be sent with the same timetag -->
+        <!-- might be useful for april tag nodes-->
+        <arg name = "enable_sync" value="True" />
+    </include>
+
+    <!-- image geometry -->
+
+    <node pkg="teleop_sensing" exec="cv_process" output="screen">
+
+    </node>
+
+  <!-- rviz will enable us to see the robot -->
+  <!-- <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share teleop_sensing)/view_robot.rviz"/> -->
+  <!-- <node pkg="rviz2" exec="rviz2" args="-d ../config/see-camera.rviz"/> -->
+
+
+</launch>

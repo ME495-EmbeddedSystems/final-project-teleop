@@ -1,0 +1,10 @@
+<launch>
+    <arg name="task" default="rings" description="Determines which task is launched"/>
+
+    <!-- Task -->
+    <include file="$(find-pkg-share teleop_tasks)/launch/rings.launch.xml" if="$(eval '\'$(var task)\' == \'rings\'')" />
+    <include file="$(find-pkg-share teleop_tasks)/launch/blocks.launch.xml" if="$(eval '\'$(var task)\' == \'blocks\'')" />
+
+    <!-- Haptics -->
+    <include file="$(find-pkg-share teleop_haptics)/haptics.launch.xml" />
+</launch>

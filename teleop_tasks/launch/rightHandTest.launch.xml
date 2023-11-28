@@ -1,0 +1,9 @@
+<launch>
+    <node pkg="robot_state_publisher" exec="robot_state_publisher">
+      	<param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_tasks)/urdf/rightHand.urdf.xacro')" />
+    </node>
+
+    <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share teleop_tasks)/config/hand_config.rviz"/>
+
+    <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui"/>
+</launch>

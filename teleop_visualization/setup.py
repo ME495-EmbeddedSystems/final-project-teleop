@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'teleop'
+package_name = 'teleop_visualization'
 
 setup(
     name=package_name,
@@ -9,18 +9,18 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml', 'launch/teleop.launch.xml']),
+        ('share/' + package_name, ['package.xml', 'launch/rings.launch.xml', 'config/rings.rviz', 'urdf/ring.urdf.xacro', 'meshes/ring.stl', 'meshes/ring.dae', 'meshes/toroid.stl']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='rohan',
     maintainer_email='rohankota@u.northwestern.edu',
-    description='This packages manages the teleoperation experience.',
+    description='TODO: Package description',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'orchestrator = teleop.orchestrator:main'
+            'rings = teleop_visualization.rings:main'
         ],
     },
 )
