@@ -11,8 +11,7 @@
   </group>
 
   <group if="$(eval '\'$(var view_only)\' == \'true\'')">
-    <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share teleop_tasks)/config/hand_config.rviz"/>
+    <node pkg="rviz2" exec="rviz2" args="-d $(find-pkg-share teleop_tasks)/config/right_hand_config.rviz"/>
+    <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui"/>
   </group>
-
-  <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui"/>
 </launch>
