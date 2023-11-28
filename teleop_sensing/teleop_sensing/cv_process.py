@@ -11,9 +11,11 @@ import pyrealsense2 as rs2
 if (not hasattr(rs2, 'intrinsics')):
     import pyrealsense2.pyrealsense2 as rs2
 
+from rcl_interfaces.msg import ParameterDescriptor as RosParameterDescriptor
+
 import rclpy
 from cv_bridge import CvBridge
-from teleop_sensing.cv_pick_color_range import BlobDetector, FilterBase, HSVFilter_SVBase, HOnlyFilter, TrackBarHelper , RedHFilter
+from teleop_sensing.cv_pick_color_range import BlobDetector, FilterBase, HSVFilter_SVBase, HOnlyFilter, TrackBarHelper , RedHFilter ,HSVFilter
 from rclpy.node import Node as RosNode
 from rclpy.time import Time as RosTime
 from rclpy.wait_for_message import wait_for_message
@@ -74,27 +76,36 @@ class ImageProcesser(RosNode):
         self.warn = self.get_logger().warning
         self.error = self.get_logger().error
 
+        self.declare_parameter("debug", True,
+            RosParameterDescriptor(description="launch debug cv2 windows when True."))
+
+        self.debug_mode: float = self.get_parameter(
+            "debug").get_parameter_value().bool_value
+
         # Setup the user tuned filters
         # TODO(LEO) Take param to decide on seeing the trackbar
         self.trackbar_helper = TrackBarHelper()
-        self.sv_filter = HSVFilter_SVBase(255,50,255,150)
+        self.sv_filter = HSVFilter_SVBase(255,80,255,150)
         self.blob_detector = BlobDetector(maxArea=6000 , minArea=50)
-
-        self.trackbar_helper.setup_cv_trackbar(self.sv_filter ,"S V shared for all")
-        self.trackbar_helper.setup_cv_trackbar(self.blob_detector ,"Blob param")
+        if self.debug_mode:
+            self.trackbar_helper.setup_cv_trackbar(self.sv_filter ,"S V shared for all")
+            self.trackbar_helper.setup_cv_trackbar(self.blob_detector ,"Blob param")
 
         # red have to sets of bars, which we took union of
         self.color_filter_map :dict[Color ,HOnlyFilter|RedHFilter] = {
             Color.RED : RedHFilter(170,2),
-            Color.GREEN: HOnlyFilter(85,50),
-            Color.BLUE: HOnlyFilter(100,85),
-            Color.ORANGE: HOnlyFilter(20,8),
+            Color.GREEN: HOnlyFilter(85,35),
+            Color.BLUE: HOnlyFilter(98,85),
+            # Color.ORANGE: HOnlyFilter(20,8),
+            # Special treatment for orange. It's really close to yellow
+            Color.ORANGE: HSVFilter(20,8,255,160,255,200),
             Color.YELLOW: HOnlyFilter(30,18),
         }
 
         # Go through all colors and setup trackbar
-        for c,trackbar in self.color_filter_map.items():
-            self.trackbar_helper.setup_cv_trackbar(trackbar,c.name)
+        if self.debug_mode:
+            for c,trackbar in self.color_filter_map.items():
+                self.trackbar_helper.setup_cv_trackbar(trackbar,c.name)
 
 
 
@@ -209,8 +220,9 @@ class ImageProcesser(RosNode):
             full_hsv_mask = cv2.bitwise_and(sv_mask,color_mask)
 
             raw_blob_marked , raw_pxy = self.find_donute_with_color_mask(raw_img_cv,full_hsv_mask)
-            cv2.imshow(c.name , self.trackbar_helper.scale_image_down(raw_blob_marked , 700))
-            cv2.waitKey(1)
+            if self.debug_mode:
+                cv2.imshow(c.name , self.trackbar_helper.scale_image_down(raw_blob_marked , 700))
+                cv2.waitKey(1)
 
             if not raw_pxy:
                 continue
