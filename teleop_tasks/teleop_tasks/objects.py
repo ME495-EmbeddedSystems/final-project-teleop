@@ -139,6 +139,7 @@ class Objects(Node):
         
         # Figure out what finger this force is on
         curFingerTip = getFingertipFrameName(msg)
+        #print(curFingerTip)
         
         # Grab the transform from world to the msg frame
         try:
@@ -150,6 +151,7 @@ class Objects(Node):
             Fgw = self.fingerLinkMass*np.array([0.0, 0.0, -9.8])
             Fgf = (Rfw @ Fgw)
             gfVec = Vector3(x=Fgf[0], y=Fgf[1], z=Fgf[2])
+            print(gfVec)
             
             msgNoGrav.wrench.force.x = msg.wrench.force.x - gfVec.x
             msgNoGrav.wrench.force.y = msg.wrench.force.y - gfVec.y

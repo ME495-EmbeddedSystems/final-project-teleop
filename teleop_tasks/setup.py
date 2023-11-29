@@ -41,7 +41,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'objects = teleop_tasks.objects:main'
+            'objects = teleop_tasks.objects:main',
+            'finger_joint_mapper = teleop_tasks.finger_joint_mapper:main'
         ],
     },
 )
