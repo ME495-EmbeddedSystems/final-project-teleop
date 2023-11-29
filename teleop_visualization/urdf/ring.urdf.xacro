@@ -21,7 +21,7 @@
         <visual>
             <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
             <geometry>
-                <mesh filename="file://$(find teleop_visualization)/measured_ring.stl" scale="${$(arg ring_color)_scale}" />
+                <mesh filename="file://$(find teleop_visualization)/ring.stl" scale="${$(arg ring_color)_scale}" />
             </geometry>
             <material name="Cyan">
                 <color rgba="${$(arg ring_color)}"/>

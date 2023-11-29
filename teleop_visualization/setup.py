@@ -9,7 +9,7 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml', 'launch/rings.launch.xml', 'config/rings.rviz', 'urdf/ring.urdf.xacro', 'meshes/ring.stl', 'meshes/measured_ring.stl', 'meshes/toroid.stl']),
+        ('share/' + package_name, ['package.xml', 'launch/rings.launch.xml', 'config/rings.rviz', 'urdf/ring.urdf.xacro', 'meshes/ring.stl']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
