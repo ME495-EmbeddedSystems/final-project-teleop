@@ -4,29 +4,29 @@
     <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share teleop_visualization)/rings.rviz"/>
 
     <!-- Robot State Publisher for Avatar Robot -->
-    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="avatar_right" output="log">
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="avatar_right">
         <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share avatar_visualizer)/robots/avatar.urdf.xacro')" />
         <param name="frame_prefix" value="avatar_right/" />
     </node>
         
     <!-- Robot State Publisher for Rings -->
-    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="blue" output="log">
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="blue">
         <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=blue')" />
     </node>
 
-    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="green" output="log">
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="green">
         <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=green')" />
     </node>
 
-    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="yellow" output="log">
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="yellow">
         <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=yellow')" />
     </node>
 
-    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="orange" output="log">
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="orange">
         <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=orange')" />
     </node>
 
-    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="red" output="log">
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="red">
         <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_visualization)/ring.urdf.xacro ring_color:=red')" />
     </node>
     
