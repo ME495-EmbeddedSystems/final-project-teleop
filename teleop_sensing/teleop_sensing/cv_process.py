@@ -85,20 +85,20 @@ class ImageProcesser(RosNode):
         # Setup the user tuned filters
         # TODO(LEO) Take param to decide on seeing the trackbar
         self.trackbar_helper = TrackBarHelper()
-        self.sv_filter = HSVFilter_SVBase(255,80,255,150)
-        self.blob_detector = BlobDetector(maxArea=6000 , minArea=50)
+        self.sv_filter = HSVFilter_SVBase(255,125,255,115)
+        self.blob_detector = BlobDetector(maxArea=6000 , minArea=500)
         if self.debug_mode:
             self.trackbar_helper.setup_cv_trackbar(self.sv_filter ,"S V shared for all")
             self.trackbar_helper.setup_cv_trackbar(self.blob_detector ,"Blob param")
 
         # red have to sets of bars, which we took union of
         self.color_filter_map :dict[Color ,HOnlyFilter|RedHFilter] = {
-            Color.RED : RedHFilter(170,2),
+            Color.RED : RedHFilter(170,5),
             Color.GREEN: HOnlyFilter(85,35),
             Color.BLUE: HOnlyFilter(98,85),
             # Color.ORANGE: HOnlyFilter(20,8),
             # Special treatment for orange. It's really close to yellow
-            Color.ORANGE: HSVFilter(20,8,255,160,255,200),
+            Color.ORANGE: HSVFilter(20,8,255,160,255,140),
             Color.YELLOW: HOnlyFilter(30,18),
         }
 
