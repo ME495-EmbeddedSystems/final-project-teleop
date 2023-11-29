@@ -1,7 +1,6 @@
 <launch>
 
-    <arg name="debug" default="True"
-        description="Enable or disable cv process debug windows" />
+    <arg name="debug" default="False" description="Enable or disable cv process debug windows" />
 
 
     <!-- ros2 launch realsense2_camera rs_launch.py -->

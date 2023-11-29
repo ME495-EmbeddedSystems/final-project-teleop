@@ -56,10 +56,10 @@ Transforms will be named as `<COLOR>_center`
 An additional launch file is created 
 
 ```
-ros2 launch teleop_sensing launch_cv_process.xml
+ros2 launch teleop_sensing ring_cv.launch.xml
 ```
 
 To not show the cv2 window that allows live tuning of filter parameters: 
 ```
-ros2 launch launch_cv_process.xml debug:=False
+ros2 launch ring_cv.launch.xml debug:=False
 ```
