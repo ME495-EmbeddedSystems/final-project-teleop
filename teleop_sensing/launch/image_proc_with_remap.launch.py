@@ -32,9 +32,8 @@
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.conditions import LaunchConfigurationEquals
-from launch.conditions import LaunchConfigurationNotEquals
-from launch.substitutions import LaunchConfiguration
+from launch.conditions import LaunchConfigurationNotEquals, IfCondition
+from launch.substitutions import LaunchConfiguration, EqualsSubstitution, NotEqualsSubstitution
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.actions import LoadComposableNodes
 from launch_ros.descriptions import ComposableNode
@@ -91,7 +90,7 @@ def generate_launch_description():
 
     # If an existing container is not provided, start a container and load nodes into it
     image_processing_container = ComposableNodeContainer(
-        condition=LaunchConfigurationEquals('container', ''),
+        condition=IfCondition(EqualsSubstitution(LaunchConfiguration('container'), '')),
         name='image_proc_container',
         namespace='',
         package='rclcpp_components',
@@ -103,7 +102,7 @@ def generate_launch_description():
     # If an existing container name is provided, load composable nodes into it
     # This will block until a container with the provided name is available and nodes are loaded
     load_composable_nodes = LoadComposableNodes(
-        condition=LaunchConfigurationNotEquals('container', ''),
+        condition=IfCondition(NotEqualsSubstitution(LaunchConfiguration('container'), '')),
         composable_node_descriptions=composable_nodes,
         target_container=LaunchConfiguration('container'),
     )

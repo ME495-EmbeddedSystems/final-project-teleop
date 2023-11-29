@@ -9,7 +9,7 @@
     <include file="$(find-pkg-share teleop_visualization)/rings.launch.xml" if="$(eval '\'$(var task)\' == \'rings\'')"/>
 
     <!-- Computer Vision -->
-    <include file="$(find-pkg-share teleop_sensing)/launch/launch_cv_process.xml" if="$(eval '\'$(var task)\' == \'rings\'')">
+    <include file="$(find-pkg-share teleop_sensing)/launch/rings_cv.launch.xml" if="$(eval '\'$(var task)\' == \'rings\'')">
         <arg name="debug" value="false"/>
     </include>
 
