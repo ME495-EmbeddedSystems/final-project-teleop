@@ -1,21 +1,22 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import TransformStamped
+from geometry_msgs.msg import TransformStamped, Point32, Quaternion
 from sensor_msgs.msg import JointState
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
 from visualization_msgs.msg import Marker
 from tf2_ros import TransformBroadcaster, StaticTransformBroadcaster
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
-from enum import Enum
+from enum import Enum, auto
 import numpy as np
 import random
 import time
 
 class SimState(Enum):
-    REST = 0
-    GRASPED = 1
-    FALLING = 2
+    REST = auto(),
+    GRASPED = auto(),
+    FALLING = auto(),
+    LOCKED = auto(),
 
 class RingSim(Node):
     """
@@ -25,8 +26,18 @@ class RingSim(Node):
     def __init__(self):
         super().__init__('ring_sim')
 
+        self.goalZ = {
+                    'blue' : 0.1,
+                    'green' : 0.2, 
+                    'yellow' : 0.3, 
+                    'orange' : 0.4,
+                    'red' : 0.5 
+        }
+
+        self.period = 0.01
+
         # Create control loop timer based on frequency parameter
-        self.timer = self.create_timer(1/100, self.timer_callback)
+        self.timer = self.create_timer(self.period, self.timer_callback)
 
         # Create broadcasters
         self.broadcaster = TransformBroadcaster(self)
@@ -38,50 +49,18 @@ class RingSim(Node):
 
         self.ring_positions = [(0,0)]
 
-        # Transform for blue ring in world
-        self.world_to_blue = TransformStamped()
-        self.world_to_blue.header.frame_id = "sim/world"
-        self.world_to_blue.child_frame_id = "sim/blue/center"
         x, y = self.generate_ring_start_position()
-        self.world_to_blue.transform.translation.x = x
-        self.world_to_blue.transform.translation.y = y
-        self.world_to_blue.transform.translation.z = 0.0155
+        self.blue = Ring(x0=x,y0=y,name="blue",period=self.period)
+        x, y = self.generate_ring_start_position()
+        self.green = Ring(x0=x,y0=y,name="green",period=self.period)
+        x, y = self.generate_ring_start_position()
+        self.yellow = Ring(x0=x,y0=y,name="yellow",period=self.period)
+        x, y = self.generate_ring_start_position()
+        self.orange = Ring(x0=x,y0=y,name="orange",period=self.period)
+        x, y = self.generate_ring_start_position()
+        self.red = Ring(x0=x,y0=y,name="red",period=self.period)
 
-        # Transform for green ring in world
-        self.world_to_green = TransformStamped()
-        self.world_to_green.header.frame_id = "sim/world"
-        self.world_to_green.child_frame_id = "sim/green/center"
-        x, y = self.generate_ring_start_position()
-        self.world_to_green.transform.translation.x = x
-        self.world_to_green.transform.translation.y = y
-        self.world_to_green.transform.translation.z = 0.0155
-
-        # Transform for yellow ring in world
-        self.world_to_yellow = TransformStamped()
-        self.world_to_yellow.header.frame_id = "sim/world"
-        self.world_to_yellow.child_frame_id = "sim/yellow/center"
-        x, y = self.generate_ring_start_position()
-        self.world_to_yellow.transform.translation.x = x
-        self.world_to_yellow.transform.translation.y = y
-        self.world_to_yellow.transform.translation.z = 0.0155
-
-        # Transform for orange ring in world
-        self.world_to_orange = TransformStamped()
-        self.world_to_orange.header.frame_id = "sim/world"
-        self.world_to_orange.child_frame_id = "sim/orange/center"
-        x, y = self.generate_ring_start_position()
-        self.world_to_orange.transform.translation.x = x
-        self.world_to_orange.transform.translation.y = y
-        self.world_to_orange.transform.translation.z = 0.0155
-
-        # Transform for red ring in world
-        self.world_to_red = TransformStamped()
-        self.world_to_red.header.frame_id = "sim/world"
-        self.world_to_red.child_frame_id = "sim/red/center"
-        x, y = self.generate_ring_start_position()
-        self.world_to_red.transform.translation.x = x
-        self.world_to_red.transform.translation.y = y
-        self.world_to_red.transform.translation.z = 0.0155
+        self.ringArray = [self.blue, self.green, self.yellow, self.orange, self.red]
 
         # Transform for red ring in world
         self.world_to_ring_base = TransformStamped()
@@ -120,27 +99,69 @@ class RingSim(Node):
         self.state = SimState.REST
         
     def timer_callback(self):
-        self.publish_world()
+        #self.publish_world()
+        self.broadcaster.sendTransform(self.world_to_ring_base)
+        
+        for i in self.ringArray:
+            if(i.state == SimState.REST):
+                i.acceleration = Point32()
+                i.velocity = Point32()
+                i.position.z = 0.0155
+                if(self.ring_grasped(i.name)):
+                    try:
+                        trans = self.tf_buffer.lookup_transform(i.TF.child_frame_id, "left_hand/palm", rclpy.time.Time())
+                        i.state = SimState.GRASPED
 
-        self.get_logger().info(str(self.state))
+                        #i.offset.x = trans.transform.translation.x
+                        #i.offset.y = trans.transform.translation.y
 
-        if self.state == SimState.REST:
-            # If ring has been grasped, transition to GRASPED state
-            if self.ring_grasped():
-                self.state = SimState.GRASPED
+                        i.acceleration = Point32()
+                        i.velocity = Point32()
 
-        if self.state == SimState.GRASPED:
-            # Publish Ring's TFs based on hand position
+                    except Exception as error:
+                        self.get_logger().info(str(error))
+            if(i.state == SimState.GRASPED):
+                if(self.ring_grasped(i.name)):
+                    try:
+                        trans = self.tf_buffer.lookup_transform("sim/world" "left_hand/palm", rclpy.time.Time())
+        
+                        i.acceleration = Point32()
+                        i.velocity = Point32()
+                        i.position.x = trans.transform.translation.x 
+                        i.posiiton.y = trans.transform.translation.y
+                        i.position.z = trans.transform.translation.z - 0.0155
+                        i.TF.rotation = trans.transform.rotation
+                        i.last_rotation = trans.transform.rotation
+
+                    except Exception as error:
+                        self.get_logger().info(str(error))
+                else:
+                    i.state = SimState.FALLING
+
+            if(i.state == SimState.FALLING):
+                i.acceleration.z = -9.81
+
+                if(self.ring_placed(i.name)):
+                    i.state = SimState.LOCKED
+                if(i.position.z <= 0.0155):
+                    i.state = SimState.REST
+
+            if(i.state == SimState.LOCKED):
+                i.acceleration = Point32()
+                i.velocity = Point32()
+                i.position.z = goalZ[i.name]
+                i.TF.transform.rotation = Quaterion()
             
-            # IF OBJECT HAS BEEN RELEASED
-            self.state == SimState.FALLING
+            if(i.position.z <= 0):
+                i.state = SimState.REST
+            
+            i.update_state()
+            i.TF.header.stamp = self.get_clock().now().to_msg()
+            self.broadcaster.sendTransform(i.TF)
 
-        if self.state == SimState.FALLING:
-            # IF OBJECT HAS HIT PEG BASE (0.125 m x 0.125 m x 0.028 m) or IF OBJECT HAS HIT GROUND
-            self.state = SimState.REST
 
-            # Otherwise, make brick fall
 
+    """
     def publish_world(self):
         self.world_to_blue.header.stamp = self.get_clock().now().to_msg()
         self.world_to_green.header.stamp = self.get_clock().now().to_msg()
@@ -154,27 +175,43 @@ class RingSim(Node):
         self.broadcaster.sendTransform(self.world_to_orange)
         self.broadcaster.sendTransform(self.world_to_red)
         self.broadcaster.sendTransform(self.world_to_ring_base)
+    """
 
-    def ring_grasped(self):
+    def ring_placed(self, name):
+        try:
+            trans = self.tf_buffer.lookup_transform("sim/"+name+"/center", "sim/ring_base/base", rclpy.time.Time())
+
+            x = trans.transform.translation.x
+            y = trans.transform.translation.y
+            z = trans.transform.translation.z
+
+            if(z < 0.5 and x*x + y*y < (0.3)**2):
+                return True
+            return False
+        except Exception as error:
+            self.get_logger().info(str(error))
+
+
+    def ring_grasped(self, name):
         """ Calculates 1x5 bitmap of which fingers are in contact with the ring.
             If thumb and another finger are touching a ring, that ring is grabbed.
         """
 
         try:
             # Lookup tf from ring to fingertips
-            yellow_thumb_tf = self.tf_buffer.lookup_transform("sim/yellow/center", "left_hand/thumb_tip", rclpy.time.Time()) # Thumb
-            yellow_index_tf = self.tf_buffer.lookup_transform("sim/yellow/center", "left_hand/index_tip", rclpy.time.Time()) # Index
-            yellow_middle_tf = self.tf_buffer.lookup_transform("sim/yellow/center", "left_hand/middle_tip", rclpy.time.Time()) # Middle
-            yellow_ring_tf = self.tf_buffer.lookup_transform("sim/yellow/center", "left_hand/ring_tip", rclpy.time.Time()) # Ring
-            yellow_pinky_tf = self.tf_buffer.lookup_transform("sim/yellow/center", "left_hand/pinky_tip", rclpy.time.Time()) # Pinky
+            thumb_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/thumb_tip", rclpy.time.Time()) # Thumb
+            index_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/index_tip", rclpy.time.Time()) # Index
+            middle_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/middle_tip", rclpy.time.Time()) # Middle
+            ring_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/ring_tip", rclpy.time.Time()) # Ring
+            pinky_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/pinky_tip", rclpy.time.Time()) # Pinky
 
             fingers_in_contact = np.zeros(5)
 
-            fingers_in_contact[0] = self.finger_contact(yellow_thumb_tf)
-            fingers_in_contact[1] = self.finger_contact(yellow_index_tf)
-            fingers_in_contact[2] = self.finger_contact(yellow_middle_tf)
-            fingers_in_contact[3] = self.finger_contact(yellow_ring_tf)
-            fingers_in_contact[4] = self.finger_contact(yellow_pinky_tf)
+            fingers_in_contact[0] = self.finger_contact(thumb_tf)
+            fingers_in_contact[1] = self.finger_contact(index_tf)
+            fingers_in_contact[2] = self.finger_contact(middle_tf)
+            fingers_in_contact[3] = self.finger_contact(ring_tf)
+            fingers_in_contact[4] = self.finger_contact(pinky_tf)
 
             self.get_logger().info(str(np.sum(fingers_in_contact)))
 
@@ -225,6 +262,45 @@ class RingSim(Node):
                 return True
 
         return False
+
+class Ring():
+
+    def __init__(self, x0, y0, name, period):
+        self.TF = TransformStamped()
+        self.period = period
+        self.name = name
+        self.state = SimState.REST
+        self.TF.header.frame_id = "sim/world"
+        self.TF.child_frame_id = "sim/"+name+"/center"
+        self.position = Point32()
+        self.position.x = x0
+        self.position.y = y0
+        self.position.z = 0.0155
+        self.velocity = Point32()
+        self.acceleration = Point32()
+
+        self.offset = Point32()
+        self.rotation = Quaternion()
+        self.last_rotation = Quaternion()
+ 
+        self.TF.transform.translation.x = self.position.x
+        self.TF.transform.translation.y = self.position.y
+        self.TF.transform.translation.z = self.position.z
+
+    
+    def update_state(self):
+        self.position.x = self.position.x + self.velocity.x * self.period + 0.5 * self.acceleration.x * self.period * self.period
+        self.velocity.x = self.velocity.x + self.acceleration.x * self.period
+        self.TF.transform.translation.x = self.position.x
+
+        self.position.y = self.position.y + self.velocity.y * self.period + 0.5 * self.acceleration.y * self.period * self.period
+        self.velocity.y = self.velocity.y + self.acceleration.y * self.period
+        self.TF.transform.translation.y = self.position.y
+
+        self.position.z = self.position.z + self.velocity.z * self.period + 0.5 * self.acceleration.z * self.period * self.period
+        self.velocity.z = self.velocity.z + self.acceleration.z * self.period
+        self.TF.transform.translation.z = self.position.z
+
     
 def main(args=None):
     rclpy.init(args=args)
