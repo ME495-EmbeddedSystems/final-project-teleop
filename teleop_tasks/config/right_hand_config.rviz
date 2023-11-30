@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /RobotModel1
+        - /RobotModel1/Links1
         - /TF1/Frames1
       Splitter Ratio: 0.5
     Tree Height: 549
@@ -61,7 +63,7 @@ Visualization Manager:
         Value: /right_hand/robot_description
       Enabled: true
       Links:
-        All Links Enabled: true
+        All Links Enabled: false
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
@@ -195,32 +197,32 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
+          Value: false
         world_2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
+          Value: false
         world_3:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
+          Value: false
         world_4:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
+          Value: false
         world_5:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
+          Value: false
         world_6:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-          Value: true
+          Value: false
       Mass Properties:
         Inertia: false
         Mass: false
@@ -234,129 +236,49 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        left_hand/index_1:
-          Value: false
-        left_hand/index_2:
-          Value: false
         left_hand/index_3:
-          Value: false
-        left_hand/index_dumb:
           Value: false
         left_hand/index_tip:
           Value: false
-        left_hand/middle_1:
-          Value: false
-        left_hand/middle_2:
-          Value: false
         left_hand/middle_3:
-          Value: false
-        left_hand/middle_dumb:
           Value: false
         left_hand/middle_tip:
           Value: false
-        left_hand/palm:
-          Value: false
-        left_hand/pinky_1:
-          Value: false
-        left_hand/pinky_2:
-          Value: false
         left_hand/pinky_3:
-          Value: false
-        left_hand/pinky_dumb:
           Value: false
         left_hand/pinky_tip:
           Value: false
-        left_hand/ring_1:
-          Value: false
-        left_hand/ring_2:
-          Value: false
         left_hand/ring_3:
-          Value: false
-        left_hand/ring_dumb:
           Value: false
         left_hand/ring_tip:
           Value: false
-        left_hand/thumb_1:
-          Value: false
         left_hand/thumb_2:
-          Value: false
-        left_hand/thumb_dumb:
           Value: false
         left_hand/thumb_tip:
           Value: false
         left_hand/world:
           Value: false
-        left_hand/world_2:
-          Value: false
-        left_hand/world_3:
-          Value: false
-        left_hand/world_4:
-          Value: false
-        left_hand/world_5:
-          Value: false
-        left_hand/world_6:
-          Value: false
-        right_hand/index_1:
-          Value: true
-        right_hand/index_2:
-          Value: true
         right_hand/index_3:
-          Value: true
-        right_hand/index_dumb:
           Value: true
         right_hand/index_tip:
           Value: true
-        right_hand/middle_1:
-          Value: true
-        right_hand/middle_2:
-          Value: true
         right_hand/middle_3:
-          Value: true
-        right_hand/middle_dumb:
           Value: true
         right_hand/middle_tip:
           Value: true
-        right_hand/palm:
-          Value: true
-        right_hand/pinky_1:
-          Value: true
-        right_hand/pinky_2:
-          Value: true
         right_hand/pinky_3:
-          Value: true
-        right_hand/pinky_dumb:
           Value: true
         right_hand/pinky_tip:
           Value: true
-        right_hand/ring_1:
-          Value: true
-        right_hand/ring_2:
-          Value: true
         right_hand/ring_3:
-          Value: true
-        right_hand/ring_dumb:
           Value: true
         right_hand/ring_tip:
           Value: true
-        right_hand/thumb_1:
-          Value: true
         right_hand/thumb_2:
-          Value: true
-        right_hand/thumb_dumb:
           Value: true
         right_hand/thumb_tip:
           Value: true
         right_hand/world:
-          Value: true
-        right_hand/world_2:
-          Value: true
-        right_hand/world_3:
-          Value: true
-        right_hand/world_4:
-          Value: true
-        right_hand/world_5:
-          Value: true
-        right_hand/world_6:
           Value: true
         world:
           Value: true
@@ -368,83 +290,15 @@ Visualization Manager:
       Tree:
         world:
           left_hand/world:
-            left_hand/world_2:
-              left_hand/world_3:
-                left_hand/world_4:
-                  left_hand/world_5:
-                    left_hand/world_6:
-                      left_hand/palm:
-                        left_hand/index_dumb:
-                          left_hand/index_1:
-                            left_hand/index_2:
-                              left_hand/index_3:
-                                left_hand/index_tip:
-                                  {}
-                        left_hand/middle_dumb:
-                          left_hand/middle_1:
-                            left_hand/middle_2:
-                              left_hand/middle_3:
-                                left_hand/middle_tip:
-                                  {}
-                        left_hand/pinky_dumb:
-                          left_hand/pinky_1:
-                            left_hand/pinky_2:
-                              left_hand/pinky_3:
-                                left_hand/pinky_tip:
-                                  {}
-                        left_hand/ring_dumb:
-                          left_hand/ring_1:
-                            left_hand/ring_2:
-                              left_hand/ring_3:
-                                left_hand/ring_tip:
-                                  {}
-                        left_hand/thumb_dumb:
-                          left_hand/thumb_1:
-                            left_hand/thumb_2:
-                              left_hand/thumb_tip:
-                                {}
+            {}
           right_hand/world:
-            right_hand/world_2:
-              right_hand/world_3:
-                right_hand/world_4:
-                  right_hand/world_5:
-                    right_hand/world_6:
-                      right_hand/palm:
-                        right_hand/index_dumb:
-                          right_hand/index_1:
-                            right_hand/index_2:
-                              right_hand/index_3:
-                                right_hand/index_tip:
-                                  {}
-                        right_hand/middle_dumb:
-                          right_hand/middle_1:
-                            right_hand/middle_2:
-                              right_hand/middle_3:
-                                right_hand/middle_tip:
-                                  {}
-                        right_hand/pinky_dumb:
-                          right_hand/pinky_1:
-                            right_hand/pinky_2:
-                              right_hand/pinky_3:
-                                right_hand/pinky_tip:
-                                  {}
-                        right_hand/ring_dumb:
-                          right_hand/ring_1:
-                            right_hand/ring_2:
-                              right_hand/ring_3:
-                                right_hand/ring_tip:
-                                  {}
-                        right_hand/thumb_dumb:
-                          right_hand/thumb_1:
-                            right_hand/thumb_2:
-                              right_hand/thumb_tip:
-                                {}
+            {}
       Update Interval: 0
       Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: right_hand/world_4
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:

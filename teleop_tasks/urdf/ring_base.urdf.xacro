@@ -1,0 +1,55 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ring_base">
+
+    <xacro:arg name="ring_color" default="white"/>
+
+    <xacro:property name="white" value="1.0 1.0 1.0 1.0" />
+    <xacro:property name="yellow" value="0.94 0.79 0.16 1.0" />
+
+    <!-- Base Link -->
+    <link name="base">
+        <visual>
+            <origin xyz="0.0 0.0 0.014" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <box size="0.125 0.125 0.028" />
+            </geometry>
+            <material name="White">
+                <color rgba="${white}"/>
+            </material>
+        </visual>
+
+        <collision>
+            <origin xyz="0.0 0.0 0.014" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <box size="0.125 0.125 0.028" />
+            </geometry>
+        </collision>
+    </link>
+    
+    <joint name="base_stem_joint" type="fixed">
+        <origin xyz="0 0 0.028" rpy="0 0 0"/>
+        <parent link="base"/>
+        <child link="stem"/>
+    </joint>
+
+    <!-- Stem Link -->
+    <link name="stem">
+        <visual>
+            <origin xyz="0.0 0.0 0.09" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <cylinder radius="0.0175" length="0.18"/>
+            </geometry>
+            <material name="Yellow">
+                <color rgba="${yellow}"/>
+            </material>
+        </visual>
+
+        <collision>
+            <origin xyz="0.0 0.0 0.09" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <cylinder radius="0.035" length="0.18"/>
+            </geometry>
+        </collision>
+    </link>
+
+</robot>
+
