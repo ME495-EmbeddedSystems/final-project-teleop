@@ -29,7 +29,7 @@ class HandPositionNode(Node):
                                ParameterDescriptor(description="The z offset for the end effector"))
         self.z = self.get_parameter("z_offset").get_parameter_value().double_value
 
-        self.declare_parameter("yaw_offset", 0.0,
+        self.declare_parameter("yaw_offset", -3.1415926,
                                ParameterDescriptor(description="The yaw offset for the end effector"))
         self.yaw = self.get_parameter("yaw_offset").get_parameter_value().double_value
 
@@ -51,13 +51,14 @@ class HandPositionNode(Node):
     def timer_callback(self):
         joints = self.convert_transform()
         msg = JointState()
+        msg.header.stamp = self.get_clock().now().to_msg()
         msg.name = self.joint_names
         msg.position = joints
         self.joint_pub.publish(msg)
 
 
     def config_callback(self, msg):
-        arr = np.tranpose(np.array([msg.config]).reshape([4, 4]))
+        arr = np.transpose(np.array([msg.config]).reshape([4, 4]))
         self.EE_transform = arr
     
     def convert_transform(self):

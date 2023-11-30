@@ -4,9 +4,6 @@
 
     <node if="$(eval '\'$(var side)\' != \'left\'')" pkg='teleop_haptics' exec="force_feedback" namespace="right_hand"/>
     <node if="$(eval '\'$(var side)\' != \'right\'')" pkg='teleop_haptics' exec="force_feedback" namespace="left_hand"/>
-    <include file="$(find-pkg-share franka_driver)/launch/anl_controller.launch.xml">
-        <arg name="side" value="$(var side)"/>
-    </include>
     <group if="$(eval '\'$(var track)\' == \'true\'')" >
         <node if="$(eval '\'$(var side)\' != \'left\'')" pkg='teleop_haptics' exec="hand_position" namespace="right_hand"/>
         <node if="$(eval '\'$(var side)\' != \'right\'')" pkg='teleop_haptics' exec="hand_position" namespace="left_hand"/> 

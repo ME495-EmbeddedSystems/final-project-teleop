@@ -1,0 +1,12 @@
+<launch>
+    <arg name="side" default="right" description="Choose which side to start the frankas: left, right, both. Defaults to right"/>
+    <arg name="track" default="true" description="Choose if the hand tracking from the frankas should be sent"/>
+
+    <include file="$(find-pkg-share franka_driver)/launch/anl_controller.launch.xml">
+        <arg name="side" value="$(var side)"/>
+    </include>
+    <include file="$(find-pkg-share teleop_haptics)/launch/haptics.launch.xml">
+        <arg name="side" value="$(var side)"/>
+        <arg name="track" value="$(var track)"/>
+    </include>
+</launch>
