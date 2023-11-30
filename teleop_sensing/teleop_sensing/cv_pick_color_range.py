@@ -252,8 +252,8 @@ class BlobDetector(FilterBase):
             x, y = keypoint.pt
             x = int(x)
             y = int(y)
-            print(f"have keypoint at:{x} , {y}")
-            print(f"angle {keypoint.angle}")
+            # print(f"have keypoint at:{x} , {y}")
+            # print(f"angle {keypoint.angle}")
 
             cv2.circle(bgr_image, (x, y), 5, (100, 100, 255), -1)
 
