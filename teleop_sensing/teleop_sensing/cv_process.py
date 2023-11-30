@@ -33,7 +33,6 @@ from std_msgs.msg import Header
 from tf2_ros import TransformBroadcaster
 import enum
 
-
 def main(args=None):
     '''
     The main entry point. This combines entry method for both ros2 run through
@@ -128,6 +127,11 @@ class ImageProcesser(RosNode):
             "raw_cam_info" : self.raw_cam_info_deque ,
         }
 
+        # Setup apriltags
+
+        
+
+
         # /D435i/aligned_depth_to_color/image_raw
         # The non alighted depth image is not usable. points near the corner of the image will have huge bad offset.
         self.depth_image_sub = self.create_subscription(RosImage, "/D435i/aligned_depth_to_color/image_raw", functools.partial(self.push_to_queue_callback, self.depth_image_deque) ,10)
@@ -191,10 +195,10 @@ class ImageProcesser(RosNode):
         Maybe the rs_ros library labeled the frame backwords?  
         """
 
-        raw_img = self.raw_image_deque[0]
-        raw_ci = self.raw_cam_info_deque[0]
-        depth_img = self.depth_image_deque[0]
-        depth_ci = self.depth_cam_info_deque[0]
+        raw_img = self.raw_image_deque.pop()
+        raw_ci = self.raw_cam_info_deque.pop()
+        depth_img = self.depth_image_deque.pop()
+        depth_ci = self.depth_cam_info_deque.pop()
 
         # TODO what happen with encoding =  image.encode
         raw_img_cv = self.br.imgmsg_to_cv2( raw_img, desired_encoding="bgr8")
@@ -230,7 +234,7 @@ class ImageProcesser(RosNode):
             raw_rect_pxy = raw_pin_model.rectifyPoint(raw_pxy)
             raw_rect_pxy = [int(x) for x in raw_rect_pxy]
             raw_rect_depth = depth_img_cv[raw_rect_pxy[1], raw_rect_pxy[0] ]
-            print(f"Color {c.name} depth {raw_rect_depth}")
+            # print(f"Color {c.name} depth {raw_rect_depth}")
             raw_rect_ph_sxyz = [v*raw_rect_depth / 1000  for v in  raw_pin_model.projectPixelTo3dRay(raw_rect_pxy)]
             print(f"Color {c.name} at xyz {raw_rect_ph_sxyz[0]:.5f} {raw_rect_ph_sxyz[1]:.5f} {raw_rect_ph_sxyz[2]:.5f} ")
 
