@@ -7,9 +7,14 @@ from visualization_msgs.msg import Marker
 from tf2_ros import TransformBroadcaster, StaticTransformBroadcaster
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
+from enum import Enum
 import random
 import time
 
+class SimState(Enum):
+    REST = 0
+    GRASPED = 1
+    FALLING = 2
 
 class RingSim(Node):
     """
@@ -117,8 +122,11 @@ class RingSim(Node):
                                  'orange_ring': 'orange_center',
                                  'red_ring': 'red_center'}
         
+        self.state = SimState.REST
+        
     def timer_callback(self):
-        pass
+        if self.state == SimState.REST:
+            
 
     def generate_ring_start_position(self):
         x = random.uniform(-0.5, 0.5)
@@ -127,12 +135,6 @@ class RingSim(Node):
         while self.too_close(x,y):
             x = random.uniform(-0.5, 0.5)
             y = random.uniform(-0.5, 0.5)
-
-        # while (x > -0.15 and x < 0.1):
-        #     x = random.uniform(-0.5, 0.5)
-
-        # while (y > -0.15 and y < 0.15):
-        #     y = random.uniform(-0.5, 0.5)
 
         self.ring_positions += [(x,y)]
 
