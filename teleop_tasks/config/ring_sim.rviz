@@ -6,11 +6,9 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /RobotModel1
-        - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.5
-    Tree Height: 1079
+    Tree Height: 719
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
@@ -254,11 +252,256 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Alpha: 1
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
+      Description File: ""
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /left_hand/robot_description
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        index_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        index_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        middle_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        palm:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        pinky_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ring_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_dumb:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        thumb_tip:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        world_6:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Mass Properties:
+        Inertia: false
+        Mass: false
+      Name: RobotModel
+      TF Prefix: left_hand
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
     - Class: rviz_default_plugins/TF
       Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        left_hand/index_1:
+          Value: false
+        left_hand/index_2:
+          Value: false
+        left_hand/index_3:
+          Value: false
+        left_hand/index_dumb:
+          Value: false
+        left_hand/index_tip:
+          Value: false
+        left_hand/middle_1:
+          Value: false
+        left_hand/middle_2:
+          Value: false
+        left_hand/middle_3:
+          Value: false
+        left_hand/middle_dumb:
+          Value: false
+        left_hand/middle_tip:
+          Value: false
+        left_hand/palm:
+          Value: false
+        left_hand/pinky_1:
+          Value: false
+        left_hand/pinky_2:
+          Value: false
+        left_hand/pinky_3:
+          Value: false
+        left_hand/pinky_dumb:
+          Value: false
+        left_hand/pinky_tip:
+          Value: false
+        left_hand/ring_1:
+          Value: false
+        left_hand/ring_2:
+          Value: false
+        left_hand/ring_3:
+          Value: false
+        left_hand/ring_dumb:
+          Value: false
+        left_hand/ring_tip:
+          Value: false
+        left_hand/thumb_1:
+          Value: false
+        left_hand/thumb_2:
+          Value: false
+        left_hand/thumb_dumb:
+          Value: false
+        left_hand/thumb_tip:
+          Value: false
+        left_hand/world:
+          Value: false
+        left_hand/world_2:
+          Value: false
+        left_hand/world_3:
+          Value: false
+        left_hand/world_4:
+          Value: false
+        left_hand/world_5:
+          Value: false
+        left_hand/world_6:
+          Value: false
+        right_hand/world:
+          Value: false
         sim/blue/center:
           Value: false
         sim/green/center:
@@ -271,9 +514,9 @@ Visualization Manager:
           Value: false
         sim/ring_base/stem:
           Value: false
-        sim/yellow/center:
+        sim/world:
           Value: false
-        world:
+        sim/yellow/center:
           Value: false
       Marker Scale: 1
       Name: TF
@@ -281,7 +524,45 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        world:
+        sim/world:
+          left_hand/world:
+            left_hand/world_2:
+              left_hand/world_3:
+                left_hand/world_4:
+                  left_hand/world_5:
+                    left_hand/world_6:
+                      left_hand/palm:
+                        left_hand/index_dumb:
+                          left_hand/index_1:
+                            left_hand/index_2:
+                              left_hand/index_3:
+                                left_hand/index_tip:
+                                  {}
+                        left_hand/middle_dumb:
+                          left_hand/middle_1:
+                            left_hand/middle_2:
+                              left_hand/middle_3:
+                                left_hand/middle_tip:
+                                  {}
+                        left_hand/pinky_dumb:
+                          left_hand/pinky_1:
+                            left_hand/pinky_2:
+                              left_hand/pinky_3:
+                                left_hand/pinky_tip:
+                                  {}
+                        left_hand/ring_dumb:
+                          left_hand/ring_1:
+                            left_hand/ring_2:
+                              left_hand/ring_3:
+                                left_hand/ring_tip:
+                                  {}
+                        left_hand/thumb_dumb:
+                          left_hand/thumb_1:
+                            left_hand/thumb_2:
+                              left_hand/thumb_tip:
+                                {}
+          right_hand/world:
+            {}
           sim/blue/center:
             {}
           sim/green/center:
@@ -300,7 +581,7 @@ Visualization Manager:
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: world
+    Fixed Frame: sim/world
     Frame Rate: 30
   Name: root
   Tools:
@@ -343,7 +624,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 2.472632884979248
+      Distance: 2.2075955867767334
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -366,10 +647,10 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1376
+  Height: 1016
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd000000040000000000000156000004c2fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000004c2000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000004c2fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003d000004c2000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000d2a0000003efc0100000002fb0000000800540069006d0065010000000000000d2a000002fb00fffffffb0000000800540069006d0065010000000000000450000000000000000000000ab9000004c200000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001560000035afc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000035a000000c900fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f0000035afc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073010000003d0000035a000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000073a0000003efc0100000002fb0000000800540069006d006501000000000000073a000002fb00fffffffb0000000800540069006d00650100000000000004500000000000000000000004c90000035a00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -378,6 +659,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 3370
+  Width: 1850
   X: 70
   Y: 27
