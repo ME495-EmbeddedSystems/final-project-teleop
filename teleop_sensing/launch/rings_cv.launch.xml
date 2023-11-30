@@ -14,7 +14,7 @@
         <arg name = "enable_sync" value="True" />
         
         <!-- Point cloud is purely for visual debugging in rviz -->
-        <arg name="pointcloud.enable" value="true"/>
+        <!-- <arg name="pointcloud.enable" value="true"/> -->
 
     </include>
 
