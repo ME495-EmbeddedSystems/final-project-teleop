@@ -1,0 +1,33 @@
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ring">
+
+    <xacro:arg name="ring_color" default="white"/>
+
+    <xacro:property name="white" value="1.0 1.0 1.0 1.0" />
+    <xacro:property name="blue" value="0.0 0.75 0.86 1.0" />
+    <xacro:property name="green" value="0.65 0.83 0.02 1.0" />
+    <xacro:property name="yellow" value="0.94 0.79 0.16 1.0" />
+    <xacro:property name="orange" value="0.97 0.48 0.0 1.0" />
+    <xacro:property name="red" value="0.88 0.0 0.06 1.0" />
+
+    <!-- Base Link -->
+    <link name="center">
+        <visual>
+            <origin xyz="0.0 0.0 0.0" rpy="${pi/2} 0.0 0.0" />
+            <geometry>
+                <mesh filename="file://$(find teleop_visualization)/ring.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="Cyan">
+                <color rgba="${$(arg ring_color)}"/>
+            </material>
+        </visual>
+
+        <collision>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            <geometry>
+                <cylinder radius="0.05" length="0.02"/>
+            </geometry>
+        </collision>
+    </link>
+
+</robot>
+

@@ -41,7 +41,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'objects = teleop_tasks.objects:main'
+            'objects = teleop_tasks.objects:main',
+            'ring_sim = teleop_tasks.ring_sim:main'
         ],
     },
 )

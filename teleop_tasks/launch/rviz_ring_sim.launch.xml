@@ -1,0 +1,40 @@
+<launch>
+    
+    <!-- Rviz -->
+    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share teleop_tasks)/config/ring_sim.rviz"/>
+        
+    <!-- Robot State Publisher for Rings and Peg -->
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="sim/blue">
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_tasks)/urdf/ring.urdf.xacro ring_color:=blue')" />
+    </node>
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="sim/green">
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_tasks)/urdf/ring.urdf.xacro ring_color:=green')" />
+    </node>
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="sim/yellow">
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_tasks)/urdf/ring.urdf.xacro ring_color:=yellow')" />
+    </node>
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="sim/orange">
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_tasks)/urdf/ring.urdf.xacro ring_color:=orange')" />
+    </node>
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="sim/red">
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_tasks)/urdf/ring.urdf.xacro ring_color:=red')" />
+    </node>
+
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="sim/ring_base">
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_tasks)/urdf/ring_base.urdf.xacro ring_color:=red')" />
+        <param name="frame_prefix" value="sim/ring_base/" />
+    </node>
+
+    <!-- Left Hand -->
+    <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml">
+        <arg name="view_only" value="false"/>
+    </include>
+    
+    <!-- Rviz 'physics' node -->
+    <node pkg="teleop_tasks" exec="ring_sim" name="ring_sim"/>
+
+</launch>
