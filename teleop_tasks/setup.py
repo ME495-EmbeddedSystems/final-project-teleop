@@ -42,7 +42,11 @@ setup(
     entry_points={
         'console_scripts': [
             'objects = teleop_tasks.objects:main',
+<<<<<<< HEAD
             'ring_sim = teleop_tasks.ring_sim:main'
+=======
+            'finger_joint_mapper = teleop_tasks.finger_joint_mapper:main'
+>>>>>>> feature/teleop_tasks
         ],
     },
 )

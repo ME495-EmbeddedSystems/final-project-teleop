@@ -6,6 +6,7 @@
         <plugin
             filename="libignition-gazebo-joint-state-publisher-system.so"
             name="ignition::gazebo::systems::JointStatePublisher">
+            <topic>/right_hand/joint_states</topic>
         </plugin>
     </gazebo>
 
