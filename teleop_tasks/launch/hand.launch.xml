@@ -1,0 +1,11 @@
+<launch>
+    <group>
+        <push-ros-namespace namespace="left_hand"/>
+        <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml">
+            <arg name="view_only" value="true"/>
+        </include>
+    </group>
+
+    <node pkg="teleop_tasks" exec="finger_joint_mapper" name="finger_joint_mapper"/>
+    <node pkg="teleop_tasks" exec="objects" name="objects"/>
+</launch>
