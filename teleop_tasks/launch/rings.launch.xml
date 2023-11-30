@@ -3,7 +3,7 @@
 
     <group if="$(eval '\'$(var real_rings)\' == \'true\'')">
         <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
-            <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/Rings.sdf"/>
+            <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/NewRings.sdf"/>
         </include>
     </group>
 
@@ -15,23 +15,12 @@
 
     <group>
         <push-ros-namespace namespace="left_hand"/>
-        <node pkg="ros_gz_sim" exec="create" args="-topic /left_hand/robot_description -y 0.15 -z 1.0" />
+        <node pkg="ros_gz_sim" exec="create" args="-topic /left_hand/robot_description -y 0.15 -z 0.85" />
 
         <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml">
-            <arg name="view_only" value="false"/>
+            <arg name="view_only" value="true"/>
         </include>
     </group>
-
-    <!-- <group>
-        <push-ros-namespace namespace="right_hand"/>
-        <node pkg="ros_gz_sim" exec="create" args="-topic /right_hand/robot_description -y -0.15 -z 1.0" />
-        <include file="$(find-pkg-share teleop_tasks)/launch/rightHandTest.launch.xml">
-            <arg name="view_only" value="false"/>
-        </include>
-    </group> -->
-
-    <!-- /left_hand/joint_states@sensor_msgs/msg/JointState]gz.msgs.Model
-    /right_hand/joint_states@sensor_msgs/msg/JointState]gz.msgs.Model -->
 
     <node pkg="ros_gz_bridge" exec="parameter_bridge"
         args="/model/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V
