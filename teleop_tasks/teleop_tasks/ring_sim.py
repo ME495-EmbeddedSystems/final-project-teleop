@@ -28,10 +28,10 @@ class RingSim(Node):
 
         self.goalZ = {
                     'blue' : 0.1,
-                    'green' : 0.2, 
-                    'yellow' : 0.3, 
-                    'orange' : 0.4,
-                    'red' : 0.5 
+                    'green' : 0.15, 
+                    'yellow' : 0.20, 
+                    'orange' : 0.25,
+                    'red' : 0.30 
         }
 
         self.period = 0.01
@@ -50,7 +50,7 @@ class RingSim(Node):
         self.ring_positions = [(0,0)]
 
         x, y = self.generate_ring_start_position()
-        self.blue = Ring(x0=x,y0=y,name="blue",period=self.period)
+        self.blue = Ring(x0=0.25,y0=0.0,name="blue",period=self.period)
         x, y = self.generate_ring_start_position()
         self.green = Ring(x0=x,y0=y,name="green",period=self.period)
         x, y = self.generate_ring_start_position()
@@ -100,16 +100,18 @@ class RingSim(Node):
         
     def timer_callback(self):
         #self.publish_world()
+        self.world_to_ring_base.header.stamp = self.get_clock().now().to_msg()
         self.broadcaster.sendTransform(self.world_to_ring_base)
         
         for i in self.ringArray:
+            self.get_logger().info(i.name+"'s state is:" + str(i.state))
             if(i.state == SimState.REST):
                 i.acceleration = Point32()
                 i.velocity = Point32()
                 i.position.z = 0.0155
                 if(self.ring_grasped(i.name)):
                     try:
-                        trans = self.tf_buffer.lookup_transform(i.TF.child_frame_id, "left_hand/palm", rclpy.time.Time())
+                        trans = self.tf_buffer.lookup_transform(i.TF.child_frame_id, "left_hand/palm", rclpy.time.Time(nanoseconds=0))
                         i.state = SimState.GRASPED
 
                         #i.offset.x = trans.transform.translation.x
@@ -123,14 +125,14 @@ class RingSim(Node):
             if(i.state == SimState.GRASPED):
                 if(self.ring_grasped(i.name)):
                     try:
-                        trans = self.tf_buffer.lookup_transform("sim/world" "left_hand/palm", rclpy.time.Time())
+                        trans = self.tf_buffer.lookup_transform("sim/world", "left_hand/palm", rclpy.time.Time(nanoseconds=0))
         
                         i.acceleration = Point32()
                         i.velocity = Point32()
                         i.position.x = trans.transform.translation.x 
-                        i.posiiton.y = trans.transform.translation.y
-                        i.position.z = trans.transform.translation.z - 0.0155
-                        i.TF.rotation = trans.transform.rotation
+                        i.position.y = trans.transform.translation.y
+                        i.position.z = trans.transform.translation.z + 0.1155
+                        i.TF.transform.rotation = trans.transform.rotation
                         i.last_rotation = trans.transform.rotation
 
                     except Exception as error:
@@ -149,17 +151,16 @@ class RingSim(Node):
             if(i.state == SimState.LOCKED):
                 i.acceleration = Point32()
                 i.velocity = Point32()
-                i.position.z = goalZ[i.name]
-                i.TF.transform.rotation = Quaterion()
+                i.position = Point32()
+                i.position.z = self.goalZ[i.name]
+                i.TF.transform.rotation = Quaternion()
             
-            if(i.position.z <= 0):
-                i.state = SimState.REST
+            #if(i.position.z <= 0):
+            #    i.state = SimState.REST
             
             i.update_state()
             i.TF.header.stamp = self.get_clock().now().to_msg()
             self.broadcaster.sendTransform(i.TF)
-
-
 
     """
     def publish_world(self):
@@ -179,7 +180,7 @@ class RingSim(Node):
 
     def ring_placed(self, name):
         try:
-            trans = self.tf_buffer.lookup_transform("sim/"+name+"/center", "sim/ring_base/base", rclpy.time.Time())
+            trans = self.tf_buffer.lookup_transform("sim/"+name+"/center", "sim/ring_base/base", rclpy.time.Time(nanoseconds=0))
 
             x = trans.transform.translation.x
             y = trans.transform.translation.y
@@ -199,11 +200,11 @@ class RingSim(Node):
 
         try:
             # Lookup tf from ring to fingertips
-            thumb_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/thumb_tip", rclpy.time.Time()) # Thumb
-            index_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/index_tip", rclpy.time.Time()) # Index
-            middle_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/middle_tip", rclpy.time.Time()) # Middle
-            ring_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/ring_tip", rclpy.time.Time()) # Ring
-            pinky_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/pinky_tip", rclpy.time.Time()) # Pinky
+            thumb_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/thumb_tip", rclpy.time.Time(nanoseconds=0)) # Thumb
+            index_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/index_tip", rclpy.time.Time(nanoseconds=0)) # Index
+            middle_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/middle_tip", rclpy.time.Time(nanoseconds=0)) # Middle
+            ring_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/ring_tip", rclpy.time.Time(nanoseconds=0)) # Ring
+            pinky_tf = self.tf_buffer.lookup_transform("sim/"+name+"/center", "left_hand/pinky_tip", rclpy.time.Time(nanoseconds=0)) # Pinky
 
             fingers_in_contact = np.zeros(5)
 
@@ -213,9 +214,9 @@ class RingSim(Node):
             fingers_in_contact[3] = self.finger_contact(ring_tf)
             fingers_in_contact[4] = self.finger_contact(pinky_tf)
 
-            self.get_logger().info(str(np.sum(fingers_in_contact)))
+            #self.get_logger().info(str(np.sum(fingers_in_contact)))
 
-            if (fingers_in_contact[0] == 1) and (np.sum(fingers_in_contact) >= 2):
+            if (fingers_in_contact[0] == 1) or (np.sum(fingers_in_contact) >= 1):
 
                 return True
         
@@ -228,8 +229,8 @@ class RingSim(Node):
     def finger_contact(self, ring_fingertip_tf):
 
         # Ring Dimensions
-        ring_width = 0.118
-        ring_height = 0.031
+        ring_width = 0.25#0.118
+        ring_height = 0.25#0.031
 
         # Check if z is within height range of ring
         if abs(ring_fingertip_tf.transform.translation.z) <= ring_height/2:
