@@ -4,6 +4,7 @@ from geometry_msgs.msg import TransformStamped, Point32, Quaternion
 from sensor_msgs.msg import JointState
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
 from visualization_msgs.msg import Marker
+from std_srvs.srv import SetBool
 from tf2_ros import TransformBroadcaster, StaticTransformBroadcaster
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
@@ -92,6 +93,10 @@ class RingSim(Node):
         #                         'orange_ring': 'orange_center',
         #                         'red_ring': 'red_center'}
 
+        # Create service client to actuate HaptX Gloves
+        self.grasped_client = self.create_client(SetBool, "grasped")
+        self.grasped_client.wait_for_service(timeout_sec=10)
+
     def timer_callback(self):
         self.world_to_ring_base.header.stamp = self.get_clock().now().to_msg()
         self.broadcaster.sendTransform(self.world_to_ring_base)
@@ -107,6 +112,11 @@ class RingSim(Node):
                         trans = self.tf_buffer.lookup_transform(i.TF.child_frame_id, "left_hand/palm", rclpy.time.Time(nanoseconds=0))
                         i.state = SimState.GRASPED
                         self.grabbed = i.name
+
+                        # Call service to turn HaptX gloves on
+                        grasped_req = SetBool.Request()
+                        grasped_req.data = True
+                        self.grasped_client.call_async(grasped_req)
 
                         #i.offset.x = trans.transform.translation.x
                         #i.offset.y = trans.transform.translation.y
@@ -134,6 +144,11 @@ class RingSim(Node):
                 else:
                     i.state = SimState.FALLING
                     self.grabbed = None
+
+                    # Call service to turn HaptX gloves off
+                    grasped_req = SetBool.Request()
+                    grasped_req.data = True
+                    self.grasped_client.call_async(grasped_req)
 
             if(i.state == SimState.FALLING):
                 i.acceleration.z = -9.81
