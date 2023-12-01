@@ -94,10 +94,10 @@ class HaptxFeedback(Node):
             brake_msg.name = ['lh_th', 'lh_ff', 'lh_mf', 'lh_rf', 'lh_lf']
             
             if request.data == True:
-                self.right_tactors_on = True
+                self.left_tactors_on = True
                 brake_msg.activated = [True]*5
             else:
-                self.right_tactors_on = False
+                self.left_tactors_on = False
                 brake_msg.activated = [False]*5
 
             self.lh_brake_pub.publish(brake_msg)
