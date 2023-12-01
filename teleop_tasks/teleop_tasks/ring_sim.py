@@ -1,6 +1,7 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import TransformStamped, Point32, Quaternion
+from geometry_msgs.msg import TransformStamped, Point32, Quaternion, Wrench
+from teleop_interfaces.srv import SetWrench
 from sensor_msgs.msg import JointState
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
 from visualization_msgs.msg import Marker
@@ -96,6 +97,8 @@ class RingSim(Node):
         # Create service client to actuate HaptX Gloves
         self.grasped_client = self.create_client(SetBool, "grasped")
         self.grasped_client.wait_for_service(timeout_sec=10)
+        self.force_client = self.create_client(SetWrench, "/left_hand/set_applied_wrench")
+        self.force_client.wait_for_service(timeout_sec=10)
 
     def timer_callback(self):
         self.world_to_ring_base.header.stamp = self.get_clock().now().to_msg()
@@ -112,11 +115,7 @@ class RingSim(Node):
                         trans = self.tf_buffer.lookup_transform(i.TF.child_frame_id, "left_hand/palm", rclpy.time.Time(nanoseconds=0))
                         i.state = SimState.GRASPED
                         self.grabbed = i.name
-
-                        # Call service to turn HaptX gloves on
-                        grasped_req = SetBool.Request()
-                        grasped_req.data = True
-                        self.grasped_client.call_async(grasped_req)
+                        self.haptics(True, i.mass)
 
                         #i.offset.x = trans.transform.translation.x
                         #i.offset.y = trans.transform.translation.y
@@ -145,10 +144,7 @@ class RingSim(Node):
                     i.state = SimState.FALLING
                     self.grabbed = None
 
-                    # Call service to turn HaptX gloves off
-                    grasped_req = SetBool.Request()
-                    grasped_req.data = True
-                    self.grasped_client.call_async(grasped_req)
+                    self.haptics(False, 0.0)
 
             if(i.state == SimState.FALLING):
                 i.acceleration.z = -9.81
@@ -232,9 +228,16 @@ class RingSim(Node):
                 return 1
             
         return 0
-    
-    #def activate_haptics(self, mass):
-        
+
+    def haptics(self, boolean, mass):
+        grasped_req = SetBool.Request()
+        grasped_req.data = boolean
+        self.grasped_client.call_async(grasped_req)
+        force_req = SetWrench.Request()
+        wrench = Wrench()
+        wrench.force.z = -9.81 * mass
+        force_req.wrench = wrench
+        self.force_client.call_async(force_req)
     
 
     def generate_ring_start_position(self):
@@ -260,7 +263,7 @@ class RingSim(Node):
 
 class Ring():
 
-    def __init__(self, x0, y0, name, period, mass=0.0):
+    def __init__(self, x0, y0, name, period, mass=2.5):
         self.TF = TransformStamped()
         self.period = period
         self.name = name
