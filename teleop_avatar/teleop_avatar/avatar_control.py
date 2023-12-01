@@ -68,6 +68,12 @@ class AvatarControl(Node):
                             [0, 0, 1,   0.01],
                             [0, 0, 0,      1]]
         
+        # Transform from abb_table april tag to peg
+        self.T_world_peg = np.array([[0.999,    -0.033,     -0.011, -0.234],
+                                     [0.033,     0.999,      0.002,  0.491],
+                                     [0.011,    -0.002,        1.0, -0.021],
+                                     [  0.0,       0.0,        0.0,    1.0]])
+
         # Transform of ring of interest in world frame
         self.T_world_obj = np.eye(4)
         
