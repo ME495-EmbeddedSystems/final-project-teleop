@@ -66,18 +66,45 @@ class AvatarControl(Node):
                             [0, 0, 1,   0.01],
                             [0, 0, 0,      1]]
         
+        # Transform from abb_table april tag to peg
+        self.T_world_peg = np.array([[0.999,    -0.033,     -0.011, -0.234],
+                                     [0.033,     0.999,      0.002,  0.491],
+                                     [0.011,    -0.002,        1.0, -0.021],
+                                     [  0.0,       0.0,        0.0,    1.0]])
+        
+        # Transform of ring in hand frame
+        self.T_hand_peg = np.array([[-1.0,    0.0,  0.0,       0.0],
+                                    [ 0.0, 0.4695,  0.8829, -0.075],
+                                    [ 0.0, 0.8829, -0.4695,   0.12],
+                                    [ 0.0,    0.0,     0.0,    1.0]])
+        
         # Transform of ring of interest in world frame
         self.T_world_obj = np.eye(4)
         
         self.graspStandoff = 0.1
 
-        self.object_frame_map = {'blue_ring': 'blue/center',
-                                 'green_ring': 'green/center',
-                                 'yellow_ring': 'yellow/center',
-                                 'orange_ring': 'orange/center',
-                                 'red_ring': 'red/center'}
+        self.object_frame_map = {'blue_ring': 'blue_center',
+                                 'green_ring': 'green_center',
+                                 'yellow_ring': 'yellow_center',
+                                 'orange_ring': 'orange_center',
+                                 'red_ring': 'red_center'}
 
         self.buffer = {}
+
+        initial_pose = TransformStamped()
+        initial_pose.header.stamp = self.get_clock().now().to_msg()
+        initial_pose.header.frame_id = "operator_task_ws"
+        initial_pose.child_frame_id = "haptxRight_sr_aligned" # Right arm
+        initial_pose.transform.translation.x = 0.5
+        initial_pose.transform.translation.y = -0.063
+        initial_pose.transform.translation.z = 0.385
+        initial_pose.transform.rotation.x = 0.5075
+        initial_pose.transform.rotation.y = 0.5293
+        initial_pose.transform.rotation.z = 0.4705
+        initial_pose.transform.rotation.w = -0.4908
+
+        self.abb_pub.publish(initial_pose)
+
 
     def timer_callback(self):
         """Timer function for the Avatar Control node."""
@@ -88,7 +115,7 @@ class AvatarControl(Node):
         object_frame = self.object_frame_map[request.object_id]
 
         # Get necessary transforms
-        world_obj_tf = self.tf_buffer.lookup_transform('world', object_frame, rclpy.time.Time())
+        world_obj_tf = self.tf_buffer.lookup_transform('tag16H05_3', object_frame, rclpy.time.Time())
         world_obj_tf.transform.translation.z = 0
         world_obj_tf.transform.rotation.x = 0.023263087438040456
         world_obj_tf.transform.rotation.y = -0.012624678671690372
@@ -102,6 +129,7 @@ class AvatarControl(Node):
         
         # Move to standoff height above object
         abb_msg.transform.translation.z += self.graspStandoff
+        abb_msg.transform.translation.x += 0.02
         
         self.abb_pub.publish(abb_msg)
 
@@ -121,7 +149,7 @@ class AvatarControl(Node):
         time.sleep(5)
 
         # Move down to object
-        abb_msg.transform.translation.z -= self.graspStandoff
+        abb_msg.transform.translation.z -= self.graspStandoff - 0.01
         
         self.abb_pub.publish(abb_msg)
 
@@ -138,6 +166,22 @@ class AvatarControl(Node):
         msg.points = [point]
 
         self.shadow_pub.publish(msg)
+
+        time.sleep(0.5)
+
+        # Move to standoff height above object
+        abb_msg.transform.translation.z += self.graspStandoff - 0.01
+        self.abb_pub.publish(abb_msg)
+
+        time.sleep(5)
+
+        # Move above peg
+        # Calculate transformation of hand relative to the avatar_ws
+        T_aws_hand = self.T_aws_world @ self.T_world_peg @ np.linalg.inv(self.T_hand_peg)
+        abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
+        abb_msg.transform.translation.z += 0.2
+
+        self.abb_pub.publish(abb_msg)
 
         return response
 
