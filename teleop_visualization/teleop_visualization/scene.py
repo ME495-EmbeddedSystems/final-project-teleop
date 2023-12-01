@@ -5,6 +5,9 @@ from geometry_msgs.msg import TransformStamped
 from visualization_msgs.msg import Marker
 from sensor_msgs.msg import JointState
 from tf2_ros import TransformBroadcaster, StaticTransformBroadcaster
+from tf2_ros.transform_listener import TransformListener
+from tf2_ros.buffer import Buffer
+
 
 
 class Scene(Node):
@@ -21,6 +24,10 @@ class Scene(Node):
         # Create broadcasters
         self.broadcaster = TransformBroadcaster(self)
         self.static_broadcaster = StaticTransformBroadcaster(self)
+
+        # Create Transform Listener
+        self.tf_buffer = Buffer()
+        self.tf_listener = TransformListener(self.tf_buffer, self)
 
         # Transform for abb base in world
         world_to_abb = TransformStamped()
@@ -43,6 +50,7 @@ class Scene(Node):
         table = Marker()
         table.header.stamp = self.get_clock().now().to_msg()
         table.header.frame_id = 'world'
+        table.id = 0
         table.type = table.CUBE
         table.action = table.ADD
         table.pose.position.z = -0.2655
@@ -55,7 +63,6 @@ class Scene(Node):
         table.color.a = 1.0
         table.lifetime.nanosec = 0
         table.frame_locked = True
-        table.id = 0
         self.marker_pub.publish(table)
 
         # Subscribe to avatar joint states
@@ -70,8 +77,6 @@ class Scene(Node):
         self.gofa_js = [-1.570799, 0.174, 0.523, 0.0, -0.697, -0.523]
         self.shadow_joint_names = ['rh_FFJ4', 'rh_FFJ3','rh_FFJ2', 'rh_FFJ1','rh_MFJ4','rh_MFJ3','rh_MFJ2','rh_MFJ1','rh_RFJ4','rh_RFJ3','rh_RFJ2','rh_RFJ1','rh_LFJ5', 'rh_LFJ4','rh_LFJ3','rh_LFJ2','rh_LFJ1','rh_THJ5','rh_THJ4','rh_THJ3','rh_THJ2','rh_THJ1', 'rh_WRJ1', 'rh_WRJ2']
         self.shadow_js = 24*[0.0]
-
-        self.brick_drawn_count = 0
         
     def timer_callback(self):
         self.avatar_js = JointState()

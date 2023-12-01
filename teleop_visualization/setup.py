@@ -9,7 +9,7 @@ setup(
     data_files=[
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
-        ('share/' + package_name, ['package.xml', 'launch/rings.launch.xml', 'config/rings.rviz', 'urdf/ring.urdf.xacro', 'meshes/ring.stl']),
+        ('share/' + package_name, ['package.xml', 'launch/rings.launch.xml', 'launch/rings_light.launch.xml', 'config/rings.rviz', 'config/rings_light.rviz', 'urdf/ring.urdf.xacro', 'meshes/ring.stl']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'rings = teleop_visualization.rings:main',
+            'rings_light = teleop_visualization.rings_light:main',
             'scene = teleop_visualization.scene:main'
         ],
     },
