@@ -26,15 +26,11 @@ class RingSim(Node):
     def __init__(self):
         super().__init__('ring_sim')
 
-        self.goalZ = {
-                    'blue' : 0.1,
-                    'green' : 0.15, 
-                    'yellow' : 0.20, 
-                    'orange' : 0.25,
-                    'red' : 0.30 
-        }
+        self.goalZ = [0.04, 0.065, 0.9, 0.115, 0.14] 
 
         self.period = 0.01
+        self.stacked = 0
+        self.grabbed = None
 
         # Create control loop timer based on frequency parameter
         self.timer = self.create_timer(self.period, self.timer_callback)
@@ -52,17 +48,17 @@ class RingSim(Node):
         x, y = self.generate_ring_start_position()
         self.blue = Ring(x0=0.25,y0=0.0,name="blue",period=self.period)
         x, y = self.generate_ring_start_position()
-        self.green = Ring(x0=x,y0=y,name="green",period=self.period)
+        self.green = Ring(x0=0.0,y0=-0.25,name="green",period=self.period)
         x, y = self.generate_ring_start_position()
-        self.yellow = Ring(x0=x,y0=y,name="yellow",period=self.period)
+        self.yellow = Ring(x0=0.25,y0=-0.25,name="yellow",period=self.period)
         x, y = self.generate_ring_start_position()
-        self.orange = Ring(x0=x,y0=y,name="orange",period=self.period)
+        self.orange = Ring(x0=0.35,y0=0.0,name="orange",period=self.period)
         x, y = self.generate_ring_start_position()
-        self.red = Ring(x0=x,y0=y,name="red",period=self.period)
+        self.red = Ring(x0=0.35,y0=-0.25,name="red",period=self.period)
 
         self.ringArray = [self.blue, self.green, self.yellow, self.orange, self.red]
 
-        # Transform for red ring in world
+        # Transform for ring base in world
         self.world_to_ring_base = TransformStamped()
         self.world_to_ring_base.header.frame_id = "sim/world"
         self.world_to_ring_base.child_frame_id = "sim/ring_base/base"
@@ -90,21 +86,18 @@ class RingSim(Node):
         table.id = 0
         self.marker_pub.publish(table)
 
-        self.object_frame_map = {'blue_ring': 'blue_center',
-                                 'green_ring': 'green_center',
-                                 'yellow_ring': 'yellow_center',
-                                 'orange_ring': 'orange_center',
-                                 'red_ring': 'red_center'}
-        
-        self.state = SimState.REST
-        
+        #self.object_frame_map = {'blue_ring': 'blue_center',
+        #                         'green_ring': 'green_center',
+        #                         'yellow_ring': 'yellow_center',
+        #                         'orange_ring': 'orange_center',
+        #                         'red_ring': 'red_center'}
+
     def timer_callback(self):
-        #self.publish_world()
         self.world_to_ring_base.header.stamp = self.get_clock().now().to_msg()
         self.broadcaster.sendTransform(self.world_to_ring_base)
         
         for i in self.ringArray:
-            self.get_logger().info(i.name+"'s state is:" + str(i.state))
+            # self.get_logger().info(i.name+"'s state is:" + str(i.state))
             if(i.state == SimState.REST):
                 i.acceleration = Point32()
                 i.velocity = Point32()
@@ -113,6 +106,7 @@ class RingSim(Node):
                     try:
                         trans = self.tf_buffer.lookup_transform(i.TF.child_frame_id, "left_hand/palm", rclpy.time.Time(nanoseconds=0))
                         i.state = SimState.GRASPED
+                        self.grabbed = i.name
 
                         #i.offset.x = trans.transform.translation.x
                         #i.offset.y = trans.transform.translation.y
@@ -131,7 +125,7 @@ class RingSim(Node):
                         i.velocity = Point32()
                         i.position.x = trans.transform.translation.x 
                         i.position.y = trans.transform.translation.y
-                        i.position.z = trans.transform.translation.z + 0.1155
+                        i.position.z = trans.transform.translation.z - 0.0155
                         i.TF.transform.rotation = trans.transform.rotation
                         i.last_rotation = trans.transform.rotation
 
@@ -139,44 +133,25 @@ class RingSim(Node):
                         self.get_logger().info(str(error))
                 else:
                     i.state = SimState.FALLING
+                    self.grabbed = None
 
             if(i.state == SimState.FALLING):
                 i.acceleration.z = -9.81
 
                 if(self.ring_placed(i.name)):
                     i.state = SimState.LOCKED
+                    i.acceleration = Point32()
+                    i.velocity = Point32()
+                    i.position = Point32()
+                    i.position.z = self.goalZ[self.stacked]
+                    i.TF.transform.rotation = Quaternion()
+                    self.stacked + 1
                 if(i.position.z <= 0.0155):
                     i.state = SimState.REST
 
-            if(i.state == SimState.LOCKED):
-                i.acceleration = Point32()
-                i.velocity = Point32()
-                i.position = Point32()
-                i.position.z = self.goalZ[i.name]
-                i.TF.transform.rotation = Quaternion()
-            
-            #if(i.position.z <= 0):
-            #    i.state = SimState.REST
-            
             i.update_state()
             i.TF.header.stamp = self.get_clock().now().to_msg()
             self.broadcaster.sendTransform(i.TF)
-
-    """
-    def publish_world(self):
-        self.world_to_blue.header.stamp = self.get_clock().now().to_msg()
-        self.world_to_green.header.stamp = self.get_clock().now().to_msg()
-        self.world_to_yellow.header.stamp = self.get_clock().now().to_msg()
-        self.world_to_orange.header.stamp = self.get_clock().now().to_msg()
-        self.world_to_red.header.stamp = self.get_clock().now().to_msg()
-
-        self.broadcaster.sendTransform(self.world_to_blue)
-        self.broadcaster.sendTransform(self.world_to_green)
-        self.broadcaster.sendTransform(self.world_to_yellow)
-        self.broadcaster.sendTransform(self.world_to_orange)
-        self.broadcaster.sendTransform(self.world_to_red)
-        self.broadcaster.sendTransform(self.world_to_ring_base)
-    """
 
     def ring_placed(self, name):
         try:
@@ -186,7 +161,7 @@ class RingSim(Node):
             y = trans.transform.translation.y
             z = trans.transform.translation.z
 
-            if(z < 0.5 and x*x + y*y < (0.3)**2):
+            if(z <= self.goalZ[self.stacked] and x*x + y*y < (0.05)**2):
                 return True
             return False
         except Exception as error:
@@ -218,7 +193,7 @@ class RingSim(Node):
 
             if (fingers_in_contact[0] == 1) or (np.sum(fingers_in_contact) >= 1):
 
-                return True
+                return True and (self.grabbed == name or self.grabbed is None)
         
         except Exception as error:
             self.get_logger().info(str(error))
@@ -229,8 +204,8 @@ class RingSim(Node):
     def finger_contact(self, ring_fingertip_tf):
 
         # Ring Dimensions
-        ring_width = 0.25#0.118
-        ring_height = 0.25#0.031
+        ring_width = 0.15 #0.118
+        ring_height = 0.1 #0.031
 
         # Check if z is within height range of ring
         if abs(ring_fingertip_tf.transform.translation.z) <= ring_height/2:
@@ -242,6 +217,10 @@ class RingSim(Node):
                 return 1
             
         return 0
+    
+    #def activate_haptics(self, mass):
+        
+    
 
     def generate_ring_start_position(self):
         x = random.uniform(-0.5, 0.5)
@@ -266,13 +245,15 @@ class RingSim(Node):
 
 class Ring():
 
-    def __init__(self, x0, y0, name, period):
+    def __init__(self, x0, y0, name, period, mass=0.0):
         self.TF = TransformStamped()
         self.period = period
         self.name = name
+        self.mass = mass
         self.state = SimState.REST
         self.TF.header.frame_id = "sim/world"
         self.TF.child_frame_id = "sim/"+name+"/center"
+
         self.position = Point32()
         self.position.x = x0
         self.position.y = y0
@@ -304,18 +285,12 @@ class Ring():
 
     
 def main(args=None):
+    """The main function."""
     rclpy.init(args=args)
-
     ring_sim_node = RingSim()
-
     rclpy.spin(ring_sim_node)
-
-    # Destroy the node explicitly
-    # (optional - otherwise it will be done automatically
-    # when the garbage collector destroys the node object)
     ring_sim_node.destroy_node()
     rclpy.shutdown()
-
 
 if __name__ == '__main__':
     main()

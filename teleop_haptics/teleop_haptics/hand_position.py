@@ -69,7 +69,7 @@ class HandPositionNode(Node):
         b = np.arcsin(R[0][2])
         g = np.arctan2(-R[0][1], R[0][0])
 
-        joints = [p[0]-0.5, p[1]-0.5, p[2]-0.35, a, b, g]
+        joints = [p[0]-0.5, p[1]+0.0, p[2]+0.1, a, b, g]
         return joints
     
         

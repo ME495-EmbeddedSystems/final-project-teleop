@@ -5,7 +5,7 @@
         <remap from="joint_states" to="/left_hand/joint_states"/>
     </node>
 
-    <node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui" namespace="left_hand"/>
+    <!--<node pkg="joint_state_publisher_gui" exec="joint_state_publisher_gui" namespace="left_hand"/>-->
 
     <node pkg="teleop_tasks" exec="finger_joint_mapper" name="finger_joint_mapper"/>
     <node pkg="teleop_tasks" exec="hand" name="hand"/>
