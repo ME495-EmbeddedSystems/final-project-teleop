@@ -12,11 +12,10 @@ import cv2
 import typing
 import functools
 import numpy as np
-import dataclass_wizard
 
 
 @dataclasses.dataclass
-class FilterBase(dataclass_wizard.JSONWizard):
+class FilterBase():
 
     def get_field_range(self, field_name: str) -> tuple[float, float]:
         """Get the possible min and max of a field

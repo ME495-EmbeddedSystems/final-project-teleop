@@ -42,13 +42,6 @@ def main(args=None):
     print(f'Starting at main of turtle control, given args: {args}')
     rclpy.init(args=args)
     image_processer = ImageProcesser()
-    for name, f in image_processer.color_filter_map.items():
-        print(f"{name} param: \n{f.to_json()}")
-        
-    print(f"SV filter param: \n{image_processer.sv_filter.to_json()}")
-    print(f"Blob detector param: \n{image_processer.blob_detector.to_json()}")
-
-
     rclpy.spin(image_processer)
     rclpy.shutdown()
 
