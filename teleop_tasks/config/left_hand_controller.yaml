@@ -3,13 +3,10 @@ controller_manager:
     update_rate: 1000  # Hz
 
     joint_trajectory_controller:
-      type: left_hand/joint_trajectory_controller/JointTrajectoryController
+      type: joint_trajectory_controller/JointTrajectoryController
 
     joint_state_broadcaster:
-      type: left_hand/joint_state_broadcaster/JointStateBroadcaster
-
-    robot_description:
-      type: left_hand/robot_description
+      type: joint_state_broadcaster/JointStateBroadcaster
 
 joint_trajectory_controller:
   ros__parameters:
@@ -20,17 +17,22 @@ joint_trajectory_controller:
       - palm_roll
       - palm_pitch
       - palm_yaw
+      - palm_thumb_dumb
       - thumb_dumb_thumb_1
       - thumb_1_thumb_2
+      - palm_index_dumb
       - index_dumb_index_1
       - index_1_index_2
       - index_2_index_3
+      - palm_middle_dumb
       - middle_dumb_middle_1
       - middle_1_middle_2
       - middle_2_middle_3
+      - palm_ring_dumb
       - ring_dumb_ring_1
       - ring_1_ring_2
       - ring_2_ring_3
+      - palm_pinky_dumb
       - pinky_dumb_pinky_1
       - pinky_1_pinky_2
       - pinky_2_pinky_3
@@ -38,3 +40,4 @@ joint_trajectory_controller:
       - position
     state_interfaces:
       - position
+      - velocity

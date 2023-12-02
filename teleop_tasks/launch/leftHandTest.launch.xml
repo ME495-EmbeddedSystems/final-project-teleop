@@ -3,8 +3,8 @@
 
   <node pkg="robot_state_publisher" exec="robot_state_publisher">
       <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share teleop_tasks)/urdf/leftHand.urdf.xacro')" />
-      <param name="frame_prefix" value="left_hand/"/>
-      <remap from="joint_states" to="/left_hand/joint_states"/>
+      <!-- <param name="frame_prefix" value="left_hand/"/> -->
+      <!-- <remap from="joint_states" to="/left_hand/joint_states"/> -->
   </node>
 
   <group if="$(eval '\'$(var view_only)\' == \'false\'')">

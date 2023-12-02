@@ -41,9 +41,9 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'hand = teleop_tasks.hand:main',
+            'objects = teleop_tasks.objects:main',
             'finger_joint_mapper = teleop_tasks.finger_joint_mapper:main',
-            'ring_sim = teleop_tasks.ring_sim:main'
+            'ros_gz_joint_client = teleop_tasks.ros_gz_joint_client:main'
         ],
     },
 )

@@ -50,21 +50,24 @@
         <parent link="world"/>
         <child link="world_2"/>
         <axis xyz="1.0 0.0 0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0"/>
+        <limit effort="1000.0" lower="-15" upper="15" velocity="30"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <joint name="palm_y" type="prismatic">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <parent link="world_2"/>
         <child link="world_3"/>
         <axis xyz="0.0 1.0 0.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0"/>
+        <limit effort="1000.0" lower="-15" upper="15" velocity="30"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <joint name="palm_z" type="prismatic">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <parent link="world_3"/>
         <child link="world_4"/>
         <axis xyz="0.0 0.0 1.0"/>
-        <limit effort="30" velocity="1.0" lower="-10.0" upper="10.0"/>
+        <limit effort="1000.0" lower="-15" upper="15" velocity="30"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
     <joint name="palm_roll" type="continuous">
@@ -72,18 +75,24 @@
         <parent link="world_4"/>
         <child link="world_5"/>
         <axis xyz="1.0 0.0 0.0"/>
+        <limit effort="1000.0" lower="-15" upper="15" velocity="30"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <joint name="palm_pitch" type="continuous">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <parent link="world_5"/>
         <child link="world_6"/>
         <axis xyz="0.0 1.0 0.0"/>
+        <limit effort="1000.0" lower="-15" upper="15" velocity="30"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
     <joint name="palm_yaw" type="continuous">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <parent link="world_6"/>
         <child link="palm"/>
         <axis xyz="0.0 0.0 1.0"/>
+        <limit effort="1000.0" lower="-15" upper="15" velocity="30"/>
+        <dynamics damping="0.0" friction="0.0"/>
     </joint>
 
     <!-- The palm -->
@@ -206,6 +215,8 @@
             <parent link="${parent}"/>
             <child link="${child}"/>
             <axis xyz="0.0 -1.0 0.0"/>
+            <limit effort="1000.0" lower="-15" upper="15" velocity="30"/>
+            <dynamics damping="0.0" friction="0.0"/>
         </joint>
     </xacro:macro>
 
@@ -364,5 +375,291 @@
         </sensor>
     </gazebo>
 
-    <!-- <xacro:include filename="$(find teleop_tasks)/urdf/leftHand.gazebo.xacro"/> -->
+    <ros2_control name="GazeboSimSystem" type="system">
+        <hardware>
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </hardware>
+        <joint name="palm_x">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_y">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_z">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_roll">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_pitch">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_yaw">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_thumb_dumb">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="thumb_dumb_thumb_1">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="thumb_1_thumb_2">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_index_dumb">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="index_dumb_index_1">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="index_1_index_2">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="index_2_index_3">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_middle_dumb">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="middle_dumb_middle_1">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="middle_1_middle_2">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="middle_2_middle_3">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_ring_dumb">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="ring_dumb_ring_1">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="ring_1_ring_2">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="ring_2_ring_3">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="palm_pinky_dumb">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="pinky_dumb_pinky_1">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="pinky_1_pinky_2">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="pinky_2_pinky_3">
+            <command_interface name="position">
+                <param name="min">-15</param>
+                <param name="max">15</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">0.0</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+    </ros2_control>
+    
+    <gazebo>
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+            <parameters>$(find teleop_tasks)/config/left_hand_controller.yaml</parameters>
+        </plugin>
+    </gazebo>
+
 </robot>

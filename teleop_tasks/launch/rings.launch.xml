@@ -1,24 +1,34 @@
 <launch>
     <arg name="real_rings" default="true"/>
 
+    <executable
+        cmd="ros2 control load_controller --set-state active joint_state_broadcaster"
+        output="screen"/>
+
+    <executable
+        cmd="ros2 control load_controller --set-state active joint_trajectory_controller"
+        output="screen"/>
+
     <group if="$(eval '\'$(var real_rings)\' == \'true\'')">
+        <!-- <push-ros-namespace namespace="left_hand"/> -->
         <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
-            <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/NewRings.sdf"/>
+            <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/Rings.sdf"/>
         </include>
     </group>
 
     <group if="$(eval '\'$(var real_rings)\' == \'false\'')">
+        <!-- <push-ros-namespace namespace="left_hand"/> -->
         <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
             <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/SimpleRings.sdf"/>
         </include>
     </group>
 
     <group>
-        <push-ros-namespace namespace="left_hand"/>
-        <node pkg="ros_gz_sim" exec="create" args="-topic /left_hand/robot_description -y 0.15 -z 0.85" />
+        <!-- <push-ros-namespace namespace="left_hand"/> -->
+        <node pkg="ros_gz_sim" exec="create" args="-topic /robot_description -y 0.15 -z 1.0"/>
 
         <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml">
-            <arg name="view_only" value="true"/>
+            <arg name="view_only" value="false"/>
         </include>
     </group>
 
@@ -32,4 +42,5 @@
 
     <node pkg="teleop_tasks" exec="objects" name="objects"/>
     <node pkg="teleop_tasks" exec="finger_joint_mapper" name="finger_joint_mapper"/>
+    <!-- <node pkg="teleop_tasks" exec="ros_gz_joint_client" name="ros_gz_joint_client"/> -->
 </launch>
