@@ -40,7 +40,7 @@ The `teleop_sensing` package uses computer vision to calculate the locations of 
 The `teleop_visualization` package allows you to visualize the avatar's workspace in RViz.
 
 __Real Life:__
-![41BA1E21-AB32-4C08-83C6-C6F4C3C7DDBD](https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/122302059/3c90d238-014b-45b9-bd0b-a8401322f335)
+![Avatar Station with Rings](https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/122302059/c47e4826-eb94-4f62-a949-32af5adda925)
 
 __RViz Visualization:__
 ![Screenshot from 2023-11-30 15-52-21](https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/122302059/cb54bf83-4209-43e2-9299-f436f003a32e)
