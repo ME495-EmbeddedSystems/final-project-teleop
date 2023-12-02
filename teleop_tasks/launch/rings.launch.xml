@@ -25,7 +25,7 @@
 
     <group>
         <!-- <push-ros-namespace namespace="left_hand"/> -->
-        <node pkg="ros_gz_sim" exec="create" args="-topic /robot_description -y 0.15 -z 1.0"/>
+        <node pkg="ros_gz_sim" exec="create" args="-topic /robot_description -x -0.1 -y 0.2 -z 0.75"/>
 
         <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml">
             <arg name="view_only" value="false"/>
@@ -42,5 +42,5 @@
 
     <node pkg="teleop_tasks" exec="objects" name="objects"/>
     <node pkg="teleop_tasks" exec="finger_joint_mapper" name="finger_joint_mapper"/>
-    <!-- <node pkg="teleop_tasks" exec="ros_gz_joint_client" name="ros_gz_joint_client"/> -->
+    <node pkg="teleop_tasks" exec="ros_gz_joint_client" name="ros_gz_joint_client"/>
 </launch>

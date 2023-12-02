@@ -10,8 +10,8 @@ from sensor_msgs.msg import JointState
 
 # Helpper functions
 def createJointNamedict():
-    jointDict = {"palm_x":0,
-                 "palm_y":1,
+    jointDict = {"palm_x":1,
+                 "palm_y":0,
                  "palm_z":2,
                  "palm_roll":3,
                  "palm_pitch":4,
@@ -108,7 +108,8 @@ class Ros_gz_joint_client(Node):
         # point2 = newPoints
         self.point1.positions = self.point2.positions
         
-        for i in len(msg.name):
+        print(msg.position)
+        for i in range(len(msg.name)):
             # Map the names of the joints in the message to the
             # positions in point2
             self.point2.positions[self.jointDict[msg.name[i]]] = msg.position[i]
