@@ -8,7 +8,7 @@
 - Leo Chen
 
 ## Packages:
-- `teleop`
+- #teleop-tasks-package
 - `teleop_tasks`
 - `teleop_haptics`
 - `teleop_sensing`
