@@ -28,7 +28,7 @@ class RingSim(Node):
     def __init__(self):
         super().__init__('ring_sim')
 
-        self.goalZ = [0.04, 0.065, 0.9, 0.115, 0.14] 
+        self.goalZ = [0.04, 0.065, 0.09, 0.115, 0.14] 
 
         self.period = 0.01
         self.stacked = 0
@@ -47,18 +47,29 @@ class RingSim(Node):
 
         self.ring_positions = [(0,0)]
 
-        x, y = self.generate_ring_start_position()
-        self.blue = Ring(x0=0.25,y0=0.0,name="blue",period=self.period)
-        x, y = self.generate_ring_start_position()
-        self.green = Ring(x0=0.0,y0=-0.25,name="green",period=self.period)
-        x, y = self.generate_ring_start_position()
-        self.yellow = Ring(x0=0.25,y0=-0.25,name="yellow",period=self.period)
-        x, y = self.generate_ring_start_position()
-        self.orange = Ring(x0=0.35,y0=0.0,name="orange",period=self.period)
-        x, y = self.generate_ring_start_position()
-        self.red = Ring(x0=0.35,y0=-0.25,name="red",period=self.period)
+        self.blue_start = Point32(y=0.0, x=0.25)
+        self.green_start = Point32(y=-0.25, x=0.0)
+        self.yellow_start = Point32(y=0.25, x=0.0)
+        self.orange_start = Point32(y=0.40, x=0.0)
+        self.red_start = Point32(y=-0.40, x=0.0)
+
+        self.start_positons = {
+                        'blue' : self.blue_start,
+                        'green' : self.green_start,
+                        'yellow' : self.yellow_start,
+                        'orange' : self.orange_start,
+                        'red' : self.red_start
+        }
+
+        self.blue = Ring(name="blue", period=self.period, mass=0.5)
+        self.green = Ring(name="green", period=self.period, mass=1.0)
+        self.yellow = Ring(name="yellow", period=self.period, mass=1.5)
+        self.orange = Ring(name="orange", period=self.period, mass=2.0)
+        self.red = Ring(name="red", period=self.period, mass=2.5)
 
         self.ringArray = [self.blue, self.green, self.yellow, self.orange, self.red]
+
+        self.reset_rings()
 
         # Transform for ring base in world
         self.world_to_ring_base = TransformStamped()
@@ -76,8 +87,8 @@ class RingSim(Node):
         table.type = table.CUBE
         table.action = table.ADD
         table.pose.position.z = -0.25
-        table.scale.x = 2.0
-        table.scale.y = 2.0
+        table.scale.x = 0.6
+        table.scale.y = 1.0
         table.scale.z = 0.5
         table.color.r = 0.68
         table.color.g = 0.51
@@ -127,6 +138,7 @@ class RingSim(Node):
                         self.get_logger().info(str(error))
             if(i.state == SimState.GRASPED):
                 if(self.ring_grasped(i.name)):
+                    i.counter = 0
                     try:
                         trans = self.tf_buffer.lookup_transform("sim/world", "left_hand/palm", rclpy.time.Time(nanoseconds=0))
         
@@ -141,10 +153,12 @@ class RingSim(Node):
                     except Exception as error:
                         self.get_logger().info(str(error))
                 else:
-                    i.state = SimState.FALLING
-                    self.grabbed = None
-
-                    self.haptics(False, 0.0)
+                    i.counter+=1
+                    if(i.counter > 3):
+                        i.counter = 0
+                        i.state = SimState.FALLING
+                        self.grabbed = None
+                        self.haptics(False, 0.0)
 
             if(i.state == SimState.FALLING):
                 i.acceleration.z = -9.81
@@ -156,7 +170,7 @@ class RingSim(Node):
                     i.position = Point32()
                     i.position.z = self.goalZ[self.stacked]
                     i.TF.transform.rotation = Quaternion()
-                    self.stacked + 1
+                    self.stacked += 1
                 if(i.position.z <= 0.0155):
                     i.state = SimState.REST
 
@@ -172,7 +186,7 @@ class RingSim(Node):
             y = trans.transform.translation.y
             z = trans.transform.translation.z
 
-            if(z <= self.goalZ[self.stacked] and x*x + y*y < (0.05)**2):
+            if(z <= self.goalZ[self.stacked] and x*x + y*y < (0.1)**2):
                 return True
             return False
         except Exception as error:
@@ -235,7 +249,7 @@ class RingSim(Node):
         self.grasped_client.call_async(grasped_req)
         force_req = SetWrench.Request()
         wrench = Wrench()
-        wrench.force.z = -9.81 * mass
+        wrench.force.z = 9.81 * mass
         force_req.wrench = wrench
         self.force_client.call_async(force_req)
     
@@ -260,14 +274,19 @@ class RingSim(Node):
                 return True
 
         return False
+    
+    def reset_rings(self):
+        for i in self.ringArray:
+            i.set_position(self.start_positons[i.name])
 
 class Ring():
 
-    def __init__(self, x0, y0, name, period, mass=2.5):
+    def __init__(self, name, period, x0=0.0, y0=0.0, mass=1.5):
         self.TF = TransformStamped()
         self.period = period
         self.name = name
         self.mass = mass
+        self.counter = 0
         self.state = SimState.REST
         self.TF.header.frame_id = "sim/world"
         self.TF.child_frame_id = "sim/"+name+"/center"
@@ -286,7 +305,9 @@ class Ring():
         self.TF.transform.translation.x = self.position.x
         self.TF.transform.translation.y = self.position.y
         self.TF.transform.translation.z = self.position.z
-
+    
+    def set_position(self, p):
+        self.position = p
     
     def update_state(self):
         self.position.x = self.position.x + self.velocity.x * self.period + 0.5 * self.acceleration.x * self.period * self.period

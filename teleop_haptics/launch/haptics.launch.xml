@@ -2,13 +2,13 @@
     <arg name="side" default="right" description="Choose which side to start the frankas: left, right, both. Defaults to right"/>
     <arg name="track" default="true" description="Choose if the hand tracking from the frankas should be sent"/>
 
-    <let name="use_right" value="true"/>
+    <let name="use_right" value="false"/>
     <let name="use_left" value="false"/>
 
     <let name="use_right" value="true" if="$(eval '\'$(var side)\' != \'left\'')"/>
     <let name="use_left" value="true" if="$(eval '\'$(var side)\' != \'right\'')"/>
 
-    <include file="$(find-pkg-share teleop_haptics)/launch/force.launch.xml">
+    <include file="$(find-pkg-share teleop_haptics)/force.launch.xml">
         <arg name="side" value="$(var side)"/>
         <arg name="track" value="$(var track)"/>
     </include>
