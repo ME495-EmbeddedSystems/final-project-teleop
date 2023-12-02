@@ -170,7 +170,7 @@ class AvatarControl(Node):
         time.sleep(0.5)
 
         # Move to standoff height above object
-        abb_msg.transform.translation.z += self.graspStandoff - 0.01
+        abb_msg.transform.translation.z += self.graspStandoff + 0.15
         self.abb_pub.publish(abb_msg)
 
         time.sleep(5)
@@ -179,7 +179,7 @@ class AvatarControl(Node):
         # Calculate transformation of hand relative to the avatar_ws
         T_aws_hand = self.T_aws_world @ self.T_world_peg @ np.linalg.inv(self.T_hand_peg)
         abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
-        abb_msg.transform.translation.z += 0.2
+        abb_msg.transform.translation.z += 0.3
 
         self.abb_pub.publish(abb_msg)
 
