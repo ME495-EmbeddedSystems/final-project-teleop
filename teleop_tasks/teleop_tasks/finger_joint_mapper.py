@@ -20,15 +20,19 @@ class Mapper(Node):
         # Variables to hold latest joint states
         self.gazebo_joint_states = JointState()
         self.gazebo_joint_states.name = ['palm_thumb_dumb', 'thumb_dumb_thumb_1', 'thumb_1_thumb_2', 'palm_index_dumb', 'index_dumb_index_1', 'index_1_index_2', 'index_2_index_3', 'palm_middle_dumb', 'middle_dumb_middle_1', 'middle_1_middle_2', 'middle_2_middle_3', 'palm_ring_dumb', 'ring_dumb_ring_1', 'ring_1_ring_2', 'ring_2_ring_3', 'palm_pinky_dumb', 'pinky_dumb_pinky_1', 'pinky_1_pinky_2', 'pinky_2_pinky_3']
+        
+        self.timer = self.create_timer(0.01, self.timer_callback)
 
     def haptx_callback(self, msg):
         fa = msg.position # finger angles
 
         #self.gazebo_joint_states.position = [fa['lh_THJ2'], fa['lh_THJ1'], fa['lh_FFJ3'], fa['lh_FFJ2'], fa['lh_FFJ1'], fa['lh_MFJ3'], fa['lh_MFJ2'], fa['lh_MFJ1'], fa['lh_RFJ3'], fa['lh_RFJ2'], fa['lh_RFJ1'], fa['lh_LFJ3'], fa['lh_LFJ2'], fa['lh_LFJ1']]
         self.gazebo_joint_states.position = [fa[3], fa[4], fa[5], fa[6], fa[7], fa[8], fa[9], fa[10], fa[11], fa[12], fa[13], fa[0], fa[14], fa[15], fa[16], fa[17], fa[18], fa[19], fa[20]]
+        
+    def timer_callback(self):
         self.gazebo_joint_states.header.stamp = self.get_clock().now().to_msg()
-
         self.gazebo_joint_pub.publish(self.gazebo_joint_states)
+    
 
 def main(args=None):
     rclpy.init(args=args)

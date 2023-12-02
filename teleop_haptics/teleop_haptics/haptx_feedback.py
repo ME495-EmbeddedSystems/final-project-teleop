@@ -32,7 +32,7 @@ class HaptxFeedback(Node):
         self.use_left = self.get_parameter('use_left').get_parameter_value().bool_value
 
         # Create control loop timer based on frequency parameter
-        timer_freq = 50  # Hz
+        timer_freq = 100  # Hz
         self.timer = self.create_timer(1/timer_freq, self.timer_callback)
 
         # Create publishers for tactor groups

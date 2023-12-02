@@ -29,7 +29,7 @@ class HandPositionNode(Node):
                                ParameterDescriptor(description="The z offset for the end effector"))
         self.z = self.get_parameter("z_offset").get_parameter_value().double_value
 
-        self.declare_parameter("yaw_offset", -3.1415926,
+        self.declare_parameter("yaw_offset", -np.pi/2,
                                ParameterDescriptor(description="The yaw offset for the end effector"))
         self.yaw = self.get_parameter("yaw_offset").get_parameter_value().double_value
 
@@ -56,7 +56,6 @@ class HandPositionNode(Node):
         msg.position = joints
         self.joint_pub.publish(msg)
 
-
     def config_callback(self, msg):
         arr = np.transpose(np.array([msg.config]).reshape([4, 4]))
         self.EE_transform = arr
@@ -69,7 +68,7 @@ class HandPositionNode(Node):
         b = np.arcsin(R[0][2])
         g = np.arctan2(-R[0][1], R[0][0])
 
-        joints = [p[0]-0.5, p[1]+0.0, p[2]+0.1, a, b, g]
+        joints = [p[0]-0.60, p[1]+0.25, p[2]+0.0, a, b, g]
         return joints
     
         
