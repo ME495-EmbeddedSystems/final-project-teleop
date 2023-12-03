@@ -49,15 +49,19 @@ __RViz Visualization:__
 
 The `teleop_avatar` package controls the avatar robot to pick up objects and move them. In order to pick up an object, you can call a service specifying the object's id.
 
+Here is an example of the teleop_avatar package picking up rings and stacking them on a peg:
+
+   https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/122302059/af606b0f-0a41-4838-8deb-db817e902a9b
+
 ## `teleop_interfaces` Package
 
 This package contains all the custom messages and services used by the teleoperation system.
 
-### Custom Messages
+#### Custom Messages
 - FingerWrenches
 - ObjectState
 
-### Custom Services
+#### Custom Services
 - Grasp
 - ExecuteTrajectory
 - SetWrench
