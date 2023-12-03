@@ -45,8 +45,20 @@ class AvatarControl(Node):
         # ABB Gofa Pose publisher
         self.abb_pub = self.create_publisher(TransformStamped, '/avatar/right_arm/target_tf', 10)
 
+        # Create the /load_rings service
+        self.load_rings = self.create_service(Empty, "load_rings", self.load_rings_callback)
+
+        # Create the /release service
+        self.release = self.create_service(Empty, "release", self.release_callback)
+
         # Create the /grasp service
         self.grasp = self.create_service(Grasp, "grasp", self.grasp_callback)
+
+        # Create the /grasp_sequence service
+        self.grasp_sequence = self.create_service(Empty, "grasp_sequence", self.grasp_sequence_callback)
+
+        # Create the /home service
+        self.home = self.create_service(Empty, "home", self.home_callback)
 
         # Create the /execute_trajectory service
         self.execute = self.create_service(ExecuteTrajectory, "execute_trajectory", self.execute_callback)
@@ -61,10 +73,10 @@ class AvatarControl(Node):
                                     [ 0.0,    0.0,     0.0,    1.0]])
 
         # Transform from avatar workspace to abb table april tag
-        self.T_aws_world = [[1, 0, 0,    0.4],
+        self.T_aws_world = np.array([[1, 0, 0,    0.4],
                             [0, 1, 0, -0.585],
                             [0, 0, 1,   0.01],
-                            [0, 0, 0,      1]]
+                            [0, 0, 0,      1]])
         
         # Transform from abb_table april tag to peg
         self.T_world_peg = np.array([[0.999,    -0.033,     -0.011, -0.234],
@@ -78,6 +90,17 @@ class AvatarControl(Node):
                                     [ 0.0, 0.8829, -0.4695,   0.12],
                                     [ 0.0,    0.0,     0.0,    1.0]])
         
+        # Transform from avatar workspace to home
+        # self.T_aws_home = np.array([[0.991,    -0.067,  0.114,       0.005],
+        #                             [ 0.0,      0.863,  0.505,      -0.010],
+        #                             [ -0.133,  -0.5,    0.856,       0.247],
+        #                             [ 0.0,      0.0,     0.0,          1.0]])
+        
+        self.T_aws_home = np.array([[ -1,    0,  0,       0.45],
+                                    [  0,    0,  1,      -0.2],
+                                    [  0,    1,  0,       0.3],
+                                    [ 0.0,      0.0,     0.0,          1.0]])
+        
         # Transform of ring of interest in world frame
         self.T_world_obj = np.eye(4)
         
@@ -88,6 +111,8 @@ class AvatarControl(Node):
                                  'yellow_ring': 'yellow_center',
                                  'orange_ring': 'orange_center',
                                  'red_ring': 'red_center'}
+        
+        self.world_ring_tf = {}
 
         self.buffer = {}
 
@@ -110,78 +135,75 @@ class AvatarControl(Node):
         """Timer function for the Avatar Control node."""
         pass
 
-    def grasp_callback(self, request, response):
+    def load_rings_callback(self, request, response):
 
-        object_frame = self.object_frame_map[request.object_id]
+        # Store tf of all rings in a dictionary
+        for object_id, object_frame in self.object_frame_map.items():
 
-        # Get necessary transforms
-        world_obj_tf = self.tf_buffer.lookup_transform('tag16H05_3', object_frame, rclpy.time.Time())
-        world_obj_tf.transform.translation.z = 0
-        world_obj_tf.transform.rotation.x = 0.023263087438040456
-        world_obj_tf.transform.rotation.y = -0.012624678671690372
-        world_obj_tf.transform.rotation.z = -0.15317466259220655
-        world_obj_tf.transform.rotation.w = 0.9878446077147206
-        self.T_world_obj = self.transform_to_SE3(world_obj_tf)
+            try:
+                self.world_ring_tf[object_id] = self.tf_buffer.lookup_transform('tag16H05_3', object_frame, rclpy.time.Time())
+                self.get_logger().info("Loading " + object_id)
+            except:
+                self.get_logger().info("Could not load " + object_id)
+                pass
 
-        # Calculate transformation of hand relative to the avatar_ws
-        T_aws_hand = self.T_aws_world @ self.T_world_obj @ np.linalg.inv(self.T_hand_obj)
-        abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
-        
-        # Move to standoff height above object
-        abb_msg.transform.translation.z += self.graspStandoff
-        abb_msg.transform.translation.x += 0.02
-        
-        self.abb_pub.publish(abb_msg)
+
+        return response
+    
+    def release_callback(self, request, response):
 
         # Open hand
-        point = JointTrajectoryPoint()
-        point.positions = [0.027, 0.091, 0.0, 0.0, 0.147, 0.098, 0.0, 0.0, -0.216, 0.152, 0.0, 0.0, 0.0, -0.349, 0.024, 0.248, 0.0, 0.1, 1.2, 0.05, 0.15, -0.025]
-        point.velocities = [0.0] * len(self.joint_names)
-        point.time_from_start.nanosec = 100000000 #50000000
+        self.shadow_pub.publish(self.open_hand_msg())
+        self.get_logger().info("Releasing")
+        time.sleep(25)
 
-        msg = JointTrajectory()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.joint_names = self.joint_names
-        msg.points = [point]
+    def grasp_callback(self, request, response):
 
-        self.shadow_pub.publish(msg)
+        # Check if abb arm is connected
+        self.get_logger().info(f"{self.transform_to_SE3(self.tf_buffer.lookup_transform('operator_task_ws', 'cmd/rh_palm', rclpy.time.Time()))}")
 
-        time.sleep(5)
+        # Open hand
+        self.shadow_pub.publish(self.open_hand_msg())
+        self.get_logger().info("Opening hand before motion")
+        time.sleep(25)
 
-        # Move down to object
-        abb_msg.transform.translation.z -= self.graspStandoff - 0.01
+        # Begin pick and place motion for specific object
+        self.pick_and_place(request.object_id)
+
+        return response
+    
+    def grasp_sequence_callback(self, request, response):
+
+        # Check if abb arm is connected
+        self.get_logger().info(f"{self.transform_to_SE3(self.tf_buffer.lookup_transform('operator_task_ws', 'cmd/rh_palm', rclpy.time.Time()))}")
+
+        object_id_sequence = ['green_ring', 'yellow_ring', 'orange_ring']
+
+        # Open hand
+        self.shadow_pub.publish(self.open_hand_msg())
+        self.get_logger().info("Opening hand before motion sequence")
+        time.sleep(25)
+
+        # Begin pick and place sequence for listed object
+        for object_id in object_id_sequence:
+
+            self.pick_and_place(object_id)
+
+        return response
+
+    def home_callback(self, request, response):
+
+        # Home configuration
+        abb_msg = self.SE3_to_transform_stamped(self.T_aws_home)
         
         self.abb_pub.publish(abb_msg)
-
+        self.get_logger().info("Going Home")
         time.sleep(5)
 
-        # Close hand
-        point.positions = [0.027, 0.091, 0.148, 0.88, 0.147, 0.098, 0.148, 0.88, -0.216, 0.152, 0.148, 0.88, 0.0, -0.349, 0.024, 0.148, 0.88, 0.3, 1.2, 0.05, 0.15, -0.025]
-        point.velocities = [0.0] * len(self.joint_names)
-        point.time_from_start.nanosec = 100000000 #50000000
-
-        msg = JointTrajectory()
-        msg.header.stamp = self.get_clock().now().to_msg()
-        msg.joint_names = self.joint_names
-        msg.points = [point]
-
-        self.shadow_pub.publish(msg)
-
-        time.sleep(0.5)
-
-        # Move to standoff height above object
-        abb_msg.transform.translation.z += self.graspStandoff - 0.01
-        self.abb_pub.publish(abb_msg)
-
+        # Open hand
+        self.shadow_pub.publish(self.open_hand_msg())
+        self.get_logger().info("Opening hand at Home")
         time.sleep(5)
-
-        # Move above peg
-        # Calculate transformation of hand relative to the avatar_ws
-        T_aws_hand = self.T_aws_world @ self.T_world_peg @ np.linalg.inv(self.T_hand_peg)
-        abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
-        abb_msg.transform.translation.z += 0.2
-
-        self.abb_pub.publish(abb_msg)
 
         return response
 
@@ -217,6 +239,98 @@ class AvatarControl(Node):
             else:
                 self.buffer[object_id] = [p.pose]
     
+    def pick_and_place(self, object_id):
+
+        # Get necessary transform
+        world_obj_tf = self.world_ring_tf[object_id]
+
+        # Constrain object to be properly oriented on the table
+        world_obj_tf.transform.translation.z = 0
+        world_obj_tf.transform.rotation.x = 0.023263087438040456
+        world_obj_tf.transform.rotation.y = -0.012624678671690372
+        world_obj_tf.transform.rotation.z = -0.15317466259220655
+        world_obj_tf.transform.rotation.w = 0.9878446077147206
+        self.T_world_obj = self.transform_to_SE3(world_obj_tf)
+
+        # Calculate transformation of hand relative to the avatar_ws for grabbing object
+        T_aws_hand = self.T_aws_world @ self.T_world_obj @ np.linalg.inv(self.T_hand_obj)
+        abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
+        
+        # Move to standoff height above object
+        abb_msg.transform.translation.z += self.graspStandoff
+        abb_msg.transform.translation.x += 0.02
+        self.abb_pub.publish(abb_msg)
+        self.get_logger().info("Moving to standoff above " + object_id)
+        time.sleep(5)
+
+        # Move down to grab object
+        abb_msg.transform.translation.z -= self.graspStandoff - 0.01
+        self.abb_pub.publish(abb_msg)
+        self.get_logger().info("Moving to grab object")
+        time.sleep(5)
+
+        # Close hand to grab object
+        self.shadow_pub.publish(self.close_hand_msg())
+        self.get_logger().info("Closing Hand")
+        time.sleep(25)
+
+        # Move to standoff height above object
+        abb_msg.transform.translation.z += self.graspStandoff + 0.10
+        self.abb_pub.publish(abb_msg)
+        self.get_logger().info("Moving to standoff above " + object_id)
+        if object_id == 'orange_ring': time.sleep(7)
+        time.sleep(8)
+
+        # Calculate transformation of hand relative to the avatar_ws for stacking ring
+        T_aws_hand = self.T_aws_world @ self.T_world_peg @ np.linalg.inv(self.T_hand_peg)
+        abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
+
+        # Move to standoff above peg
+        abb_msg.transform.translation.z += 0.3
+        self.abb_pub.publish(abb_msg)
+        self.get_logger().info("Moving to standoff above peg")
+        time.sleep(8)
+
+        # Move to drop position
+        abb_msg.transform.translation.z -= 0.07
+
+        self.abb_pub.publish(abb_msg)
+        self.get_logger().info("Moving above peg")
+        time.sleep(8)
+
+        # Open hand
+        self.shadow_pub.publish(self.open_hand_msg())
+        self.get_logger().info("Placing " + object_id)
+        time.sleep(25)
+
+    def open_hand_msg(self):
+
+        point = JointTrajectoryPoint()
+        point.positions = [0.027, 0.091, 0.0, 0.0, 0.147, 0.098, 0.0, 0.0, -0.216, 0.152, 0.0, 0.0, 0.0, -0.349, 0.024, 0.248, 0.0, 0.1, 1.2, 0.05, 0.15, -0.025]
+        point.velocities = [0.0] * len(self.joint_names)
+        point.time_from_start.nanosec = 100000000 #50000000
+
+        msg = JointTrajectory()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.joint_names = self.joint_names
+        msg.points = [point]
+
+        return msg
+    
+    def close_hand_msg(self):
+
+        point = JointTrajectoryPoint()
+        point.positions = [0.027, 0.091, 0.148, 0.88, 0.147, 0.098, 0.148, 0.88, -0.216, 0.152, 0.148, 0.88, 0.0, -0.349, 0.024, 0.148, 0.88, 0.3, 1.2, 0.05, 0.15, -0.025]
+        point.velocities = [0.0] * len(self.joint_names)
+        point.time_from_start.nanosec = 100000000 #50000000
+
+        msg = JointTrajectory()
+        msg.header.stamp = self.get_clock().now().to_msg()
+        msg.joint_names = self.joint_names
+        msg.points = [point]
+
+        return msg
+
     def transform_to_SE3(self, transform):
         """
         Converts a geometry_msgs/Transform message to an SE(3) transformation matrix.
