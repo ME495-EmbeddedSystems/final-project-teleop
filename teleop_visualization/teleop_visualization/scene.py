@@ -12,7 +12,7 @@ from tf2_ros.buffer import Buffer
 
 class Scene(Node):
     """
-    Sets up table and robot in scene.
+    Sets up self.table and robot in scene.
     """
 
     def __init__(self):
@@ -47,23 +47,23 @@ class Scene(Node):
         self.marker_pub = self.create_publisher(Marker, "visualization_marker", markerQoS)
 
         # Publish table marker
-        table = Marker()
-        table.header.stamp = self.get_clock().now().to_msg()
-        table.header.frame_id = 'world'
-        table.id = 0
-        table.type = table.CUBE
-        table.action = table.ADD
-        table.pose.position.z = -0.2655
-        table.scale.x = 2.0
-        table.scale.y = 2.0
-        table.scale.z = 0.5
-        table.color.r = 0.68
-        table.color.g = 0.51
-        table.color.b = 0.32
-        table.color.a = 1.0
-        table.lifetime.nanosec = 0
-        table.frame_locked = True
-        self.marker_pub.publish(table)
+        self.table = Marker()
+        self.table.header.stamp = self.get_clock().now().to_msg()
+        self.table.header.frame_id = 'world'
+        self.table.id = 0
+        self.table.type = self.table.CUBE
+        self.table.action = self.table.ADD
+        self.table.pose.position.z = -0.2655
+        self.table.scale.x = 2.0
+        self.table.scale.y = 2.0
+        self.table.scale.z = 0.5
+        self.table.color.r = 0.68
+        self.table.color.g = 0.51
+        self.table.color.b = 0.32
+        self.table.color.a = 1.0
+        self.table.lifetime.nanosec = 0
+        self.table.frame_locked = True
+        self.marker_pub.publish(self.table)
 
         # Subscribe to avatar joint states
         self.gofa_js_subscription = self.create_subscription(JointState, 'avatar/right_arm/gofa2/joint_states', self.gofa_callback, 10)
@@ -84,6 +84,7 @@ class Scene(Node):
         self.avatar_js.name = self.gofa_joint_names + self.shadow_joint_names
         self.avatar_js.position = self.gofa_js + self.shadow_js
         self.joint_pub.publish(self.avatar_js)
+        self.marker_pub.publish(self.table)
 
     def gofa_callback(self, msg):
         self.gofa_js = list(msg.position)

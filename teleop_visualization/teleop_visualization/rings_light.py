@@ -39,11 +39,7 @@ class RingsLight(Node):
         self.orange_ring = self.generate_ring_marker('orange')
         self.red_ring = self.generate_ring_marker('red')
 
-        self.marker_pub.publish(self.blue_ring)
-        self.marker_pub.publish(self.green_ring)
-        self.marker_pub.publish(self.yellow_ring)
-        self.marker_pub.publish(self.orange_ring)
-        self.marker_pub.publish(self.red_ring)
+        self.publish_rings()
 
         self.object_frame_map = {'blue_ring': 'blue_center',
                                  'green_ring': 'green_center',
@@ -53,6 +49,7 @@ class RingsLight(Node):
         
     def timer_callback(self):
         self.update_ring_positions()
+        self.publish_rings()
 
     def generate_ring_marker(self, color):
 
@@ -113,6 +110,12 @@ class RingsLight(Node):
             self.red_ring.pose.position.x = tf.translation.x
             self.red_ring.pose.position.y = tf.translation.y
 
+    def publish_rings(self):
+        self.marker_pub.publish(self.blue_ring)
+        self.marker_pub.publish(self.green_ring)
+        self.marker_pub.publish(self.yellow_ring)
+        self.marker_pub.publish(self.orange_ring)
+        self.marker_pub.publish(self.red_ring)
 
 def main(args=None):
     rclpy.init(args=args)
