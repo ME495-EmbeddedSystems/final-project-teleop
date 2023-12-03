@@ -32,7 +32,7 @@
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
-from launch.conditions import LaunchConfigurationNotEquals, IfCondition
+from launch.conditions import IfCondition
 from launch.substitutions import LaunchConfiguration, EqualsSubstitution, NotEqualsSubstitution
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.actions import LoadComposableNodes
@@ -45,11 +45,8 @@ def generate_launch_description():
             package='image_proc',
             plugin='image_proc::DebayerNode',
             name='debayer_node',
-            remappings=[
-                ('camera_info', '/D435i/color/camera_info'),
-                ('/image_raw', '/D435i/color/image_raw')
-            ],
-
+            remappings=[('camera_info', '/D435i/color/camera_info'),
+                        ('/image_raw', '/D435i/color/image_raw')],
         ),
         ComposableNode(
             package='image_proc',
@@ -57,7 +54,7 @@ def generate_launch_description():
             name='rectify_mono_node',
             # Remap subscribers and publishers
             remappings=[
-                # Subscriber of rectify 
+                # Subscriber of rectify
                 ('image', 'image_mono'),
                 ('camera_info', '/D435i/color/camera_info'),
                 # Publisher of rectify
@@ -81,12 +78,10 @@ def generate_launch_description():
     ]
 
     arg_container = DeclareLaunchArgument(
-        name='container', default_value='',
-        description=(
-            'Name of an existing node container to load launched nodes into. '
-            'If unset, a new container will be created.'
-        )
-    )
+        name='container',
+        default_value='',
+        description=('Name of an existing node container to load launched nodes into. '
+                     'If unset, a new container will be created.'))
 
     # If an existing container is not provided, start a container and load nodes into it
     image_processing_container = ComposableNodeContainer(
@@ -96,8 +91,7 @@ def generate_launch_description():
         package='rclcpp_components',
         executable='component_container',
         composable_node_descriptions=composable_nodes,
-        output='screen'
-    )
+        output='screen')
 
     # If an existing container name is provided, load composable nodes into it
     # This will block until a container with the provided name is available and nodes are loaded
