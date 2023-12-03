@@ -5,7 +5,11 @@
     <node if="$(eval '\'$(var side)\' != \'left\'')" pkg='teleop_haptics' exec="force_feedback" namespace="right_hand"/>
     <node if="$(eval '\'$(var side)\' != \'right\'')" pkg='teleop_haptics' exec="force_feedback" namespace="left_hand"/>
     <group if="$(eval '\'$(var track)\' == \'true\'')" >
-        <node if="$(eval '\'$(var side)\' != \'left\'')" pkg='teleop_haptics' exec="hand_position" namespace="right_hand"/>
-        <node if="$(eval '\'$(var side)\' != \'right\'')" pkg='teleop_haptics' exec="hand_position" namespace="left_hand"/> 
+        <node if="$(eval '\'$(var side)\' != \'left\'')" pkg='teleop_haptics' exec="hand_position" namespace="right_hand">
+            <param from="$(find-pkg-share teleop_haptics)/right_hand.yaml"/>
+        </node>
+        <node if="$(eval '\'$(var side)\' != \'right\'')" pkg='teleop_haptics' exec="hand_position" namespace="left_hand"> 
+            <param from="$(find-pkg-share teleop_haptics)/left_hand.yaml"/>
+        </node>
     </group>
 </launch>
