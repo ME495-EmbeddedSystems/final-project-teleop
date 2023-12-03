@@ -1,22 +1,23 @@
-## Sensing 
+# Visual Sensing
 
+This package is to find the 5 rings within camera's field of view, publish their transform. As well as detecting apriltags and their transforms.
 find rings, april-tags, and publish their tfs.
 
 ## Hardware requirement
 
-Intel Realsense D435(i)
+Intel Realsense D435(i) connected to the machine running this package.
 
-## Run april tag detection 
+## Running this package
 
+Everything will be launched by running the launch file 
 ```
-ros2 launch teleop_sensing launch_RS_April.xml
+ros2 launch teleop_sensing rings_cv.launch.xml
 ```
 
-This launch 
-* realsense_ros: publish camera images
-* image_proc: rectify image
-* apriltag_ros: finding april-tag and publishing tag's TF
-
+To see the cv2 window with trackbars to live tune the filer parameters, set the debug argument to true 
+```
+ros2 launch teleop_sensing rings_cv.launch.xml debug:=True
+```
 
 ### April tag tf names 
 
@@ -31,35 +32,41 @@ they would be
 * tag16H05_10 - peg
 
 
-## Run the object finding
-
-The cv_process will do the classic CV to find the location of rings, and using depth image to deproject a world location of each ring. 
-
-For each ring (color) The following are used: 
-
-* HSV filter
-* Blob-detection
-* rectifying
-* de-projection
-* publish tf. 
-
-For simplicity and performance, the S and V channel in HSV are pre-processed on the image before splitting into each color channel. Thus the S and V value among file different rings are shared. 
-
-run `cv_process.py` to start the processing node. This node listen to `/D435i/color/image_row` and `/D435i/aligned_depth_to_color/image_raw` and their camera_info. After launch, it will create 7 cv2 windows. 5 for each color, which also have trackbar for Hue channel of this color. 1 for shared S and V trackbar, 1 for Blob-detector parameter. Live tuning the CV filter is possible through these trackbars. 
-
 For each ring detected, a transform will be published at it's center
 
 **Node: The published TF will go through the middle of the ring and actually land on the background object. This works fine when ring is on the table, the Frame will simply be sitting on the table**
 
 Transforms will be named as `<COLOR>_center`
 
-An additional launch file is created 
+**All transforms published will be based on the D435i's base frame**
 
-```
-ros2 launch teleop_sensing ring_cv.launch.xml
-```
 
-To not show the cv2 window that allows live tuning of filter parameters: 
-```
-ros2 launch ring_cv.launch.xml debug:=False
-```
+## More detailed workflow explanation
+
+### April Tag detection
+
+The following parts are working together for april-tag detection:
+* realsense_ros: publish camera images
+* image_proc: rectify image
+* apriltag_ros: finding april-tag and publishing tag's TF
+
+There is a special launch file `image_proc_with_remap.launch.py` to launch the image_proc with topic re-mapping. ROS2 removes the ability to remap topics on launch file include. Thus this is needed to have image_proc subscribe the correct image topic.
+
+The `apriltag_ros` handles the actual detection of the apriltag. A config file `tag16_config.yaml` list the info for each apriltag used in the project.
+
+### Ring Locating
+
+The workflow for ring detection use the following nodes
+* realsense_ros: publish alighed color and depth image
+* cv_process: python node to detect ring and locate it.
+
+The detection process is generally a classic CV problem. 
+* HSV filter 
+* Blob-detection
+
+After ring is located inside a image frame. It's location in space is found through 
+* rectifying
+* de-projection
+
+Finally, the ring's location is published as a TF
+
