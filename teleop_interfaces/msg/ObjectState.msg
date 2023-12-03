@@ -1,1 +1,1 @@
-geometry_msgs/PoseStamped[] pose
+geometry_msgs/PoseStamped[] pose # An array of poses for each object of interest

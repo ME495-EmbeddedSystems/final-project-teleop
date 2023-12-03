@@ -1,18 +1,28 @@
+"""
+Publishes the avatar workspace.
+
+Publishers:
+  + avatar_right/joint_states (geometry_msgs/msg/JointState) - Joint states for the right avatar arm (ABB Gofa + Shadow Hand)
+  + visualization_marker (visualization_msgs/msg/Marker) - Table marker
+
+Subscribers:
+  + avatar/right_arm/gofa2/joint_states (geometry_msgs/msg/JointState) - Joint states of the right ABB Gofa
+  + joint_states (geometry_msgs/msg/JointState) - Joint states of the Shadow Hands
+
+"""
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
 from geometry_msgs.msg import TransformStamped
 from visualization_msgs.msg import Marker
 from sensor_msgs.msg import JointState
-from tf2_ros import TransformBroadcaster, StaticTransformBroadcaster
-from tf2_ros.transform_listener import TransformListener
-from tf2_ros.buffer import Buffer
+from tf2_ros import StaticTransformBroadcaster
 
 
 
 class Scene(Node):
     """
-    Sets up self.table and robot in scene.
+    Sets up table and robot in scene.
     """
 
     def __init__(self):
@@ -21,15 +31,9 @@ class Scene(Node):
         # Create control loop timer based on frequency parameter
         self.timer = self.create_timer(1/100, self.timer_callback)
 
-        # Create broadcasters
-        self.broadcaster = TransformBroadcaster(self)
-        self.static_broadcaster = StaticTransformBroadcaster(self)
+        self.static_broadcaster = StaticTransformBroadcaster()
 
-        # Create Transform Listener
-        self.tf_buffer = Buffer()
-        self.tf_listener = TransformListener(self.tf_buffer, self)
-
-        # Transform for abb base in world
+        # Transform for abb base in world frame
         world_to_abb = TransformStamped()
         world_to_abb.header.frame_id = "world"
         world_to_abb.child_frame_id = "avatar_right/gofa2_base"
@@ -46,7 +50,7 @@ class Scene(Node):
         markerQoS = QoSProfile(depth=10, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
         self.marker_pub = self.create_publisher(Marker, "visualization_marker", markerQoS)
 
-        # Publish table marker
+        # Create table marker
         self.table = Marker()
         self.table.header.stamp = self.get_clock().now().to_msg()
         self.table.header.frame_id = 'world'
@@ -63,13 +67,12 @@ class Scene(Node):
         self.table.color.a = 1.0
         self.table.lifetime.nanosec = 0
         self.table.frame_locked = True
-        self.marker_pub.publish(self.table)
 
-        # Subscribe to avatar joint states
+        # Subscribe to ABB Gofa and Shadow Hand joint states
         self.gofa_js_subscription = self.create_subscription(JointState, 'avatar/right_arm/gofa2/joint_states', self.gofa_callback, 10)
         self.shadow_js_subscription = self.create_subscription(JointState, 'joint_states', self.shadow_callback, 10)
 
-        # Publish joint states for avatar robot
+        # Publisher for avatar robot's joint states
         self.joint_pub = self.create_publisher(JointState, 'avatar_right/joint_states', 10)
 
         # Variables to hold latest joint states
@@ -79,22 +82,44 @@ class Scene(Node):
         self.shadow_js = 24*[0.0]
         
     def timer_callback(self):
+        """Timer callback for Scene node."""
+        # Create JointState object for avatar robot
         self.avatar_js = JointState()
         self.avatar_js.header.stamp = self.get_clock().now().to_msg()
         self.avatar_js.name = self.gofa_joint_names + self.shadow_joint_names
         self.avatar_js.position = self.gofa_js + self.shadow_js
+
+        # Publish avatar robot joint states
         self.joint_pub.publish(self.avatar_js)
+
+        # Publish table marker
         self.marker_pub.publish(self.table)
 
     def gofa_callback(self, msg):
+        """
+        Updates Gofa joint angles.
+
+        Args
+        ----
+            msg (JointState): The current joint states of the right ABB Gofa
+
+        """
         self.gofa_js = list(msg.position)
 
     def shadow_callback(self, msg):
+        """
+        Updates Shadow Hand joint angles.
 
+        Args
+        ----
+            msg (JointState): The current joint states of the Shadow Hands
+
+        """
         self.shadow_joint_names = []
         self.shadow_js = []
 
         for i in range(len(msg.name)):
+            # If it's a joint for the right hand
             if msg.name[i][0] == 'r':
                 self.shadow_joint_names += [msg.name[i]]
                 self.shadow_js += [msg.position[i]]

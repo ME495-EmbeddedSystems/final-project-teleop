@@ -1,0 +1,17 @@
+repositories:
+  final-project-teleop:
+    type: git
+    url: git@github.com:ME495-EmbeddedSystems/final-project-teleop.git
+    version: main
+  ME495_Operator_Master:
+    type: git
+    url: git@github.com:LukeBatteas/ME495_Operator_Master.git
+    version: main
+  haptx_interfaces:
+    type: git
+    url: https://github.com/NU-Haptics-Lab/haptx_interfaces.git
+    version: main
+  min-avatar-description:
+    type: git
+    url: https://github.com/NU-Haptics-Lab/min-avatar-description.git
+    version: main
