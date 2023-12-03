@@ -31,7 +31,7 @@ class Scene(Node):
         # Create control loop timer based on frequency parameter
         self.timer = self.create_timer(1/100, self.timer_callback)
 
-        self.static_broadcaster = StaticTransformBroadcaster()
+        self.static_broadcaster = StaticTransformBroadcaster(self)
 
         # Transform for abb base in world frame
         world_to_abb = TransformStamped()

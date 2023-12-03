@@ -35,6 +35,13 @@ class Rings(Node):
         # Variables to keep track of ring's marker ID and start position
         self.ring_x = -0.3
         self.ring_id = 1
+
+        # Create ring markers
+        self.blue_ring = self.generate_ring_marker('blue')
+        self.green_ring = self.generate_ring_marker('green')
+        self.yellow_ring = self.generate_ring_marker('yellow')
+        self.orange_ring = self.generate_ring_marker('orange')
+        self.red_ring = self.generate_ring_marker('red')
         
     def timer_callback(self):
         """Timer callback for Rings node."""
@@ -123,8 +130,8 @@ class Rings(Node):
             tf = self.tf_buffer.lookup_transform('tag16H05_3', 'yellow_center', rclpy.time.Time()).transform
             self.yellow_ring.pose.position.x = tf.translation.x
             self.yellow_ring.pose.position.y = tf.translation.y
-        if self.tf_buffer.can_transform('tag16H05_3', 'yellow_center', rclpy.time.Time()):
-            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'yellow_center', rclpy.time.Time()).transform
+        if self.tf_buffer.can_transform('tag16H05_3', 'orange_center', rclpy.time.Time()):
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'orange_center', rclpy.time.Time()).transform
             self.orange_ring.pose.position.x = tf.translation.x
             self.orange_ring.pose.position.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', 'red_center', rclpy.time.Time()):
