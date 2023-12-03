@@ -1,17 +1,15 @@
 #! /usr/bin/env python3
-from typing import Any
-import rclpy
-from rclpy.node import Node as RosNode
-
-from sensor_msgs.msg import Image as RosImage, CompressedImage
-
-from cv_bridge import CvBridge
 import dataclasses
-import cv2
-
-import typing
 import functools
+import typing
+from typing import Any
+
+import cv2
 import numpy as np
+import rclpy
+from cv_bridge import CvBridge
+from rclpy.node import Node as RosNode
+from sensor_msgs.msg import Image as RosImage
 
 
 @dataclasses.dataclass
@@ -63,7 +61,7 @@ class FilterBase():
 
 @dataclasses.dataclass
 class HSVFilter_SVBase(FilterBase):
-    
+
     s_high: float = 255
     s_low: float = 118
     v_high: float = 255
@@ -93,8 +91,8 @@ class HSVFilter_SVBase(FilterBase):
 
     def apply_filter(self, bgr_image):
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
-        return cv2.inRange(hsv_image, (0, self.s_low, self.v_low),
-                           (179, self.s_high, self.v_high))
+        return cv2.inRange(hsv_image, (0, self.s_low, self.v_low), (179, self.s_high, self.v_high))
+
 
 @dataclasses.dataclass
 class HOnlyFilter(FilterBase):
@@ -105,6 +103,7 @@ class HOnlyFilter(FilterBase):
     # The exact names of these const are referenced later.
     H_MAX: typing.ClassVar[float] = 179
     H_MIN: typing.ClassVar[float] = 0
+
     # name: typing.ClassVar[str] = ""
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
         super().update_field_by_name(field_name, value)
@@ -125,13 +124,13 @@ class HOnlyFilter(FilterBase):
 
     def apply_filter(self, bgr_image):
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
-        return cv2.inRange(hsv_image, (self.h_low, 0,0),
-                           (self.h_high, 255,255))
+        return cv2.inRange(hsv_image, (self.h_low, 0, 0), (self.h_high, 255, 255))
+
 
 @dataclasses.dataclass
 class RedHFilter(FilterBase):
-    h_low:float = 170
-    h_high:float = 20
+    h_low: float = 170
+    h_high: float = 20
 
     H_MAX: typing.ClassVar[float] = 179
     H_MIN: typing.ClassVar[float] = 0
@@ -139,13 +138,11 @@ class RedHFilter(FilterBase):
     def apply_filter(self, bgr_image):
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
 
-        lower_filter = cv2.inRange(hsv_image, (self.h_low, 0,0),
-                           (self.H_MAX, 255,255))
+        lower_filter = cv2.inRange(hsv_image, (self.h_low, 0, 0), (self.H_MAX, 255, 255))
 
-        upper_filter = cv2.inRange(hsv_image, (self.H_MIN, 0,0),
-                           (self.h_high, 255,255))
+        upper_filter = cv2.inRange(hsv_image, (self.H_MIN, 0, 0), (self.h_high, 255, 255))
 
-        return cv2.bitwise_or(lower_filter,upper_filter)
+        return cv2.bitwise_or(lower_filter, upper_filter)
 
 
 @dataclasses.dataclass
@@ -187,7 +184,6 @@ class HSVFilter(FilterBase):
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
         return cv2.inRange(hsv_image, (self.h_low, self.s_low, self.v_low),
                            (self.h_high, self.s_high, self.v_high))
-
 
 
 @dataclasses.dataclass
@@ -244,7 +240,7 @@ class BlobDetector(FilterBase):
                 return ["maxArea"]
         return []
 
-    def apply_filter(self, bgr_image) -> tuple[Any ,list[cv2.KeyPoint]]:
+    def apply_filter(self, bgr_image) -> tuple[Any, list[cv2.KeyPoint]]:
         keypoints = self.detector.detect(bgr_image)
 
         for keypoint in keypoints:
@@ -259,30 +255,35 @@ class BlobDetector(FilterBase):
         im_with_keypoints = cv2.drawKeypoints(bgr_image, keypoints, np.array([]), (0, 0, 255),
                                               cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 
-        return im_with_keypoints , keypoints
+        return im_with_keypoints, keypoints
 
 
 @dataclasses.dataclass
 class HoughCircle(FilterBase):
 
-
     def apply_filter(self, bgr_image):
 
         gray = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2GRAY)
-        gray = cv2.medianBlur(gray, 5)   
+        gray = cv2.medianBlur(gray, 5)
 
         rows = gray.shape[0]
-        circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, minDist = rows / 8,
-                               param1=100, param2=30,
-                               minRadius=1, maxRadius=30)
-        
+        circles = cv2.HoughCircles(gray,
+                                   cv2.HOUGH_GRADIENT,
+                                   1,
+                                   minDist=rows / 8,
+                                   param1=100,
+                                   param2=30,
+                                   minRadius=1,
+                                   maxRadius=30)
+
         for c in circles:
 
-            center = ( c[0] , c[1] )
+            center = (c[0], c[1])
             radius = c[2]
-            cv2.circle(bgr_image , center , 2, (0,100,100) , 5)
-            cv2.circle(bgr_image , center , radius, (255,0,250) , 3)
+            cv2.circle(bgr_image, center, 2, (0, 100, 100), 5)
+            cv2.circle(bgr_image, center, radius, (255, 0, 250), 3)
         return bgr_image
+
 
 def main(args=None):
     '''
@@ -299,15 +300,16 @@ def main(args=None):
 
 
 class TrackBarHelper():
-    
-    def scale_image_down(self, image: np.ndarray , expected_width):
+
+    def scale_image_down(self, image: np.ndarray, expected_width):
         height, width, _ = image.shape
 
         scale_down_factor = expected_width / width
         return cv2.resize(image, (0, 0), fx=scale_down_factor, fy=scale_down_factor)
 
     # Node: the order of arguments matter.
-    def update_field_callback(self,window_name:str, filter: FilterBase, field_name: str, new_value ):
+    def update_field_callback(self, window_name: str, filter: FilterBase, field_name: str,
+                              new_value):
         # In theory this is actually very very bad. But in practice it worked.
         # Problem with cv2 setTrackbarPos is it also trigger callback (instead of
         # just user hitting it)
@@ -328,7 +330,7 @@ class TrackBarHelper():
             linked_value = getattr(filter, linked_attr)
             cv2.setTrackbarPos(linked_attr, window_name, linked_value)
 
-    def setup_cv_trackbar(self, filter: FilterBase , window_name:str ="trackbars" ):
+    def setup_cv_trackbar(self, filter: FilterBase, window_name: str = "trackbars"):
 
         default_value_map = {}
         cv2.namedWindow(window_name)
@@ -341,7 +343,8 @@ class TrackBarHelper():
             # binded_callback = lambda value: self.update_field_callback(name,value)
 
             # Note this binding is in orders, from left to right.
-            binded_callback = functools.partial(self.update_field_callback,window_name, filter, name)
+            binded_callback = functools.partial(self.update_field_callback, window_name, filter,
+                                                name)
 
             print(f"max min {field_max} , {field_min}\n{binded_callback}")
 
@@ -358,6 +361,7 @@ class TrackBarHelper():
             # a callback which cause the linked_attr's trackbar (not existing) to be sets
             print(f"-- Initializeing {field.name} to {default_value_map[field.name]} ")
             cv2.setTrackbarPos(field.name, window_name, default_value_map[field.name])
+
 
 class FilterDemoNode(RosNode):
 
@@ -381,10 +385,10 @@ class FilterDemoNode(RosNode):
 
         self.blob_detector = BlobDetector()
 
-        self.track_bar_helper.setup_cv_trackbar(self.sv_filter,self.bar_window_name)
-        self.track_bar_helper.setup_cv_trackbar(self.red_filter,self.bar_window_name)
+        self.track_bar_helper.setup_cv_trackbar(self.sv_filter, self.bar_window_name)
+        self.track_bar_helper.setup_cv_trackbar(self.red_filter, self.bar_window_name)
         # self.track_bar_helper.setup_cv_trackbar(self.hsv_filter , "hsv",self.bar_window_name)
-        self.track_bar_helper.setup_cv_trackbar(self.blob_detector,self.bar_window_name)
+        self.track_bar_helper.setup_cv_trackbar(self.blob_detector, self.bar_window_name)
 
     # Yes, Intentionally stuff everything into the callback.
     # Color picking only need to update when we have new image anyway
@@ -395,28 +399,24 @@ class FilterDemoNode(RosNode):
 
         bgr_input_image = self.br.imgmsg_to_cv2(msg, desired_encoding="bgr8")
 
-
         sv_mask = self.sv_filter.apply_filter(bgr_input_image)
         red_mask = self.red_filter.apply_filter(bgr_input_image)
         # cv2.imshow("sv_mask" , sv_mask)
         # cv2.imshow("red_mask" , red_mask)
-        
+
         color_mask = sv_mask
         # color_mask = cv2.bitwise_and(sv_mask , red_mask)
 
         # cv2.imshow("and_mask" , and_mask)
         red_masked_image = cv2.bitwise_and(bgr_input_image, bgr_input_image, mask=color_mask)
 
-
-
-        blob_marked , _ = self.blob_detector.apply_filter(red_masked_image)
+        blob_marked, _ = self.blob_detector.apply_filter(red_masked_image)
         # stacked_image = np.hstack([bgr_input_image, blob_marked])
         # scaled_image = self.scale_image_down(stacked_image)
         cv2.imshow("masked_image", blob_marked)
         cv2.waitKey(50)
         # TODO
         # self.hsv_filter.to_json_file()
-
 
 
 if __name__ == '__main__':
