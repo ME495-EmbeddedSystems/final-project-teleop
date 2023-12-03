@@ -1,4 +1,20 @@
 #! /usr/bin/env python3
+"""_summary_
+  Subscribers:
+    /D435i/aligned_depth_to_color/camera_info: sensor_msgs/msg/CameraInfo
+    /D435i/aligned_depth_to_color/image_raw: sensor_msgs/msg/Image
+    /D435i/color/camera_info: sensor_msgs/msg/CameraInfo
+    /D435i/color/image_raw: sensor_msgs/msg/Image
+    /tf: tf2_msgs/msg/TFMessage
+    /tf_static: tf2_msgs/msg/TFMessage
+  Publishers:
+    /parameter_events: rcl_interfaces/msg/ParameterEvent
+    /rosout: rcl_interfaces/msg/Log
+    /tf: tf2_msgs/msg/TFMessage
+  Parameters:
+    debug: floa
+"""
+
 import collections
 import dataclasses
 import functools
@@ -9,7 +25,7 @@ import numpy as np
 # Copied from example.
 import pyrealsense2 as rs2
 
-if (not hasattr(rs2, 'intrinsics')):
+if not hasattr(rs2, "intrinsics"):
     import pyrealsense2.pyrealsense2 as rs2
 
 import enum
@@ -25,20 +41,21 @@ from rclpy.time import Time as RosTime
 from sensor_msgs.msg import CameraInfo
 from sensor_msgs.msg import Image as RosImage
 from std_msgs.msg import Header
-from teleop_sensing.cv_filers import (BlobDetector, HOnlyFilter, HSVFilter, HSVFilter_SVBase,
-                                      RedHFilter, TrackBarHelper)
+from teleop_sensing.cv_filers import (BlobDetector, HOnlyFilter, HSVFilter,
+                                      HSVFilter_SVBase, RedHFilter,
+                                      TrackBarHelper)
 from tf2_ros import TransformBroadcaster
 from tf2_ros.buffer import Buffer as TfBuffer
 from tf2_ros.transform_listener import TransformListener
 
 
 def main(args=None):
-    '''
+    """
     The main entry point. This combines entry method for both ros2 run through
-    setup.py as well as direct file execution 
-    '''
+    setup.py as well as direct file execution
+    """
     # This allows verifying the entry point
-    print(f'Starting at main of turtle control, given args: {args}')
+    print(f"Starting at main of turtle control, given args: {args}")
     rclpy.init(args=args)
     image_processer = ImageProcesser()
     rclpy.spin(image_processer)
@@ -54,13 +71,12 @@ class Color(enum.Enum):
 
 
 @dataclasses.dataclass()
-class ColoredFilter():
+class ColoredFilter:
     color: Color
     filter: HOnlyFilter
 
 
 class ImageProcesser(RosNode):
-
     def __init__(self) -> None:
         super().__init__("cv_ring_finding")
         self.info = self.get_logger().info
@@ -69,10 +85,14 @@ class ImageProcesser(RosNode):
         self.error = self.get_logger().error
 
         self.declare_parameter(
-            "debug", True,
-            RosParameterDescriptor(description="launch debug cv2 windows when True."))
+            "debug",
+            True,
+            RosParameterDescriptor(description="launch debug cv2 windows when True."),
+        )
 
-        self.debug_mode: float = self.get_parameter("debug").get_parameter_value().bool_value
+        self.debug_mode: float = (
+            self.get_parameter("debug").get_parameter_value().bool_value
+        )
 
         # Setup the user tuned filters
         # TODO(LEO) Take param to decide on seeing the trackbar
@@ -85,18 +105,13 @@ class ImageProcesser(RosNode):
 
         # red have to sets of bars, which we took union of
         self.color_filter_map: dict[Color, HOnlyFilter | RedHFilter] = {
-            Color.RED:
-                RedHFilter(170, 5),
-            Color.GREEN:
-                HOnlyFilter(85, 35),
-            Color.BLUE:
-                HOnlyFilter(98, 85),
+            Color.RED: RedHFilter(170, 5),
+            Color.GREEN: HOnlyFilter(85, 35),
+            Color.BLUE: HOnlyFilter(98, 85),
             # Color.ORANGE: HOnlyFilter(20,8),
             # Special treatment for orange. It's really close to yellow
-            Color.ORANGE:
-                HSVFilter(20, 8, 255, 160, 255, 140),
-            Color.YELLOW:
-                HOnlyFilter(30, 18),
+            Color.ORANGE: HSVFilter(20, 8, 255, 160, 255, 140),
+            Color.YELLOW: HOnlyFilter(30, 18),
         }
 
         # Go through all colors and setup trackbar
@@ -128,18 +143,30 @@ class ImageProcesser(RosNode):
         # /D435i/aligned_depth_to_color/image_raw
         # The non alighted depth image is not usable. points near the corner of the image will have huge bad offset.
         self.depth_image_sub = self.create_subscription(
-            RosImage, "/D435i/aligned_depth_to_color/image_raw",
-            functools.partial(self.push_to_queue_callback, self.depth_image_deque), 10)
+            RosImage,
+            "/D435i/aligned_depth_to_color/image_raw",
+            functools.partial(self.push_to_queue_callback, self.depth_image_deque),
+            10,
+        )
         self.depth_ci_sub = self.create_subscription(
-            CameraInfo, "/D435i/aligned_depth_to_color/camera_info",
-            functools.partial(self.push_to_queue_callback, self.depth_cam_info_deque), 10)
+            CameraInfo,
+            "/D435i/aligned_depth_to_color/camera_info",
+            functools.partial(self.push_to_queue_callback, self.depth_cam_info_deque),
+            10,
+        )
 
         self.raw_image_sub = self.create_subscription(
-            RosImage, "/D435i/color/image_raw",
-            functools.partial(self.push_to_queue_callback, self.raw_image_deque), 10)
+            RosImage,
+            "/D435i/color/image_raw",
+            functools.partial(self.push_to_queue_callback, self.raw_image_deque),
+            10,
+        )
         self.raw_ci_sub = self.create_subscription(
-            CameraInfo, "/D435i/color/camera_info",
-            functools.partial(self.push_to_queue_callback, self.raw_cam_info_deque), 10)
+            CameraInfo,
+            "/D435i/color/camera_info",
+            functools.partial(self.push_to_queue_callback, self.raw_cam_info_deque),
+            10,
+        )
 
         # intentionally to be between 1~2 times the image publishing rate. So the timer is likely in between when all image topics
         # has done publishing.
@@ -224,9 +251,13 @@ class ImageProcesser(RosNode):
 
             full_hsv_mask = cv2.bitwise_and(sv_mask, color_mask)
 
-            raw_blob_marked, raw_pxy = self.find_donute_with_color_mask(raw_img_cv, full_hsv_mask)
+            raw_blob_marked, raw_pxy = self.find_donute_with_color_mask(
+                raw_img_cv, full_hsv_mask
+            )
             if self.debug_mode:
-                cv2.imshow(c.name, self.trackbar_helper.scale_image_down(raw_blob_marked, 700))
+                cv2.imshow(
+                    c.name, self.trackbar_helper.scale_image_down(raw_blob_marked, 700)
+                )
                 cv2.waitKey(1)
 
             if not raw_pxy:
@@ -237,13 +268,16 @@ class ImageProcesser(RosNode):
             raw_rect_depth = depth_img_cv[raw_rect_pxy[1], raw_rect_pxy[0]]
             # print(f"Color {c.name} depth {raw_rect_depth}")
             raw_rect_ph_sxyz = [
-                v * raw_rect_depth / 1000 for v in raw_pin_model.projectPixelTo3dRay(raw_rect_pxy)
+                v * raw_rect_depth / 1000
+                for v in raw_pin_model.projectPixelTo3dRay(raw_rect_pxy)
             ]
             print(
                 f"Color {c.name} at xyz {raw_rect_ph_sxyz[0]:.5f} {raw_rect_ph_sxyz[1]:.5f} {raw_rect_ph_sxyz[2]:.5f} "
             )
 
-            self.publish_circle_tf(depth_img.header, f"{c.name.lower()}_center", raw_rect_ph_sxyz)
+            self.publish_circle_tf(
+                depth_img.header, f"{c.name.lower()}_center", raw_rect_ph_sxyz
+            )
 
     def find_donute_with_color_mask(self, bgr_image, color_mask):
 
@@ -279,7 +313,9 @@ class ImageProcesser(RosNode):
         py = int(py)
         return px, py
 
-    def publish_circle_tf(self, image_header: Header, child_frame_id: str, sxyz: list[float]):
+    def publish_circle_tf(
+        self, image_header: Header, child_frame_id: str, sxyz: list[float]
+    ):
         tf = TransformStamped()
         tf.header.stamp = image_header.stamp
         tf.header.frame_id = image_header.frame_id
@@ -301,13 +337,15 @@ class ImageProcesser(RosNode):
             source_frame (str): The source frame name
 
         Returns:
-            Optional[TransformStamped]: None if error when getting tf. 
-                TransformStamped between the frames given 
+            Optional[TransformStamped]: None if error when getting tf.
+                TransformStamped between the frames given
         """
         try:
             # get the latest transform between left and right
             # (rclpy.time.Time() means get the latest information)
-            trans = self._tf_buffer.lookup_transform(target_frame, source_frame, rclpy.time.Time())
+            trans = self._tf_buffer.lookup_transform(
+                target_frame, source_frame, rclpy.time.Time()
+            )
             return trans
         except tf2_ros.LookupException as e:
             # the frames don't exist yet
@@ -321,5 +359,5 @@ class ImageProcesser(RosNode):
         return None
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
