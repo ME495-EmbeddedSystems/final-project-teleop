@@ -5,24 +5,41 @@ from teleop_interfaces.srv import SetWrench
 from sensor_msgs.msg import JointState
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
 from visualization_msgs.msg import Marker
-from std_srvs.srv import SetBool
+from std_srvs.srv import SetBool, Empty
 from tf2_ros import TransformBroadcaster, StaticTransformBroadcaster
 from tf2_ros.transform_listener import TransformListener
 from tf2_ros.buffer import Buffer
 from enum import Enum, auto
 import numpy as np
 import random
-import time
 
 class SimState(Enum):
+    """Control states for the Finite State Machine."""
     REST = auto(),
     GRASPED = auto(),
     FALLING = auto(),
     LOCKED = auto(),
 
+
 class RingSim(Node):
     """
-    Publishes transforms for all the rings.
+    Simulates physics for the rings in the RVIZ enviroment.
+    
+
+    Publishers
+    ----------
+        - /visualization_marker (visualization_msgs/msg/Marker) : The table marker publisher
+        - /tf (geometry_msgs/msg/TransformStamped) : The transforms of the following:
+                                                        - The ring base
+                                                        - ALl rings
+    Services
+    --------
+        - /reset_rings (std_srvs/srv/Empty) : Reset the ring position and states
+
+    Clients
+    -------
+        - /grasped (std_srvs/srv/SetBool) : Enable or diasble the Haptx
+        -/left_hand/set_applied_wrench (teleop_interfaces/srv/SetWrench) : The set the applied force
     """
 
     def __init__(self):
@@ -47,11 +64,11 @@ class RingSim(Node):
 
         self.ring_positions = [(0,0)]
 
-        self.blue_start = Point32(y=0.0, x=0.25)
-        self.green_start = Point32(y=-0.25, x=0.0)
-        self.yellow_start = Point32(y=0.25, x=0.0)
-        self.orange_start = Point32(y=0.40, x=0.0)
-        self.red_start = Point32(y=-0.40, x=0.0)
+        self.blue_start = Point32(x=0.25, y=0.0)
+        self.green_start = Point32(x=0.0, y=-0.25)
+        self.yellow_start = Point32(x=0.0, y=0.25)
+        self.orange_start = Point32(x=0.0,y=0.40)
+        self.red_start = Point32(x=0.0, y=-0.40)
 
         self.start_positons = {
                         'blue' : self.blue_start,
@@ -99,28 +116,41 @@ class RingSim(Node):
         table.id = 0
         self.marker_pub.publish(table)
 
-        #self.object_frame_map = {'blue_ring': 'blue_center',
-        #                         'green_ring': 'green_center',
-        #                         'yellow_ring': 'yellow_center',
-        #                         'orange_ring': 'orange_center',
-        #                         'red_ring': 'red_center'}
-
         # Create service client to actuate HaptX Gloves
         self.grasped_client = self.create_client(SetBool, "grasped")
         self.grasped_client.wait_for_service(timeout_sec=10)
         self.force_client = self.create_client(SetWrench, "/left_hand/set_applied_wrench")
         self.force_client.wait_for_service(timeout_sec=10)
 
+        self.reset_service = self.create_service(Empty, "reset_rings", self.reset_callback)
+
     def timer_callback(self):
+        """
+        Timer function. 
+
+        Runs through the following loop for each ring in the ringArray.
+
+            REST:
+                - Ring is at rest on the table.
+                - Checks if picked up.
+            GRASPED:
+                - Ring is in the hand 
+                - Moves with the hand, checks if dropped.
+            FALLING:
+                - Ring is falling 
+                - Checks if landed on the pole or the table.
+            LOCKED:
+                - Ring is locked on the pole.
+        """
         self.world_to_ring_base.header.stamp = self.get_clock().now().to_msg()
         self.broadcaster.sendTransform(self.world_to_ring_base)
         
         for i in self.ringArray:
-            # self.get_logger().info(i.name+"'s state is:" + str(i.state))
             if(i.state == SimState.REST):
                 i.acceleration = Point32()
                 i.velocity = Point32()
                 i.position.z = 0.0155
+                i.TF.transform.rotation = Quaternion()
                 if(self.ring_grasped(i.name)):
                     try:
                         trans = self.tf_buffer.lookup_transform(i.TF.child_frame_id, "left_hand/palm", rclpy.time.Time(nanoseconds=0))
@@ -128,8 +158,9 @@ class RingSim(Node):
                         self.grabbed = i.name
                         self.haptics(True, i.mass)
 
-                        #i.offset.x = trans.transform.translation.x
-                        #i.offset.y = trans.transform.translation.y
+                        # Probably not worth since ring should be centered in the hand.
+                        # i.offset.x = trans.transform.translation.x
+                        # i.offset.y = trans.transform.translation.y
 
                         i.acceleration = Point32()
                         i.velocity = Point32()
@@ -137,7 +168,7 @@ class RingSim(Node):
                     except Exception as error:
                         self.get_logger().info(str(error))
             if(i.state == SimState.GRASPED):
-                if(self.ring_grasped(i.name)):
+                if(self.ring_grasped(i.name, SimState.GRASPED)):
                     i.counter = 0
                     try:
                         trans = self.tf_buffer.lookup_transform("sim/world", "left_hand/palm", rclpy.time.Time(nanoseconds=0))
@@ -179,6 +210,17 @@ class RingSim(Node):
             self.broadcaster.sendTransform(i.TF)
 
     def ring_placed(self, name):
+        """
+        Check if the ring is placed on the pole.
+
+        Args:
+        ----
+            - name (string) : The name of the ring being checked
+        
+        Returns:
+        -------
+            - True if placed on the pole, False otherwise
+        """
         try:
             trans = self.tf_buffer.lookup_transform("sim/"+name+"/center", "sim/ring_base/base", rclpy.time.Time(nanoseconds=0))
 
@@ -193,9 +235,19 @@ class RingSim(Node):
             self.get_logger().info(str(error))
 
 
-    def ring_grasped(self, name):
-        """ Calculates 1x5 bitmap of which fingers are in contact with the ring.
-            If thumb and another finger are touching a ring, that ring is grabbed.
+    def ring_grasped(self, name, state=SimState.REST):
+        """
+        Calculate 1x5 bitmap of which fingers are in contact with the ring.
+
+        If thumb and another finger are touching a ring, that ring is grabbed.
+
+        Args:
+        ----
+            name (string) : The name of the ring being picked up.
+        
+        Returns
+        -------
+            (bool) : True if the ring is "grabbed", False otherwise
         """
 
         try:
@@ -214,10 +266,11 @@ class RingSim(Node):
             fingers_in_contact[3] = self.finger_contact(ring_tf)
             fingers_in_contact[4] = self.finger_contact(pinky_tf)
 
-            #self.get_logger().info(str(np.sum(fingers_in_contact)))
-
-            if (fingers_in_contact[0] == 1) or (np.sum(fingers_in_contact) >= 1):
-
+            if(state == SimState.GRASPED):
+                # Condition for remaining picked up is one finger is touching the ring.
+                return(np.sum(fingers_in_contact) > 0)
+            elif (fingers_in_contact[0] == 1) or (np.sum(fingers_in_contact) >= 2):
+                # Condition for picking up is that the thumb and one other finger is in contact with the ring
                 return True and (self.grabbed == name or self.grabbed is None)
         
         except Exception as error:
@@ -227,6 +280,17 @@ class RingSim(Node):
 
 
     def finger_contact(self, ring_fingertip_tf):
+        """
+        Check if the ring is in contact with the finger.
+
+        Args:
+        ----
+            - ring_fingertip_tf (TransformStamped) : The tf from the ring to the fingertip
+        
+        Returns
+        -------
+            - 1 if in contact, 0 otherwise.
+        """
 
         # Ring Dimensions
         ring_width = 0.15 #0.118
@@ -244,17 +308,26 @@ class RingSim(Node):
         return 0
 
     def haptics(self, boolean, mass):
+        """
+        Call for haptic feedback.
+
+        Args:
+        ----
+            boolean (Bool) : True to activate Haptx, False to deactivate Haptx
+            mass (float) : The z force to apply with the frankas.
+        """
         grasped_req = SetBool.Request()
         grasped_req.data = boolean
         self.grasped_client.call_async(grasped_req)
         force_req = SetWrench.Request()
         wrench = Wrench()
-        wrench.force.z = 9.81 * mass
+        wrench.force.z = -9.81 * mass
         force_req.wrench = wrench
         self.force_client.call_async(force_req)
     
 
     def generate_ring_start_position(self):
+        """Generate a random ring start position."""
         x = random.uniform(-0.5, 0.5)
         y = random.uniform(-0.5, 0.5)
 
@@ -267,6 +340,20 @@ class RingSim(Node):
         return x, y
 
     def too_close(self, x, y):
+        """
+        Check if a ring start position is too close to another ring.
+
+
+        Args:
+        ----
+            - x (float) : The x position
+            - y (float) : The y position 
+
+        Returns
+        -------
+            - True if too close, false otherwise
+
+        """
         for pos in self.ring_positions:
             d = ((x - pos[0])**2 + (y - pos[1])**2)**0.5
 
@@ -276,10 +363,28 @@ class RingSim(Node):
         return False
     
     def reset_rings(self):
+        """Reset ring position to start position."""
         for i in self.ringArray:
+            i.state = SimState.REST
             i.set_position(self.start_positons[i.name])
+    
+    def reset_callback(self, request, response):
+        """
+        Reset rings callback.
+
+        Args:
+        ----
+            -  request (Empty.Request) :
+            - response (Empty.Response) :
+        Returns
+        -------
+            - response (Empty.Response)
+        """
+        self.reset_rings()
+        return response
 
 class Ring():
+    """The ring object."""
 
     def __init__(self, name, period, x0=0.0, y0=0.0, mass=1.5):
         self.TF = TransformStamped()
@@ -307,9 +412,17 @@ class Ring():
         self.TF.transform.translation.z = self.position.z
     
     def set_position(self, p):
+        """
+        Set the position of the ring object.
+
+        Args:
+        ----
+            p (Point32) : The position to set it to.
+        """
         self.position = p
     
     def update_state(self):
+        """Update the internal state of the ring according to kinematic equations."""
         self.position.x = self.position.x + self.velocity.x * self.period + 0.5 * self.acceleration.x * self.period * self.period
         self.velocity.x = self.velocity.x + self.acceleration.x * self.period
         self.TF.transform.translation.x = self.position.x
