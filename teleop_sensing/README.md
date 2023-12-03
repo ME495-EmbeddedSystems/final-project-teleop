@@ -19,6 +19,8 @@ To see the cv2 window with trackbars to live tune the filer parameters, set the 
 ros2 launch teleop_sensing rings_cv.launch.xml debug:=True
 ```
 
+[example of running this in debug mode](https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/7969697/c79e4f70-6d18-47e0-8438-9ad4425930bc)
+
 ### April tag tf names 
 
 The actual configuration for each tag is in the `tag16_config.yaml`
