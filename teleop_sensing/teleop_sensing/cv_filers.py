@@ -55,6 +55,8 @@ class FilterBase():
 
         Returns:
             list[str]: List of fields that are linked and should also be called by caller to update
+        Raises:
+            ValueError: if the name of the field is not in the class
         """
         x_max, x_min = self.get_field_range(field_name)
         value = min(x_max, max(value, x_min))
@@ -269,12 +271,12 @@ class HSVFilter(FilterBase):
             counter_part = channel + "_low"
             if (getattr(self, counter_part) > getattr(self, field_name)):
                 # also update counter part
-                setattr(self, counter_part, value)
+                setattr(self, counter_part, value-1)
         else:
             counter_part = channel + "_high"
             if (getattr(self, counter_part) < getattr(self, field_name)):
                 # also update counter part
-                setattr(self, counter_part, value)
+                setattr(self, counter_part, value+1)
         return [counter_part]
 
     def apply_filter(self, bgr_image):
