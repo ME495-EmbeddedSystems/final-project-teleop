@@ -15,10 +15,12 @@ ros2 launch teleop_haptics haptics.launch.xml
 ```
 
 This launch file takes the following arguments:
-- `side`: Determines whether to launch haptic feedback for the right side, left side, or both sides __(default: right)__
+- `side`: Determines whether to launch haptic feedback for the right side, left side, or both sides
+    - __Default__: right
+    - __Options__: right, left, both
 - `track`: Determines whether hand tracking from the frankas should be published __(default: true)__
 
-For example, to launch feedback for the both sides of the body only, you can use the following command:
+For example, to launch feedback for the both sides of the body, you can use the following command:
 
 ```bash
 ros2 launch teleop_haptics haptics.launch.xml side:=both
@@ -35,7 +37,9 @@ ros2 run teleop_haptics haptx_feedback
 ```
 
 This node takes in one parameter:
-- `side`: Determines whether to launch haptic feedback for the right side, left side, or both sides __(default: right)__
+- `side`: Determines whether to launch haptic feedback for the right side, left side, or both sides
+    - __Default__: right
+    - __Options__: right, left, both
 
 For example, to run just the right HaptX Glove, you can use the following command:
 
