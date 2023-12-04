@@ -1,0 +1,23 @@
+<launch>
+    
+    <!-- Rviz -->
+    <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share teleop_visualization)/rings.rviz"/>
+
+    <!-- Robot State Publisher for Avatar Robot -->
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" namespace="avatar_right">
+        <param name="robot_description" value="$(command '$(exec-in-pkg xacro xacro) $(find-pkg-share avatar_visualizer)/robots/avatar.urdf.xacro')" />
+        <param name="frame_prefix" value="avatar_right/" />
+    </node>
+    
+    <!-- Node To Set Up Scene -->
+    <node pkg="teleop_visualization" exec="scene" name="scene"/>
+
+    <!-- Node to Publish Rings -->
+    <node pkg="teleop_visualization" exec="rings" name="rings"/>
+
+    <!-- Computer Vision -->
+    <include file="$(find-pkg-share teleop_sensing)/launch/rings_cv.launch.xml" if="$(eval '\'$(var task)\' == \'rings\'')">
+        <arg name="debug" value="false"/>
+    </include>
+
+</launch>
