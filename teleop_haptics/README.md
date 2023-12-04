@@ -6,7 +6,7 @@ The `teleop_haptics` package enables two forms of haptic feedback:
 
 <br>
 
-## Launch The Haptic Feedback
+### Launch The Haptic Feedback
 
 To launch both the cutaneous feedback and the kinesthetic feedback, you can use the following command:
 
@@ -28,7 +28,7 @@ ros2 launch teleop_haptics haptics.launch.xml side:=both
 
 <br>
 
-## Cutaneous Feedback Node
+### Cutaneous Feedback Node
 
 To run just the cutaneous feedback node, you can use the following command:
 
@@ -49,7 +49,7 @@ ros2 run teleop_haptics haptx_feedback --ros-args -p side:=left
 
 <br>
 
-## Kinesthetic Feedback Node
+### Kinesthetic Feedback Node
 
 To run the just kinesthetic feedback node, you can use the following command:
 

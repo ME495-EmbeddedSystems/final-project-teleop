@@ -11,6 +11,9 @@ __Default View__:
 Upon starting only this node, you will see a scene which looks like this:
 ![Default Visualization Screen](https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/122302059/607f3553-d389-4377-9223-9e869b37e54c)
 
+
+<br>
+
 ### Getting Live Ring Positions
 In order to get live positions of rings, the sensing node (found in the `teleop_sensing` package) needs to be running. You can launch this node, along with the visualization node, using the following command:
 
@@ -18,5 +21,15 @@ In order to get live positions of rings, the sensing node (found in the `teleop_
 ros2 launch teleop_visualization live_rings.launch.xml
 ```
 
+<br>
+
 ### Visualizing The Actual Avatar Robot Configuration
 The visualizer can also show the current configuration of the avatar robot. For this to happen, the avatar robot's nodes must be running and publishing the current joint angles of the robots.
+
+<br>
+
+### Rings Node
+The Rings node publishes the ring markers in the scene, and updates the ring's positions if location data is available from the sensing/computer vision nodes.
+
+### Scene Node
+The Scene node publishes a marker for the table and publishes live joint angles for the avatar robot if they are available.
