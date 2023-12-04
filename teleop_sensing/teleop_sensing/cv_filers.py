@@ -1,4 +1,10 @@
-#! /usr/bin/env python3
+"""
+The library for applying filters in opencv style, along with some helpers to tune the filter.
+
+Two main parts of the library
+* FilterBase and his child classes
+* TrackBarHelper class
+"""
 import dataclasses
 import functools
 import typing
@@ -10,29 +16,34 @@ import numpy as np
 
 @dataclasses.dataclass
 class FilterBase:
-    """The base class for cv filters Defines the common method.
+    """
+    The base class for cv filters Defines the common method.
 
     The class inherent this must also be a data class. This class specifically depends
     on the dataclass field features. There is a pre-defined way to find the MIN MAX values.
     of each field. Look at get_field_range for the name based look up.
 
     Example:
+    --------
     @dataclasses.dataclass
     Class UpperLowerFilter(FilterBase):
         size_upper:int
         size_lower:int
         SIZE_MAX: typing.ClassVar[float] = 255
         SIZE_MIN: typing.ClassVar[float] = 255
+
     """
 
     def get_field_range(self, field_name: str) -> tuple[float, float]:
-        """Get the possible min and max of a field
+        """
+        Get the possible min and max of a field.
 
         Args:
             field_name (str): string name of one of the class's field
 
         Raises:
             ValueError: if the name of the field is not in the class
+
         """
         if field_name not in [f.name for f in dataclasses.fields(self)]:
             raise ValueError(f"Trying to get the range of a field: {field_name}" +
@@ -49,15 +60,20 @@ class FilterBase:
         )
 
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
-        """Update field by its name
+        """
+        Update field by its name
 
         Args:
+        ----
             field_name (str): The name of the field
             value (float): New value for the field
 
         Returns:
+        -------
             list[str]: List of fields that are linked and should also be called by caller to update
+        
         Raises:
+        ------
             ValueError: if the name of the field is not in the class
         """
         x_max, x_min = self.get_field_range(field_name)
@@ -66,27 +82,34 @@ class FilterBase:
         return []
 
     def apply_filter(self, bgr_image):
-        """Apply the cv filter base on field values This should be overwritten by base class.
-        # The specific implementation depends on each sub class
+        """
+        Apply the cv filter base on field values This should be overwritten by base class.
+
+        The specific implementation depends on each sub class
 
         Args:
+        ----
             bgr_image (np.ndarray): The bgr image in cv2's format
 
         Returns:
+        -------
             np.Ndarray: Depends on sub class
         """
         return bgr_image
 
     def ensure_linked_field_smaller(self, field, linked_field, margin=1):
-        """This makes sure the linked field is smaller then given field. Relationship
+        """
+        This makes sure the linked field is smaller then given field. Relationship
         is provided by the field name in arguments
 
         Args:
+        ----
             field (str): field name
             linked_field (str): linked field name
             margin (int, optional): the margin between to fields. Defaults to 1.
 
         Returns:
+        -------
             bool: if linked field's value is updated
         """
         if (getattr(self, field) - getattr(self, linked_field)) < margin:
@@ -96,15 +119,18 @@ class FilterBase:
         return False
 
     def ensure_linked_field_larger(self, field, linked_field, margin=1):
-        """This makes sure the linked field is larger then given field. Relationship
+        """
+        This makes sure the linked field is larger then given field. Relationship
         is provided by the field name in arguments
 
         Args:
+        ----
             field (str): field name
             linked_field (str): linked field name
             margin (int, optional): the margin between to fields. Defaults to 1.
 
         Returns:
+        -------
             bool: if linked field's value is updated
         """
         if (getattr(self, linked_field) - getattr(self, field)) < margin:
@@ -129,14 +155,17 @@ class HSVFilter_SVBase(FilterBase):
     V_MIN: typing.ClassVar[float] = 0
 
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
-        """Update value in field by its name. the counter part of the field
-        will also be updated
+        """Update value in field by its name. 
+
+        The counter part of the field will also be updated
 
         Args:
+        ----
             field_name (str): field name
             value (float): new values
 
         Returns:
+        -------
             list[str]: counter part field that also have been update
         """
         super().update_field_by_name(field_name, value)
@@ -159,9 +188,11 @@ class HSVFilter_SVBase(FilterBase):
         """Apply the HSV filter (only limiting in S and V channel)
 
         Args:
+        ----
             bgr_image (np.ndarray): input image
 
         Returns:
+        -------
             np.ndarray: The HSV mask
         """
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
@@ -202,9 +233,11 @@ class HOnlyFilter(FilterBase):
         """Apply only the H channel for hsv filter
 
         Args:
+        ----
             bgr_image (np.ndarray): numpy array
 
         Returns:
+        -------
             np.ndarray: mask after applying the filter
         """
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
@@ -228,9 +261,11 @@ class RedHFilter(FilterBase):
         """Special way of applying HSV filter with lower half for RED, then upper half
 
         Args:
+        ----
             bgr_image input image
 
         Returns:
+        -------
             combined mask (or combined)
         """
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
@@ -283,6 +318,7 @@ class HSVFilter(FilterBase):
         """Apply the HSV filter
 
         Returns:
+        -------
             HSV mask after applying
         """
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
@@ -330,7 +366,7 @@ class BlobDetector(FilterBase):
         self.detector = cv2.SimpleBlobDetector_create(self.params)
 
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
-
+        """Similar to parents's version with special linkages between fields"""
         super().update_field_by_name(field_name, value)
 
         # Additionally update the param object's value
@@ -358,9 +394,11 @@ class BlobDetector(FilterBase):
         """Specific one for appling blob detector.
 
         Args:
+        ----
             bgr_image (np.ndarray): input image
 
         Returns:
+        -------
             tuple[Any, list[cv2.KeyPoint]]: Tuple of labeled image
             (with circle and center dot) and a list of keypoints.
         """
@@ -387,13 +425,15 @@ class BlobDetector(FilterBase):
 class TrackBarHelper:
 
     def scale_image_down(self, image: np.ndarray, expected_width):
-        """Scale the image down so it's display-able on smaller screen when having track bars
+        """Scale the image down so it's display-able on smaller screen when having track bars.
 
         Args:
+        ----
             image (np.ndarray): cv2 image
             expected_width (int): width after scaling
 
         Returns:
+        -------
             np.ndarray: scaled image
         """
         # We only care about width, doesn't care about height or color channel numbers
@@ -410,6 +450,7 @@ class TrackBarHelper:
         Last argument is the one given by cv2 during callback.
 
         Args:
+        ----
             window_name (str): name of the
             filter (FilterBase): The filer
             field_name (str): name of the field
@@ -440,6 +481,7 @@ class TrackBarHelper:
         """Setup trackbars on window for each field in the Filter object
 
         Args:
+        ----
             filter (FilterBase): The filter object
             window_name (str, optional): Name of the window to attach the trackbar
             to Will create the window internally.

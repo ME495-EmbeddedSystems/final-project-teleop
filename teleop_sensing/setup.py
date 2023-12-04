@@ -9,7 +9,8 @@ package_name = 'teleop_sensing'
 
 def copy_dir_rec(dest: pathlib.Path, source: pathlib.Path,
                  here: pathlib.Path) -> list[tuple[pathlib.Path, list[pathlib.Path]]]:
-    # Set dest.parent as root, then go through all sub files and output their p.relative_to(dest.parents)
+    # Set dest.parent as root, then go through all sub files
+    # and output their p.relative_to(dest.parents)
     if not source.is_dir():
         return [(str(dest / source.relative_to(here).parent), [str(source)])]
     out_list = []
