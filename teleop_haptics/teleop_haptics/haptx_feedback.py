@@ -19,9 +19,9 @@ class HaptxFeedback(Node):
     + haptx/lh/tactor_group_state (haptx_interfaces/msg/TactorGroupState) - Actuate tactor
                                                                             groups on left glove
     + haptx/rh/brake_state (haptx_interfaces/msg/FingerBrakeState) - Actuate tactor groups
-                                                                    on right glove
+                                                                     on right glove
     + haptx/lh/brake_state (haptx_interfaces/msg/FingerBrakeState) - Actuate tactor groups
-                                                                    on left glove
+                                                                     on left glove
 
     Services:
     --------

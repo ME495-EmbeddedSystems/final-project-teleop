@@ -14,12 +14,12 @@ class Scene(Node):
     Publishers:
     + visualization_marker (visualization_msgs/msg/Marker) - Table marker
     + avatar_right/joint_states (geometry_msgs/msg/JointState) - Joint states for the right avatar
-                                                                arm (ABB Gofa + Shadow Hand)
+                                                                 arm (ABB Gofa + Shadow Hand)
 
     Subscribers:
     + joint_states (geometry_msgs/msg/JointState) - Joint states of the Shadow Hands
     + avatar/right_arm/gofa2/joint_states (geometry_msgs/msg/JointState) - Joint states of the
-                                                                        right ABB Gofa
+                                                                           right ABB Gofa
 
     """
 
