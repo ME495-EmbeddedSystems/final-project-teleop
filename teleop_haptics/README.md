@@ -6,7 +6,7 @@ The `teleop_haptics` package enables two forms of haptic feedback:
 
 <br>
 
-## Launch Everything
+## Launch The Haptic Feedback
 
 To launch both the cutaneous feedback and the kinesthetic feedback, you can use the following command:
 
