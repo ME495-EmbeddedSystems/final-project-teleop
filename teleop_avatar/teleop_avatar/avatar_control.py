@@ -160,7 +160,7 @@ class AvatarControl(Node):
     def grasp_callback(self, request, response):
 
         # Check if abb arm is connected
-        self.get_logger().info(f"{self.transform_to_SE3(self.tf_buffer.lookup_transform('operator_task_ws', 'cmd/rh_palm', rclpy.time.Time()))}")
+        # self.get_logger().info(f"{self.transform_to_SE3(self.tf_buffer.lookup_transform('operator_task_ws', 'cmd/rh_palm', rclpy.time.Time()))}")
 
         # Open hand
         self.shadow_pub.publish(self.open_hand_msg())
@@ -175,7 +175,7 @@ class AvatarControl(Node):
     def grasp_sequence_callback(self, request, response):
 
         # Check if abb arm is connected
-        self.get_logger().info(f"{self.transform_to_SE3(self.tf_buffer.lookup_transform('operator_task_ws', 'cmd/rh_palm', rclpy.time.Time()))}")
+        # self.get_logger().info(f"{self.transform_to_SE3(self.tf_buffer.lookup_transform('operator_task_ws', 'cmd/rh_palm', rclpy.time.Time()))}")
 
         object_id_sequence = ['green_ring', 'yellow_ring', 'orange_ring']
 
@@ -189,6 +189,13 @@ class AvatarControl(Node):
 
             self.pick_and_place(object_id)
 
+        # Home configuration
+        abb_msg = self.SE3_to_transform_stamped(self.T_aws_home)
+        
+        self.abb_pub.publish(abb_msg)
+        self.get_logger().info("Going Home")
+        time.sleep(5)
+        
         return response
 
     def home_callback(self, request, response):
@@ -257,17 +264,17 @@ class AvatarControl(Node):
         abb_msg = self.SE3_to_transform_stamped(T_aws_hand)
         
         # Move to standoff height above object
-        abb_msg.transform.translation.z += self.graspStandoff
+        abb_msg.transform.translation.z += self.graspStandoff + 0.05
         abb_msg.transform.translation.x += 0.02
         self.abb_pub.publish(abb_msg)
         self.get_logger().info("Moving to standoff above " + object_id)
-        time.sleep(5)
+        time.sleep(8)
 
         # Move down to grab object
         abb_msg.transform.translation.z -= self.graspStandoff - 0.01
         self.abb_pub.publish(abb_msg)
         self.get_logger().info("Moving to grab object")
-        time.sleep(5)
+        time.sleep(8)
 
         # Close hand to grab object
         self.shadow_pub.publish(self.close_hand_msg())
@@ -278,7 +285,7 @@ class AvatarControl(Node):
         abb_msg.transform.translation.z += self.graspStandoff + 0.10
         self.abb_pub.publish(abb_msg)
         self.get_logger().info("Moving to standoff above " + object_id)
-        if object_id == 'orange_ring': time.sleep(7)
+        if object_id == 'orange_ring': time.sleep(15)
         time.sleep(8)
 
         # Calculate transformation of hand relative to the avatar_ws for stacking ring
