@@ -1,6 +1,4 @@
 <launch>
-    <arg name="real_rings" default="true"/>
-
     <executable
         cmd="ros2 control load_controller --set-state active joint_state_broadcaster"
         output="screen"/>
@@ -9,22 +7,11 @@
         cmd="ros2 control load_controller --set-state active joint_trajectory_controller"
         output="screen"/>
 
-    <group if="$(eval '\'$(var real_rings)\' == \'true\'')">
-        <!-- <push-ros-namespace namespace="left_hand"/> -->
-        <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
-            <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/Rings.sdf"/>
-        </include>
-    </group>
-
-    <group if="$(eval '\'$(var real_rings)\' == \'false\'')">
-        <!-- <push-ros-namespace namespace="left_hand"/> -->
-        <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
-            <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/SimpleRings.sdf"/>
-        </include>
-    </group>
+    <include file="$(find-pkg-share ros_gz_sim)/launch/gz_sim.launch.py">
+        <arg name="gz_args" value="-r $(find-pkg-share teleop_tasks)/worlds/Rings.sdf"/>
+    </include>
 
     <group>
-        <!-- <push-ros-namespace namespace="left_hand"/> -->
         <node pkg="ros_gz_sim" exec="create" args="-topic /robot_description -x -0.1 -y 0.2 -z 0.75"/>
 
         <include file="$(find-pkg-share teleop_tasks)/launch/leftHandTest.launch.xml">

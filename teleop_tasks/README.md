@@ -1,24 +1,31 @@
-To run the blocks simulation run "ros2 launch teleop_tasks rings.launch.xml"
-To run the blocks simulation run "ros2 launch teleop_tasks blocks.launch.xml"
+# teleop_tasks
 
-Frames of the desired objects
-Block frames: childID -> block
-Ring frames: childID -> ring_red, ring_orange, ring_yellow
+## Quick launch
+To run the rings simulation run `ros2 launch teleop_tasks rings.launch.xml`  
 
-Force and torque info in this topic: /force_torque
-Published as a stamped wrench type
-Example published wrench:
-header:
-  stamp:
-    sec: 2
-    nanosec: 60000000
-  frame_id: left_hand/index_3_index_tip/force_torque_sensor
-wrench:
-  force:
-    x: -2.6198082581022587e-07
-    y: 8.054420889837468e-06
-    z: 0.9799984506689391
-  torque:
-    x: 1.662303241172108e-11
-    y: -3.2122527912891555e-07
-    z: -3.328256418488998e-11
+## Launch file descriptions
+**hand.launch.xml**  
+Run: `ros2 launch teleop_tasks hand.launch.xml`  
+Launches a left hand in Rviz with joint state gui launched to more easily view what each joint. Also launches *finger_joint_mapper.py* and *ros_gz_joint_client.py* so the joints can be visualized from the haptx joint state publisher.
+  
+**leftHandTest.launch.xml**  
+Run: `ros2 launch teleop_tasks leftHandTest.launch.xml`  
+Launches a left hand in Rviz with joint state gui.  
+
+**rings.launch.xml**  
+Run: `ros2 launch teleop_tasks rings.launch.xml`  
+Launches **leftHandTest.launch.xml**, *finger_joint_mapper.py*, and *ros_gz_joint_client.py* to have a complete visualization of the left hand in Rviz and gazebo. No joint_state_gui is launched, the hand takes in joint states from topic `/left_hand/joint_states`
+
+## Node list  
+*finger_joint_mapper*  
+Reads in joint values from `/haptx/lh/raw_joint_states`, the topic that the haptx gloves publish their raw joint states to. Then maps them to the joints defined in leftHand.urdf.xacro.  
+
+*obejcts*  
+Reads in data about the objects in the gazebo virtual environment and publishes them to `/objects` so other nodes can record the position of the objects in question.  
+
+*ros_gz_joint_client*  
+Reads in joints published to `/left_hand/joint_states` and sends them to the ros_controller nodes that are created in the **rings.launch.xml** launch file. 
+
+*controller_manager*  
+Default controller manager node created to manage the controller nodes launched in **rings.launch.xml**  
+

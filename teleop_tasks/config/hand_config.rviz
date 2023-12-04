@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
+        - /TF1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz_common/Selection
@@ -230,19 +231,116 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz_default_plugins/TF
-      Enabled: false
+      Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: true
-      Marker Scale: 1
+        index_1:
+          Value: true
+        index_2:
+          Value: true
+        index_3:
+          Value: true
+        index_dumb:
+          Value: true
+        index_tip:
+          Value: true
+        middle_1:
+          Value: true
+        middle_2:
+          Value: true
+        middle_3:
+          Value: true
+        middle_dumb:
+          Value: true
+        middle_tip:
+          Value: true
+        palm:
+          Value: true
+        pinky_1:
+          Value: true
+        pinky_2:
+          Value: true
+        pinky_3:
+          Value: true
+        pinky_dumb:
+          Value: true
+        pinky_tip:
+          Value: true
+        ring_1:
+          Value: true
+        ring_2:
+          Value: true
+        ring_3:
+          Value: true
+        ring_dumb:
+          Value: true
+        ring_tip:
+          Value: true
+        thumb_1:
+          Value: true
+        thumb_2:
+          Value: true
+        thumb_dumb:
+          Value: true
+        thumb_tip:
+          Value: true
+        world:
+          Value: true
+        world_2:
+          Value: true
+        world_3:
+          Value: true
+        world_4:
+          Value: true
+        world_5:
+          Value: true
+        world_6:
+          Value: true
+      Marker Scale: 0.05000000074505806
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        {}
+        world:
+          world_2:
+            world_3:
+              world_4:
+                world_5:
+                  world_6:
+                    palm:
+                      index_dumb:
+                        index_1:
+                          index_2:
+                            index_3:
+                              index_tip:
+                                {}
+                      middle_dumb:
+                        middle_1:
+                          middle_2:
+                            middle_3:
+                              middle_tip:
+                                {}
+                      pinky_dumb:
+                        pinky_1:
+                          pinky_2:
+                            pinky_3:
+                              pinky_tip:
+                                {}
+                      ring_dumb:
+                        ring_1:
+                          ring_2:
+                            ring_3:
+                              ring_tip:
+                                {}
+                      thumb_dumb:
+                        thumb_1:
+                          thumb_2:
+                            thumb_tip:
+                              {}
       Update Interval: 0
-      Value: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -289,7 +387,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 0.4671274423599243
+      Distance: 0.4956931471824646
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -325,5 +423,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 70
-  Y: 60
+  X: 508
+  Y: 107
