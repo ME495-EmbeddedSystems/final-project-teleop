@@ -41,10 +41,10 @@ This node takes in one parameter:
     - __Default__: right
     - __Options__: right, left, both
 
-For example, to run just the right HaptX Glove, you can use the following command:
+For example, to run just the left HaptX Glove, you can use the following command:
 
 ```bash
-ros2 run teleop_haptics haptx_feedback --ros-args -p side:=right
+ros2 run teleop_haptics haptx_feedback --ros-args -p side:=left
 ```
 
 <br>
