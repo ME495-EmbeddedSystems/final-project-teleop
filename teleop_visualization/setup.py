@@ -23,7 +23,6 @@ setup(
     entry_points={
         'console_scripts': [
             'rings = teleop_visualization.rings:main',
-            'rings_light = teleop_visualization.rings_light:main',
             'scene = teleop_visualization.scene:main'
         ],
     },
