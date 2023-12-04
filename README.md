@@ -77,7 +77,7 @@ Here is an example of the teleop_avatar package picking up rings and stacking th
 
 ## `teleop_interfaces` Package
 
-This package contains all the custom messages and services used by the teleoperation system.
+The `teleop_interfaces` package contains all the custom messages and services used by the teleoperation system.
 
 #### Custom Messages:
 - FingerWrenches
