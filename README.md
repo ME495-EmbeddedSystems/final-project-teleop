@@ -43,6 +43,10 @@ The `teleop_haptics` package can be used to provide haptic feedback to the user.
 
 The `teleop_sensing` package uses computer vision to calculate the locations of objects present in the avatar robot's workspace.
 
+A demo of the package's ability to detect the positions of the rings is shown below:
+
+   https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/7969697/c79e4f70-6d18-47e0-8438-9ad4425930bc
+
 <br>
 
 ## `teleop_visualization` Package
