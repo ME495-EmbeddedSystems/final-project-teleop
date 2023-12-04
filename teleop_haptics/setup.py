@@ -14,7 +14,7 @@ setup(
                                    'launch/force.launch.xml',
                                    'launch/operator.launch.xml',
                                    'config/right_hand.yaml',
-                                   'config/left_hand.yaml',]),
+                                   'config/left_hand.yaml']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

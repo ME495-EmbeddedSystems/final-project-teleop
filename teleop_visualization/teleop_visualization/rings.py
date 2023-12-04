@@ -1,10 +1,3 @@
-"""
-Publishes ring markers to reflect the positions of rings in the avatar workspace.
-
-Publishers:
-  + visualization_marker (visualization_msgs/msg/Marker) - Publish ring markers
-
-"""
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
@@ -15,7 +8,11 @@ from tf2_ros.buffer import Buffer
 
 class Rings(Node):
     """
-    Sets up table and robot in scene.
+    Publishes ring markers to reflect the positions of rings in the avatar workspace.
+
+    Publishers:
+    + visualization_marker (visualization_msgs/msg/Marker) - Publish ring markers
+
     """
 
     def __init__(self):
@@ -42,10 +39,9 @@ class Rings(Node):
         self.yellow_ring = self.generate_ring_marker('yellow')
         self.orange_ring = self.generate_ring_marker('orange')
         self.red_ring = self.generate_ring_marker('red')
-        
+
     def timer_callback(self):
         """Timer callback for Rings node."""
-
         # Update positions of the rings
         self.update_ring_positions()
 
@@ -58,7 +54,7 @@ class Rings(Node):
 
     def generate_ring_marker(self, color):
         """
-        Generates a Marker message to display a ring.
+        Generate a Marker message to display a ring.
 
         Args
         ----
@@ -114,31 +110,37 @@ class Rings(Node):
         self.ring_x -= 0.15
 
         return ring
-        
+
     def update_ring_positions(self):
-        """Updates the ring marker positions."""
+        """Update the ring marker positions."""
         # If the ring's transform exists, update the marker position
         if self.tf_buffer.can_transform('tag16H05_3', 'blue_center', rclpy.time.Time()):
-            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'blue_center', rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'blue_center',
+                                                 rclpy.time.Time()).transform
             self.blue_ring.pose.position.x = tf.translation.x
             self.blue_ring.pose.position.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', 'green_center', rclpy.time.Time()):
-            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'green_center', rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'green_center',
+                                                 rclpy.time.Time()).transform
             self.green_ring.pose.position.x = tf.translation.x
             self.green_ring.pose.position.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', 'yellow_center', rclpy.time.Time()):
-            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'yellow_center', rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'yellow_center',
+                                                 rclpy.time.Time()).transform
             self.yellow_ring.pose.position.x = tf.translation.x
             self.yellow_ring.pose.position.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', 'orange_center', rclpy.time.Time()):
-            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'orange_center', rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'orange_center',
+                                                 rclpy.time.Time()).transform
             self.orange_ring.pose.position.x = tf.translation.x
             self.orange_ring.pose.position.y = tf.translation.y
         if self.tf_buffer.can_transform('tag16H05_3', 'red_center', rclpy.time.Time()):
-            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'red_center', rclpy.time.Time()).transform
+            tf = self.tf_buffer.lookup_transform('tag16H05_3', 'red_center',
+                                                 rclpy.time.Time()).transform
             self.red_ring.pose.position.x = tf.translation.x
             self.red_ring.pose.position.y = tf.translation.y
-        
+
+
 def main(args=None):
     rclpy.init(args=args)
 

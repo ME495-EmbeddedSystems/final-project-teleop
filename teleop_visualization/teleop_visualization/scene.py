@@ -1,15 +1,3 @@
-"""
-Publishes the avatar workspace.
-
-Publishers:
-  + avatar_right/joint_states (geometry_msgs/msg/JointState) - Joint states for the right avatar arm (ABB Gofa + Shadow Hand)
-  + visualization_marker (visualization_msgs/msg/Marker) - Table marker
-
-Subscribers:
-  + avatar/right_arm/gofa2/joint_states (geometry_msgs/msg/JointState) - Joint states of the right ABB Gofa
-  + joint_states (geometry_msgs/msg/JointState) - Joint states of the Shadow Hands
-
-"""
 import rclpy
 from rclpy.node import Node
 from rclpy.qos import QoSProfile, QoSDurabilityPolicy
@@ -19,10 +7,20 @@ from sensor_msgs.msg import JointState
 from tf2_ros import StaticTransformBroadcaster
 
 
-
 class Scene(Node):
     """
-    Sets up table and robot in scene.
+    Publishes the avatar workspace, which contains the table and avatar robot (right arm only).
+
+    Publishers:
+    + visualization_marker (visualization_msgs/msg/Marker) - Table marker
+    + avatar_right/joint_states (geometry_msgs/msg/JointState) - Joint states for the right avatar
+                                                                arm (ABB Gofa + Shadow Hand)
+
+    Subscribers:
+    + joint_states (geometry_msgs/msg/JointState) - Joint states of the Shadow Hands
+    + avatar/right_arm/gofa2/joint_states (geometry_msgs/msg/JointState) - Joint states of the
+                                                                        right ABB Gofa
+
     """
 
     def __init__(self):
@@ -69,18 +67,28 @@ class Scene(Node):
         self.table.frame_locked = True
 
         # Subscribe to ABB Gofa and Shadow Hand joint states
-        self.gofa_js_subscription = self.create_subscription(JointState, 'avatar/right_arm/gofa2/joint_states', self.gofa_callback, 10)
-        self.shadow_js_subscription = self.create_subscription(JointState, 'joint_states', self.shadow_callback, 10)
+        self.gofa_js_subscription = self.create_subscription(JointState,
+                                                             'avatar/right_arm/gofa2/joint_states',
+                                                             self.gofa_callback, 10)
+        self.shadow_js_subscription = self.create_subscription(JointState,
+                                                               'joint_states',
+                                                               self.shadow_callback, 10)
 
         # Publisher for avatar robot's joint states
         self.joint_pub = self.create_publisher(JointState, 'avatar_right/joint_states', 10)
 
         # Variables to hold latest joint states
-        self.gofa_joint_names = ['gofa2_joint_1', 'gofa2_joint_2', 'gofa2_joint_3', 'gofa2_joint_4', 'gofa2_joint_5', 'gofa2_joint_6'] 
+        self.gofa_joint_names = ['gofa2_joint_1', 'gofa2_joint_2', 'gofa2_joint_3',
+                                 'gofa2_joint_4', 'gofa2_joint_5', 'gofa2_joint_6']
         self.gofa_js = [-1.570799, 0.174, 0.523, 0.0, -0.697, -0.523]
-        self.shadow_joint_names = ['rh_FFJ4', 'rh_FFJ3','rh_FFJ2', 'rh_FFJ1','rh_MFJ4','rh_MFJ3','rh_MFJ2','rh_MFJ1','rh_RFJ4','rh_RFJ3','rh_RFJ2','rh_RFJ1','rh_LFJ5', 'rh_LFJ4','rh_LFJ3','rh_LFJ2','rh_LFJ1','rh_THJ5','rh_THJ4','rh_THJ3','rh_THJ2','rh_THJ1', 'rh_WRJ1', 'rh_WRJ2']
+        self.shadow_joint_names = ['rh_THJ5', 'rh_THJ4', 'rh_THJ3', 'rh_THJ2', 'rh_THJ1',
+                                   'rh_FFJ4', 'rh_FFJ3', 'rh_FFJ2', 'rh_FFJ1',
+                                   'rh_MFJ4', 'rh_MFJ3', 'rh_MFJ2', 'rh_MFJ1',
+                                   'rh_RFJ4', 'rh_RFJ3', 'rh_RFJ2', 'rh_RFJ1',
+                                   'rh_LFJ5', 'rh_LFJ4', 'rh_LFJ3', 'rh_LFJ2',
+                                   'rh_LFJ1', 'rh_WRJ1', 'rh_WRJ2']
         self.shadow_js = 24*[0.0]
-        
+
     def timer_callback(self):
         """Timer callback for Scene node."""
         # Create JointState object for avatar robot
@@ -97,9 +105,9 @@ class Scene(Node):
 
     def gofa_callback(self, msg):
         """
-        Updates Gofa joint angles.
+        Update ABB Gofa joint angles.
 
-        Args
+        Args:
         ----
             msg (JointState): The current joint states of the right ABB Gofa
 
@@ -108,9 +116,9 @@ class Scene(Node):
 
     def shadow_callback(self, msg):
         """
-        Updates Shadow Hand joint angles.
+        Update Shadow Hand joint angles.
 
-        Args
+        Args:
         ----
             msg (JointState): The current joint states of the Shadow Hands
 
