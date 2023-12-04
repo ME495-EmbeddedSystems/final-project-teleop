@@ -1,4 +1,4 @@
-# teleop_haptics package
+# `teleop_haptics` package
 
 The `teleop_haptics` package enables two forms of haptic feedback:
 - __Cutaneous Feedback:__ Provided by the HaptX Gloves, cutaneous feedback allows a user to feel contact on their fingertips.
@@ -15,40 +15,39 @@ ros2 launch teleop_haptics haptics.launch.xml
 ```
 
 This launch file takes the following arguments:
-- `use_right`: Determines whether or not the right side is being used __(default: true)__
-- `use_left`: Determines whether or not the left side is being used __(default: true)__
+- `side`: Determines whether to launch haptic feedback for the right side, left side, or both sides __(default: right)__
+- `track`: Determines whether hand tracking from the frankas should be published __(default: true)__
 
-For example, to launch feedback for the right side of the body only, you can use the following command:
+For example, to launch feedback for the both sides of the body only, you can use the following command:
 
 ```bash
-ros2 launch teleop_haptics haptics.launch.xml use_left:=false
+ros2 launch teleop_haptics haptics.launch.xml side:=both
 ```
 
 <br>
 
 ## Cutaneous Feedback Node
 
-To run the cutaneous feedback node, you can use the following command:
+To run just the cutaneous feedback node, you can use the following command:
 
 ```bash
 ros2 run teleop_haptics haptx_feedback
 ```
 
-This node takes in two parameters:
-- `use_right`: Determines whether or not the right HaptX glove is being used __(default: true)__
-- `use_left`: Determines whether or not the left HaptX glove is being used __(default: true)__
+This node takes in one parameter:
+- `side`: Determines whether to launch haptic feedback for the right side, left side, or both sides __(default: right)__
 
 For example, to run just the right HaptX Glove, you can use the following command:
 
 ```bash
-ros2 run teleop_haptics haptx_feedback --ros-args -p use_left:=false
+ros2 run teleop_haptics haptx_feedback --ros-args -p side:=right
 ```
 
 <br>
 
 ## Kinesthetic Feedback Node
 
-To run the kinesthetic feedback node, you can use the following command:
+To run the just kinesthetic feedback node, you can use the following command:
 
 ```bash
 ros2 run teleop_haptics force_feedback
