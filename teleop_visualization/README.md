@@ -31,5 +31,7 @@ The visualizer can also show the current configuration of the avatar robot. For 
 ### Rings Node
 The Rings node publishes the ring markers in the scene, and updates the ring's positions if location data is available from the sensing/computer vision nodes.
 
+<br>
+
 ### Scene Node
 The Scene node publishes a marker for the table and publishes live joint angles for the avatar robot if they are available.
