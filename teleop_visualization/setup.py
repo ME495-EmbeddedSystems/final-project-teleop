@@ -17,7 +17,7 @@ setup(
     zip_safe=True,
     maintainer='rohan',
     maintainer_email='rohankota@u.northwestern.edu',
-    description='TODO: Package description',
+    description='Visualizes the avatar workspace in RViz',
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
