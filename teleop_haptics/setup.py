@@ -21,7 +21,7 @@ setup(
     maintainer='rohan',
     maintainer_email='rohankota@u.northwestern.edu',
     description='This package handles all of the haptic feedback of the teleop system.',
-    license='TODO: License declaration',
+    license='MIT',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [

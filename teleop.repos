@@ -1,17 +1,25 @@
 repositories:
+  min-avatar-description:
+    type: git
+    url: https://github.com/NU-Haptics-Lab/min-avatar-description.git
+    version: mainrepositories:
+  ME495_Operator_Master:
+    type: git
+    url: git@github.com:LukeBatteas/ME495_Operator_Master.git
+    version: merge_branch
   final-project-teleop:
     type: git
     url: git@github.com:ME495-EmbeddedSystems/final-project-teleop.git
     version: main
-  ME495_Operator_Master:
-    type: git
-    url: git@github.com:LukeBatteas/ME495_Operator_Master.git
-    version: main
   haptx_interfaces:
     type: git
-    url: https://github.com/NU-Haptics-Lab/haptx_interfaces.git
+    url: git@github.com:NU-Haptics-Lab/haptx_interfaces.git
     version: main
-  min-avatar-description:
+  net_ft_sensor:
     type: git
-    url: https://github.com/NU-Haptics-Lab/min-avatar-description.git
+    url: git@github.com:NU-Haptics-Lab/net_ft_sensor.git
     version: main
+  ros2-footswitch:
+    type: git
+    url: https://github.com/NU-Haptics-Lab/ros2-footswitch.git
+    version: kevin_edits
