@@ -44,7 +44,7 @@ class HandPositionNode(Node):
                                    description="The yaw offset for the end effector"))
         self.yaw = self.get_parameter("yaw_offset").get_parameter_value().double_value
 
-        self.declare_parameter("x_world_offset", 0.6,
+        self.declare_parameter("x_world_offset", 0.0,
                                ParameterDescriptor(
                                    description="The x world offset for the coordinate frame"))
         self.x_world = self.get_parameter("x_world_offset").get_parameter_value().double_value
