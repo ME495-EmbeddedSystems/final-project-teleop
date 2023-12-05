@@ -96,8 +96,6 @@ class Mapper(Node):
         self.gazebo_joint_pub.publish(self.gazebo_joint_states)
 
 
-
-
 def main(args=None):
     """fingr_joint_mapper's main function."""
     rclpy.init(args=args)
