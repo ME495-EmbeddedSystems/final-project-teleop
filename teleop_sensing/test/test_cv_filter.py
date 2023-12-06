@@ -1,12 +1,12 @@
 import pytest
 
-from teleop_sensing import cv_filers
+from teleop_sensing import cv_filters
 import dataclasses
 import cv2
 
 
 def test_filter_base():
-    filter_base_only = cv_filers.FilterBase()
+    filter_base_only = cv_filters.FilterBase()
 
     # This should throw exception
     with pytest.raises(ValueError):
@@ -16,7 +16,7 @@ def test_filter_base():
 
 
 def test_hsv_filter():
-    hsv_filter = cv_filers.HSVFilter(20, 10, 20, 10, 20, 10)
+    hsv_filter = cv_filters.HSVFilter(20, 10, 20, 10, 20, 10)
 
     hsv_filter.update_field_by_name("h_high", 30)
     assert hsv_filter.h_high == 30
@@ -30,9 +30,9 @@ def test_hsv_filter():
 
 def test_setup_trackbar():
     test_cv2_window = "test_window"
-    h_filter = cv_filers.HOnlyFilter(100, 10)
+    h_filter = cv_filters.HOnlyFilter(100, 10)
 
-    helper = cv_filers.TrackBarHelper()
+    helper = cv_filters.TrackBarHelper()
     helper.setup_cv_trackbar(h_filter, window_name="test_window")
 
     for field in dataclasses.fields(h_filter):
