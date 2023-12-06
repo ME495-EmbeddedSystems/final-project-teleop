@@ -3,6 +3,9 @@
 ## Quick launch
 To run the rings simulation run `ros2 launch teleop_tasks rings.launch.xml`  
 
+## Video of gazebo demo
+https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/45044587/034b8f07-48cb-4aeb-b7dd-29035d9955ad
+
 ## Launch file descriptions
 **hand.launch.xml**  
 Run: `ros2 launch teleop_tasks hand.launch.xml`  
@@ -28,4 +31,3 @@ Reads in joints published to `/left_hand/joint_states` and sends them to the ros
 
 *controller_manager*  
 Default controller manager node created to manage the controller nodes launched in **rings.launch.xml**  
-
