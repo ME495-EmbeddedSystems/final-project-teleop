@@ -1,9 +1,0 @@
-repositories:
-  ME495_Operator_Master:
-    type: git
-    url: git@github.com:LukeBatteas/ME495_Operator_Master.git
-    version: main
-  final-project-teleop:
-    type: git
-    url: git@github.com:ME495-EmbeddedSystems/final-project-teleop.git
-    version: feature/teleop_haptics
