@@ -18,13 +18,13 @@ The goal of this project was to design a teleoperation system which leverages ob
 ## Packages:
 
 This projects consists of the following packages:
-- [`teleop`](#teleop_tasks-package)
 - [`teleop_tasks`](#teleop_tasks-package)
 - [`teleop_haptics`](#teleop_haptics-package)
 - [`teleop_sensing`](#teleop_sensing-package)
 - [`teleop_visualization`](#teleop_visualization-package)
 - [`teleop_avatar`](#teleop_avatar-package)
 - [`teleop_interfaces`](#teleop_interfaces-package)
+- [`teleop`](#teleop-package) (*work in progress*)
 
 *Instructions on how to run/launch nodes in each package can be found within the READMEs of the individual packages.*
 
@@ -93,3 +93,9 @@ The `teleop_interfaces` package contains all the custom messages and services us
 - Grasp
 - ExecuteTrajectory
 - SetWrench
+
+<br>
+
+## `teleop` Package
+
+The `teleop` package is a work in progress, but it is meant to bridge the operator and avatar stations and orchestrate the entire teleoperation experience. It will launch all the nodes necessary for the user to complete the task in a simulated environments, as well as all the nodes needed to run the avatar station. When a user begins moving objects in the simulated world, it will sense this and begin publishing the transforms of the object to the avatar station. Once the user is done moving the object, the nodes within this package will prompt the avatar station to begin executing the same trajectories with the real-life objects.
