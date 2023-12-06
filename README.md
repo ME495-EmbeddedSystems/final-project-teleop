@@ -71,7 +71,7 @@ The `teleop_avatar` package controls the avatar robot to pick up objects and mov
 
 Here is an example of the teleop_avatar package picking up rings and stacking them on a peg:
 
-   https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/122302059/af606b0f-0a41-4838-8deb-db817e902a9b
+   https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/122302059/d2059ccf-5fb9-461d-afd6-dd741a69f29b
 
 <br>
 
