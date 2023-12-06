@@ -36,12 +36,12 @@ The `teleop_tasks` package defines and launches virtual tasks, which can be comp
 - Using the physics engine that comes with __Gazebo__
 - Programming some crude physics into __RViz__
 
-__Gazebo:__
+### Gazebo:
 The video below shows a hand moving around in Gazebo. This hand can interact with the objects in the Gazebo world, and the hand's state is dictated by the hand of the human operator.
 
    https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/45044587/034b8f07-48cb-4aeb-b7dd-29035d9955ad
 
-__RViz:__
+### RViz:
 The video below shows an example of a user completing a ring stacking task. The user can feel the mass of the rings due to the Franka robots attached to their hands. The HaptX gloves allow the user to feel the rings in their hands by activating the finger brakes and inflating the tactors when the user picks up a ring.
 
    https://github.com/ME495-EmbeddedSystems/final-project-teleop/assets/122302059/b09ece30-6af2-4751-981c-6e6976359e5a
