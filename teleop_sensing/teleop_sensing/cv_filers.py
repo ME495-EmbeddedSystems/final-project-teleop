@@ -24,7 +24,7 @@ class FilterBase:
     of each field. Look at get_field_range for the name based look up.
 
     Example:
-    --------
+    -------
     @dataclasses.dataclass
     Class UpperLowerFilter(FilterBase):
         size_upper:int
@@ -38,10 +38,12 @@ class FilterBase:
         """
         Get the possible min and max of a field.
 
-        Args:
+        Args
+        ----
             field_name (str): string name of one of the class's field
 
-        Raises:
+        Raises
+        ------
             ValueError: if the name of the field is not in the class
 
         """
@@ -61,20 +63,21 @@ class FilterBase:
 
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
         """
-        Update field by its name
+        Update field by its name.
 
-        Args:
+        Args
         ----
             field_name (str): The name of the field
             value (float): New value for the field
 
-        Returns:
+        Returns
         -------
             list[str]: List of fields that are linked and should also be called by caller to update
-        
-        Raises:
+
+        Raises
         ------
             ValueError: if the name of the field is not in the class
+
         """
         x_max, x_min = self.get_field_range(field_name)
         value = min(x_max, max(value, x_min))
@@ -87,30 +90,33 @@ class FilterBase:
 
         The specific implementation depends on each sub class
 
-        Args:
+        Args
         ----
             bgr_image (np.ndarray): The bgr image in cv2's format
 
-        Returns:
+        Returns
         -------
             np.Ndarray: Depends on sub class
+
         """
         return bgr_image
 
     def ensure_linked_field_smaller(self, field, linked_field, margin=1):
         """
-        This makes sure the linked field is smaller then given field. Relationship
-        is provided by the field name in arguments
+        Make sure the linked field is smaller then given field.
 
-        Args:
+        Relationship is provided by the field name in arguments
+
+        Args
         ----
             field (str): field name
             linked_field (str): linked field name
             margin (int, optional): the margin between to fields. Defaults to 1.
 
-        Returns:
+        Returns
         -------
             bool: if linked field's value is updated
+
         """
         if (getattr(self, field) - getattr(self, linked_field)) < margin:
             # also update counter part
@@ -120,18 +126,20 @@ class FilterBase:
 
     def ensure_linked_field_larger(self, field, linked_field, margin=1):
         """
-        This makes sure the linked field is larger then given field. Relationship
-        is provided by the field name in arguments
+        Make sure the linked field is larger then given field.
 
-        Args:
+        Relationship is provided by the field name in arguments
+
+        Args
         ----
             field (str): field name
             linked_field (str): linked field name
             margin (int, optional): the margin between to fields. Defaults to 1.
 
-        Returns:
+        Returns
         -------
             bool: if linked field's value is updated
+
         """
         if (getattr(self, linked_field) - getattr(self, field)) < margin:
             # also update counter part
@@ -142,7 +150,7 @@ class FilterBase:
 
 @dataclasses.dataclass
 class HSVFilter_SVBase(FilterBase):
-    """The S and V channel in HSV filter"""
+    """S and V channel in HSV filter."""
 
     s_high: float = 255
     s_low: float = 118
@@ -155,18 +163,20 @@ class HSVFilter_SVBase(FilterBase):
     V_MIN: typing.ClassVar[float] = 0
 
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
-        """Update value in field by its name. 
+        """
+        Update value in field by its name.
 
         The counter part of the field will also be updated
 
-        Args:
+        Args
         ----
             field_name (str): field name
             value (float): new values
 
-        Returns:
+        Returns
         -------
             list[str]: counter part field that also have been update
+
         """
         super().update_field_by_name(field_name, value)
 
@@ -185,15 +195,17 @@ class HSVFilter_SVBase(FilterBase):
         return [counter_part]
 
     def apply_filter(self, bgr_image):
-        """Apply the HSV filter (only limiting in S and V channel)
+        """
+        Apply the HSV filter (only limiting in S and V channel).
 
-        Args:
+        Args
         ----
             bgr_image (np.ndarray): input image
 
-        Returns:
+        Returns
         -------
             np.ndarray: The HSV mask
+
         """
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
         return cv2.inRange(hsv_image, (0, self.s_low, self.v_low), (179, self.s_high, self.v_high))
@@ -212,7 +224,7 @@ class HOnlyFilter(FilterBase):
 
     # name: typing.ClassVar[str] = ""
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
-        """Instance specific implementation"""
+        """Instance specific implementation."""
         super().update_field_by_name(field_name, value)
 
         # The custom linked attribute updating
@@ -230,15 +242,17 @@ class HOnlyFilter(FilterBase):
         return [counter_part]
 
     def apply_filter(self, bgr_image):
-        """Apply only the H channel for hsv filter
+        """
+        Apply only the H channel for hsv filter.
 
-        Args:
+        Args
         ----
             bgr_image (np.ndarray): numpy array
 
-        Returns:
+        Returns
         -------
             np.ndarray: mask after applying the filter
+
         """
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
         return cv2.inRange(hsv_image, (self.h_low, 0, 0), (self.h_high, 255, 255))
@@ -246,9 +260,10 @@ class HOnlyFilter(FilterBase):
 
 @dataclasses.dataclass
 class RedHFilter(FilterBase):
-    """Specific H only filter for red color (H_high and H_low wrapped around)
+    """
+    Specific H only filter for red color (H_high and H_low wrapped around).
 
-    Since RED is at two ends of the HSV filter, actually need the filter value to wrap-around
+    Since RED is at two ends of the HSV filter, actually need the filter value to wrap-around.
     """
 
     h_low: float = 170
@@ -258,15 +273,17 @@ class RedHFilter(FilterBase):
     H_MIN: typing.ClassVar[float] = 0
 
     def apply_filter(self, bgr_image):
-        """Special way of applying HSV filter with lower half for RED, then upper half
+        """
+        Sspecial way of applying HSV filter with lower half for RED, then upper half.
 
-        Args:
+        Args
         ----
             bgr_image input image
 
-        Returns:
+        Returns
         -------
             combined mask (or combined)
+
         """
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
 
@@ -279,7 +296,7 @@ class RedHFilter(FilterBase):
 
 @dataclasses.dataclass
 class HSVFilter(FilterBase):
-    """Full hsv filter with all three channels"""
+    """Full hsv filter with all three channels."""
 
     h_high: float = 26
     h_low: float = 0
@@ -297,7 +314,7 @@ class HSVFilter(FilterBase):
     V_MIN: typing.ClassVar[float] = 0
 
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
-        """Update a filed (and update its linked counter part if needed)"""
+        """Update a filed (and update its linked counter part if needed)."""
         super().update_field_by_name(field_name, value)
 
         # The custom linked attribute updating
@@ -315,11 +332,13 @@ class HSVFilter(FilterBase):
         return [counter_part]
 
     def apply_filter(self, bgr_image):
-        """Apply the HSV filter
+        """
+        Apply the HSV filter.
 
-        Returns:
+        Returns
         -------
             HSV mask after applying
+
         """
         hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
         return cv2.inRange(
@@ -331,7 +350,9 @@ class HSVFilter(FilterBase):
 
 @dataclasses.dataclass
 class BlobDetector(FilterBase):
-    """Filter for blob detection.
+    """
+    Filter for blob detection.
+
     Only parameter of threshold and area are exposed
     """
 
@@ -355,10 +376,7 @@ class BlobDetector(FilterBase):
 
     # Overriding init for dataclass is bad
     def __post_init__(self):
-        """
-        Specific post init to be called by dataclass to make the parameter
-        object needed for filtering
-        """
+        """Specific post init to be called by dataclass to make the parameter object needed."""
         super().__init__()
 
         self.params = cv2.SimpleBlobDetector_Params()
@@ -366,7 +384,7 @@ class BlobDetector(FilterBase):
         self.detector = cv2.SimpleBlobDetector_create(self.params)
 
     def update_field_by_name(self, field_name: str, value: float) -> list[str]:
-        """Similar to parents's version with special linkages between fields"""
+        """Similar to parents's version with special linkages between fields."""
         super().update_field_by_name(field_name, value)
 
         # Additionally update the param object's value
@@ -391,16 +409,18 @@ class BlobDetector(FilterBase):
         return []
 
     def apply_filter(self, bgr_image) -> tuple[Any, list[cv2.KeyPoint]]:
-        """Specific one for appling blob detector.
+        """
+        Specific one for appling blob detector.
 
-        Args:
+        Args
         ----
             bgr_image (np.ndarray): input image
 
-        Returns:
+        Returns
         -------
             tuple[Any, list[cv2.KeyPoint]]: Tuple of labeled image
             (with circle and center dot) and a list of keypoints.
+
         """
         keypoints = self.detector.detect(bgr_image)
 
@@ -425,16 +445,18 @@ class BlobDetector(FilterBase):
 class TrackBarHelper:
 
     def scale_image_down(self, image: np.ndarray, expected_width):
-        """Scale the image down so it's display-able on smaller screen when having track bars.
+        """
+        Scale the image down so it's display-able on smaller screen when having track bars.
 
-        Args:
+        Args
         ----
             image (np.ndarray): cv2 image
             expected_width (int): width after scaling
 
-        Returns:
+        Returns
         -------
             np.ndarray: scaled image
+
         """
         # We only care about width, doesn't care about height or color channel numbers
         _, width, _ = image.shape
@@ -445,7 +467,9 @@ class TrackBarHelper:
     # Node: the order of arguments matter.
     def update_field_callback(self, window_name: str, filter: FilterBase, field_name: str,
                               new_value):
-        """The callback function to update a field when its value changes.
+        """
+        Ccallback function to update a field when its value changes.
+
         Should use argument binding before give it to cv2.createTrackbar.
         Last argument is the one given by cv2 during callback.
 
@@ -455,8 +479,8 @@ class TrackBarHelper:
             filter (FilterBase): The filer
             field_name (str): name of the field
             new_value (float): value
-        """
 
+        """
         # Problem with cv2 setTrackbarPos is it also trigger callback (instead of
         # just user hitting it)
         # So this would have cause a infinite loop
@@ -478,14 +502,16 @@ class TrackBarHelper:
             cv2.setTrackbarPos(linked_attr, window_name, linked_value)
 
     def setup_cv_trackbar(self, filter: FilterBase, window_name: str = "trackbars"):
-        """Setup trackbars on window for each field in the Filter object
+        """
+        Set up trackbars on window for each field in the Filter object.
 
         Args:
         ----
             filter (FilterBase): The filter object
             window_name (str, optional): Name of the window to attach the trackbar
             to Will create the window internally.
-              Defaults to "trackbars".
+            Defaults to "trackbars".
+
         """
         default_value_map = {}
         cv2.namedWindow(window_name)
