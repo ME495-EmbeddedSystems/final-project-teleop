@@ -11,7 +11,7 @@
 
 ## Overview:
 
-The goal of this project was to design a teleoperation system which leverages object models in order to make the user's experience more intuitive. The idea is that a human operator can stack virtual rings in a simulated environment, all while getting instantaneous haptic feedback thanks to local object models and the low-latency simulation environment. The user's impact on the world is then replicated by an avatar robot, i.e. the robot does the same thing with the rings that the human user did. While we did not end up bridging the operator station and avatar station, we developed several key packages which will contribute to this end goal. These packages are outlines below, and more detailed information about how to run each package, etc. can be found in the READMEs of each individual package.
+The goal of this project was to design a teleoperation system which leverages object models in order to make the user's experience more intuitive. The idea is that a human operator can stack virtual rings in a simulated environment, all while getting instantaneous haptic feedback thanks to the local object models and low-latency simulation environment. The user's impact on the world is then replicated by an avatar robot, i.e. the robot does the same thing with the rings that the human user did. While we did not end up bridging the operator station and avatar station, we developed several key packages which will contribute to this end goal. These packages are outlines below, and more detailed information about how to run each package, etc. can be found in the READMEs of each individual package.
 
 <br>
 
