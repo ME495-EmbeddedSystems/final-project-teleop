@@ -26,7 +26,7 @@ This projects consists of the following packages:
 - [`teleop_avatar`](#teleop_avatar-package)
 - [`teleop_interfaces`](#teleop_interfaces-package)
 
-Instructions on how to run/launch nodes in each package can be found within the READMEs of the individual packages.
+__**Instructions on how to run/launch nodes in each package can be found within the READMEs of the individual packages.**__
 
 <br>
 
