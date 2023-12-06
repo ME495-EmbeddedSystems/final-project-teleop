@@ -1,18 +1,20 @@
 #! /usr/bin/env python3
-"""_summary_
-  Subscribers:
+"""
+This is a image processing ros node for finding rings.
+
+Subscribers:
     /D435i/aligned_depth_to_color/camera_info: sensor_msgs/msg/CameraInfo
     /D435i/aligned_depth_to_color/image_raw: sensor_msgs/msg/Image
     /D435i/color/camera_info: sensor_msgs/msg/CameraInfo
     /D435i/color/image_raw: sensor_msgs/msg/Image
     /tf: tf2_msgs/msg/TFMessage
     /tf_static: tf2_msgs/msg/TFMessage
-  Publishers:
+Publishers:
     /parameter_events: rcl_interfaces/msg/ParameterEvent
     /rosout: rcl_interfaces/msg/Log
     /tf: tf2_msgs/msg/TFMessage
-  Parameters:
-    debug: floa
+Parameters:
+    debug: bool - When used, will turn on cv2 windows for tuning parameters
 """
 
 import collections
@@ -49,8 +51,9 @@ from tf2_ros.transform_listener import TransformListener
 
 def main(args=None):
     """
-    The main entry point. This combines entry method for both ros2 run through
-    setup.py as well as direct file execution
+    Mmain entry point.
+
+    This combines entry method for both ros2 run through setup.py as well as direct file execution
     """
     # This allows verifying the entry point
     print(f"Starting at main of turtle control, given args: {args}")
@@ -61,7 +64,8 @@ def main(args=None):
 
 
 class Color(enum.Enum):
-    """Enum class to clearly label each color """
+    """Enum class to clearly label each color."""
+
     RED = enum.auto()
     GREEN = enum.auto()
     BLUE = enum.auto()
@@ -72,9 +76,7 @@ class Color(enum.Enum):
 class ImageProcesser(RosNode):
 
     def __init__(self) -> None:
-        """
-        Init the class with all ros stuff.
-        """
+        """Init the class with all ros stuff."""
         super().__init__("cv_ring_finding")
         self.info = self.get_logger().info
         self.debug = self.get_logger().debug
@@ -183,13 +185,12 @@ class ImageProcesser(RosNode):
         ----
             target_queue (collections.deque): The target queue
             msg (Any): incomming message
+
         """
         target_queue.append(msg)
 
     def _find_ring_process_time_cb(self):
-        """
-        Timer callback for processing ring finding.
-        """
+        """Timer callback for processing ring finding."""
         # Lets go through all the dequeue to check frame alignment.
         named_time = {}
         for name, queue in self.named_queue.items():
@@ -286,9 +287,10 @@ class ImageProcesser(RosNode):
             bgr_image (np.ndarray): source image
             color_mask (np.ndarray): color mask
 
-        Returns:
+        Returns
         -------
             tuple[Any,Any]: the image of marked blob and the biggest blob's xy.
+
         """
         kernel = np.ones((3, 3), np.uint8)
         closed_mask = cv2.morphologyEx(color_mask, cv2.MORPH_CLOSE, kernel)
@@ -311,9 +313,10 @@ class ImageProcesser(RosNode):
         ----
             keypoints (list): list of cv2 keyponits
 
-        Returns:
+        Returns
         -------
             keypoint: the largest keypoint
+
         """
         max_size = 0
         max_key = None
@@ -325,15 +328,16 @@ class ImageProcesser(RosNode):
 
     def _keypoint_to_pxy(self, keypoint):
         """
-        strip out the x y from a keypoint
+        Strip out the x y from a keypoint.
 
         Args:
         ----
             keypoint (cv2.keypoint ): keypoint
 
-        Returns:
+        Returns
         -------
             tuple[x,y]: tuple of x and y
+
         """
         px, py = keypoint.pt
         px = int(px)
@@ -342,7 +346,7 @@ class ImageProcesser(RosNode):
 
     def _publish_circle_tf(self, image_header: Header, child_frame_id: str, sxyz: list[float]):
         """
-        Publish the transform of the ring
+        Publish the transform of the ring.
 
         Args:
         ----
@@ -370,10 +374,10 @@ class ImageProcesser(RosNode):
             target_frame (str): The target frame name
             source_frame (str): The source frame name
 
-        Returns:
+        Returns
         -------
             Optional[TransformStamped]: None if error when getting tf.
-                TransformStamped between the frames given
+            TransformStamped between the frames given
 
         """
         try:
