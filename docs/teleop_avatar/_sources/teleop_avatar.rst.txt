@@ -1,0 +1,18 @@
+teleop\_avatar package
+======================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   teleop_avatar.avatar_control
+
+Module contents
+---------------
+
+.. automodule:: teleop_avatar
+   :members:
+   :undoc-members:
+   :show-inheritance:

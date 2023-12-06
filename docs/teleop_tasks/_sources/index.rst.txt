@@ -1,0 +1,15 @@
+Welcome to the documentation for teleop_tasks
+=============================================
+
+.. toctree::
+   :maxdepth: 2
+
+   teleop_tasks <modules>
+
+
+Indices and Search
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+

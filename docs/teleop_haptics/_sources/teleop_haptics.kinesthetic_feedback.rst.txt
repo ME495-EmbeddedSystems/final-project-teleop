@@ -1,0 +1,7 @@
+teleop\_haptics.kinesthetic\_feedback module
+============================================
+
+.. automodule:: teleop_haptics.kinesthetic_feedback
+   :members:
+   :undoc-members:
+   :show-inheritance:

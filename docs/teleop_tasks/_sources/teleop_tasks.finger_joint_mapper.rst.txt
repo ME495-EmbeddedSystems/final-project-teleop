@@ -1,0 +1,7 @@
+teleop\_tasks.finger\_joint\_mapper module
+==========================================
+
+.. automodule:: teleop_tasks.finger_joint_mapper
+   :members:
+   :undoc-members:
+   :show-inheritance:

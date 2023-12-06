@@ -1,0 +1,20 @@
+teleop\_haptics package
+=======================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   teleop_haptics.hand_position
+   teleop_haptics.haptx_feedback
+   teleop_haptics.kinesthetic_feedback
+
+Module contents
+---------------
+
+.. automodule:: teleop_haptics
+   :members:
+   :undoc-members:
+   :show-inheritance:

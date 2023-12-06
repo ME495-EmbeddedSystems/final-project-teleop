@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>teleop_tasks.ring_sim module &mdash; teleop_tasks 0.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=7026087e"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="teleop_tasks.ros_gz_joint_client module" href="teleop_tasks.ros_gz_joint_client.html" />
+    <link rel="prev" title="teleop_tasks.objects module" href="teleop_tasks.objects.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            teleop_tasks
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">teleop_tasks</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="teleop_tasks.html">teleop_tasks package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="teleop_tasks.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="teleop_tasks.finger_joint_mapper.html">teleop_tasks.finger_joint_mapper module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="teleop_tasks.finger_joint_mapper.html#teleop_tasks.finger_joint_mapper.Mapper"><code class="docutils literal notranslate"><span class="pre">Mapper</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="teleop_tasks.finger_joint_mapper.html#teleop_tasks.finger_joint_mapper.Mapper.haptx_callback"><code class="docutils literal notranslate"><span class="pre">Mapper.haptx_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="teleop_tasks.finger_joint_mapper.html#teleop_tasks.finger_joint_mapper.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="teleop_tasks.hand.html">teleop_tasks.hand module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="teleop_tasks.hand.html#teleop_tasks.hand.Objects"><code class="docutils literal notranslate"><span class="pre">Objects</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="teleop_tasks.hand.html#teleop_tasks.hand.Objects.publishWorld"><code class="docutils literal notranslate"><span class="pre">Objects.publishWorld()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="teleop_tasks.hand.html#teleop_tasks.hand.Objects.timer_callback"><code class="docutils literal notranslate"><span class="pre">Objects.timer_callback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="teleop_tasks.hand.html#teleop_tasks.hand.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="teleop_tasks.objects.html">teleop_tasks.objects module</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">teleop_tasks.ring_sim module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="teleop_tasks.ros_gz_joint_client.html">teleop_tasks.ros_gz_joint_client module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="teleop_tasks.ros_gz_joint_client.html#teleop_tasks.ros_gz_joint_client.Ros_gz_joint_client"><code class="docutils literal notranslate"><span class="pre">Ros_gz_joint_client</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="teleop_tasks.ros_gz_joint_client.html#teleop_tasks.ros_gz_joint_client.Ros_gz_joint_client.jointStateListener"><code class="docutils literal notranslate"><span class="pre">Ros_gz_joint_client.jointStateListener()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="teleop_tasks.ros_gz_joint_client.html#teleop_tasks.ros_gz_joint_client.Ros_gz_joint_client.timerCallback"><code class="docutils literal notranslate"><span class="pre">Ros_gz_joint_client.timerCallback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="teleop_tasks.ros_gz_joint_client.html#teleop_tasks.ros_gz_joint_client.createJointNamedict"><code class="docutils literal notranslate"><span class="pre">createJointNamedict()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="teleop_tasks.ros_gz_joint_client.html#teleop_tasks.ros_gz_joint_client.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="teleop_tasks.html#module-teleop_tasks">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">teleop_tasks</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">teleop_tasks</a></li>
+          <li class="breadcrumb-item"><a href="teleop_tasks.html">teleop_tasks package</a></li>
+      <li class="breadcrumb-item active">teleop_tasks.ring_sim module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/teleop_tasks.ring_sim.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="teleop-tasks-ring-sim-module">
+<h1>teleop_tasks.ring_sim module<a class="headerlink" href="#teleop-tasks-ring-sim-module" title="Link to this heading"></a></h1>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="teleop_tasks.objects.html" class="btn btn-neutral float-left" title="teleop_tasks.objects module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="teleop_tasks.ros_gz_joint_client.html" class="btn btn-neutral float-right" title="teleop_tasks.ros_gz_joint_client module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, TODO: License declaration.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

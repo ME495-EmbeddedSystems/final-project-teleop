@@ -1,0 +1,7 @@
+teleop\_avatar.avatar\_control module
+=====================================
+
+.. automodule:: teleop_avatar.avatar_control
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>teleop_sensing.cv_filers module &mdash; teleop_sensing 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="teleop_sensing.cv_process module" href="teleop_sensing.cv_process.html" />
+    <link rel="prev" title="teleop_sensing package" href="teleop_sensing.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            teleop_sensing
+          </a>
+              <div class="version">
+                0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">teleop_sensing</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="teleop_sensing.html">teleop_sensing package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="teleop_sensing.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">teleop_sensing.cv_filers module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector"><code class="docutils literal notranslate"><span class="pre">BlobDetector</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.MAXAREA_MAX"><code class="docutils literal notranslate"><span class="pre">BlobDetector.MAXAREA_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.MAXAREA_MIN"><code class="docutils literal notranslate"><span class="pre">BlobDetector.MAXAREA_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.MAXTHRESHOLD_MAX"><code class="docutils literal notranslate"><span class="pre">BlobDetector.MAXTHRESHOLD_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.MAXTHRESHOLD_MIN"><code class="docutils literal notranslate"><span class="pre">BlobDetector.MAXTHRESHOLD_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.MINAREA_MAX"><code class="docutils literal notranslate"><span class="pre">BlobDetector.MINAREA_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.MINAREA_MIN"><code class="docutils literal notranslate"><span class="pre">BlobDetector.MINAREA_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.MINTHRESHOLD_MAX"><code class="docutils literal notranslate"><span class="pre">BlobDetector.MINTHRESHOLD_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.MINTHRESHOLD_MIN"><code class="docutils literal notranslate"><span class="pre">BlobDetector.MINTHRESHOLD_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.apply_filter"><code class="docutils literal notranslate"><span class="pre">BlobDetector.apply_filter()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.maxArea"><code class="docutils literal notranslate"><span class="pre">BlobDetector.maxArea</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.maxThreshold"><code class="docutils literal notranslate"><span class="pre">BlobDetector.maxThreshold</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.minArea"><code class="docutils literal notranslate"><span class="pre">BlobDetector.minArea</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.minThreshold"><code class="docutils literal notranslate"><span class="pre">BlobDetector.minThreshold</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.BlobDetector.update_field_by_name"><code class="docutils literal notranslate"><span class="pre">BlobDetector.update_field_by_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase"><code class="docutils literal notranslate"><span class="pre">FilterBase</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase.apply_filter"><code class="docutils literal notranslate"><span class="pre">FilterBase.apply_filter()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase.ensure_linked_field_larger"><code class="docutils literal notranslate"><span class="pre">FilterBase.ensure_linked_field_larger()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase.ensure_linked_field_smaller"><code class="docutils literal notranslate"><span class="pre">FilterBase.ensure_linked_field_smaller()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase.get_field_range"><code class="docutils literal notranslate"><span class="pre">FilterBase.get_field_range()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase.update_field_by_name"><code class="docutils literal notranslate"><span class="pre">FilterBase.update_field_by_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#teleop_sensing.cv_filers.HOnlyFilter"><code class="docutils literal notranslate"><span class="pre">HOnlyFilter</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HOnlyFilter.H_MAX"><code class="docutils literal notranslate"><span class="pre">HOnlyFilter.H_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HOnlyFilter.H_MIN"><code class="docutils literal notranslate"><span class="pre">HOnlyFilter.H_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HOnlyFilter.apply_filter"><code class="docutils literal notranslate"><span class="pre">HOnlyFilter.apply_filter()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HOnlyFilter.h_high"><code class="docutils literal notranslate"><span class="pre">HOnlyFilter.h_high</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HOnlyFilter.h_low"><code class="docutils literal notranslate"><span class="pre">HOnlyFilter.h_low</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HOnlyFilter.update_field_by_name"><code class="docutils literal notranslate"><span class="pre">HOnlyFilter.update_field_by_name()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter"><code class="docutils literal notranslate"><span class="pre">HSVFilter</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.H_MAX"><code class="docutils literal notranslate"><span class="pre">HSVFilter.H_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.H_MIN"><code class="docutils literal notranslate"><span class="pre">HSVFilter.H_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.S_MAX"><code class="docutils literal notranslate"><span class="pre">HSVFilter.S_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.S_MIN"><code class="docutils literal notranslate"><span class="pre">HSVFilter.S_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.V_MAX"><code class="docutils literal notranslate"><span class="pre">HSVFilter.V_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.V_MIN"><code class="docutils literal notranslate"><span class="pre">HSVFilter.V_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.apply_filter"><code class="docutils literal notranslate"><span class="pre">HSVFilter.apply_filter()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.h_high"><code class="docutils literal notranslate"><span class="pre">HSVFilter.h_high</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.h_low"><code class="docutils literal notranslate"><span class="pre">HSVFilter.h_low</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.s_high"><code class="docutils literal notranslate"><span class="pre">HSVFilter.s_high</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.s_low"><code class="docutils literal notranslate"><span class="pre">HSVFilter.s_low</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.update_field_by_name"><code class="docutils literal notranslate"><span class="pre">HSVFilter.update_field_by_name()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.v_high"><code class="docutils literal notranslate"><span class="pre">HSVFilter.v_high</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter.v_low"><code class="docutils literal notranslate"><span class="pre">HSVFilter.v_low</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.S_MAX"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.S_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.S_MIN"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.S_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.V_MAX"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.V_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.V_MIN"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.V_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.apply_filter"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.apply_filter()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.s_high"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.s_high</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.s_low"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.s_low</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.update_field_by_name"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.update_field_by_name()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.v_high"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.v_high</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.v_low"><code class="docutils literal notranslate"><span class="pre">HSVFilter_SVBase.v_low</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#teleop_sensing.cv_filers.RedHFilter"><code class="docutils literal notranslate"><span class="pre">RedHFilter</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.RedHFilter.H_MAX"><code class="docutils literal notranslate"><span class="pre">RedHFilter.H_MAX</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.RedHFilter.H_MIN"><code class="docutils literal notranslate"><span class="pre">RedHFilter.H_MIN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.RedHFilter.apply_filter"><code class="docutils literal notranslate"><span class="pre">RedHFilter.apply_filter()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.RedHFilter.h_high"><code class="docutils literal notranslate"><span class="pre">RedHFilter.h_high</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.RedHFilter.h_low"><code class="docutils literal notranslate"><span class="pre">RedHFilter.h_low</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#teleop_sensing.cv_filers.TrackBarHelper"><code class="docutils literal notranslate"><span class="pre">TrackBarHelper</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.TrackBarHelper.scale_image_down"><code class="docutils literal notranslate"><span class="pre">TrackBarHelper.scale_image_down()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.TrackBarHelper.setup_cv_trackbar"><code class="docutils literal notranslate"><span class="pre">TrackBarHelper.setup_cv_trackbar()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#teleop_sensing.cv_filers.TrackBarHelper.update_field_callback"><code class="docutils literal notranslate"><span class="pre">TrackBarHelper.update_field_callback()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="teleop_sensing.cv_process.html">teleop_sensing.cv_process module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.Color"><code class="docutils literal notranslate"><span class="pre">Color</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.Color.BLUE"><code class="docutils literal notranslate"><span class="pre">Color.BLUE</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.Color.GREEN"><code class="docutils literal notranslate"><span class="pre">Color.GREEN</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.Color.ORANGE"><code class="docutils literal notranslate"><span class="pre">Color.ORANGE</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.Color.RED"><code class="docutils literal notranslate"><span class="pre">Color.RED</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.Color.YELLOW"><code class="docutils literal notranslate"><span class="pre">Color.YELLOW</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.ImageProcesser"><code class="docutils literal notranslate"><span class="pre">ImageProcesser</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.ImageProcesser.get_largest_keypoint"><code class="docutils literal notranslate"><span class="pre">ImageProcesser.get_largest_keypoint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="teleop_sensing.cv_process.html#teleop_sensing.cv_process.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="teleop_sensing.html#module-teleop_sensing">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">teleop_sensing</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">teleop_sensing</a></li>
+          <li class="breadcrumb-item"><a href="teleop_sensing.html">teleop_sensing package</a></li>
+      <li class="breadcrumb-item active">teleop_sensing.cv_filers module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/teleop_sensing.cv_filers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-teleop_sensing.cv_filers">
+<span id="teleop-sensing-cv-filers-module"></span><h1>teleop_sensing.cv_filers module<a class="headerlink" href="#module-teleop_sensing.cv_filers" title="Link to this heading"></a></h1>
+<p>The library for applying filters in opencv style, along with some helpers to tune the filter.</p>
+<p>Two main parts of the library
+* FilterBase and his child classes
+* TrackBarHelper class</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">teleop_sensing.cv_filers.</span></span><span class="sig-name descname"><span class="pre">BlobDetector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maxThreshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">101</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minThreshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxArea</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9999</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minArea</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">601</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase" title="teleop_sensing.cv_filers.FilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FilterBase</span></code></a></p>
+<p>Filter for blob detection.</p>
+<p>Only parameter of threshold and area are exposed</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.MAXAREA_MAX">
+<span class="sig-name descname"><span class="pre">MAXAREA_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10000</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.MAXAREA_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.MAXAREA_MIN">
+<span class="sig-name descname"><span class="pre">MAXAREA_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">500</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.MAXAREA_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.MAXTHRESHOLD_MAX">
+<span class="sig-name descname"><span class="pre">MAXTHRESHOLD_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">250</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.MAXTHRESHOLD_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.MAXTHRESHOLD_MIN">
+<span class="sig-name descname"><span class="pre">MAXTHRESHOLD_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">30</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.MAXTHRESHOLD_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.MINAREA_MAX">
+<span class="sig-name descname"><span class="pre">MINAREA_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3000</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.MINAREA_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.MINAREA_MIN">
+<span class="sig-name descname"><span class="pre">MINAREA_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.MINAREA_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.MINTHRESHOLD_MAX">
+<span class="sig-name descname"><span class="pre">MINTHRESHOLD_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">230</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.MINTHRESHOLD_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.MINTHRESHOLD_MIN">
+<span class="sig-name descname"><span class="pre">MINTHRESHOLD_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.MINTHRESHOLD_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.apply_filter">
+<span class="sig-name descname"><span class="pre">apply_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bgr_image</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">KeyPoint</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.apply_filter" title="Link to this definition"></a></dt>
+<dd><p>Specific one for appling blob detector.</p>
+<section id="args">
+<h2>Args<a class="headerlink" href="#args" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>bgr_image (np.ndarray): input image</p>
+</div></blockquote>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>tuple[Any, list[cv2.KeyPoint]]: Tuple of labeled image
+(with circle and center dot) and a list of keypoints.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.maxArea">
+<span class="sig-name descname"><span class="pre">maxArea</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9999</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.maxArea" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.maxThreshold">
+<span class="sig-name descname"><span class="pre">maxThreshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">101</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.maxThreshold" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.minArea">
+<span class="sig-name descname"><span class="pre">minArea</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">601</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.minArea" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.minThreshold">
+<span class="sig-name descname"><span class="pre">minThreshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.minThreshold" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.BlobDetector.update_field_by_name">
+<span class="sig-name descname"><span class="pre">update_field_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#teleop_sensing.cv_filers.BlobDetector.update_field_by_name" title="Link to this definition"></a></dt>
+<dd><p>Similar to parents’s version with special linkages between fields.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.FilterBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">teleop_sensing.cv_filers.</span></span><span class="sig-name descname"><span class="pre">FilterBase</span></span><a class="headerlink" href="#teleop_sensing.cv_filers.FilterBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The base class for cv filters Defines the common method.</p>
+<p>The class inherent this must also be a data class. This class specifically depends
+on the dataclass field features. There is a pre-defined way to find the MIN MAX values.
+of each field. Look at get_field_range for the name based look up.</p>
+<section id="example">
+<h2>Example:<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<p>&#64;dataclasses.dataclass
+Class UpperLowerFilter(FilterBase):</p>
+<blockquote>
+<div><p>size_upper:int
+size_lower:int
+SIZE_MAX: typing.ClassVar[float] = 255
+SIZE_MIN: typing.ClassVar[float] = 255</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.FilterBase.apply_filter">
+<span class="sig-name descname"><span class="pre">apply_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bgr_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.FilterBase.apply_filter" title="Link to this definition"></a></dt>
+<dd><p>Apply the cv filter base on field values This should be overwritten by base class.</p>
+<p>The specific implementation depends on each sub class</p>
+<section id="id1">
+<h3>Args<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>bgr_image (np.ndarray): The bgr image in cv2’s format</p>
+</div></blockquote>
+</section>
+<section id="id2">
+<h3>Returns<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>np.Ndarray: Depends on sub class</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.FilterBase.ensure_linked_field_larger">
+<span class="sig-name descname"><span class="pre">ensure_linked_field_larger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linked_field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.FilterBase.ensure_linked_field_larger" title="Link to this definition"></a></dt>
+<dd><p>Make sure the linked field is larger then given field.</p>
+<p>Relationship is provided by the field name in arguments</p>
+<section id="id3">
+<h3>Args<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>field (str): field name
+linked_field (str): linked field name
+margin (int, optional): the margin between to fields. Defaults to 1.</p>
+</div></blockquote>
+</section>
+<section id="id4">
+<h3>Returns<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>bool: if linked field’s value is updated</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.FilterBase.ensure_linked_field_smaller">
+<span class="sig-name descname"><span class="pre">ensure_linked_field_smaller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linked_field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.FilterBase.ensure_linked_field_smaller" title="Link to this definition"></a></dt>
+<dd><p>Make sure the linked field is smaller then given field.</p>
+<p>Relationship is provided by the field name in arguments</p>
+<section id="id5">
+<h3>Args<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>field (str): field name
+linked_field (str): linked field name
+margin (int, optional): the margin between to fields. Defaults to 1.</p>
+</div></blockquote>
+</section>
+<section id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>bool: if linked field’s value is updated</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.FilterBase.get_field_range">
+<span class="sig-name descname"><span class="pre">get_field_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#teleop_sensing.cv_filers.FilterBase.get_field_range" title="Link to this definition"></a></dt>
+<dd><p>Get the possible min and max of a field.</p>
+<section id="id7">
+<h3>Args<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>field_name (str): string name of one of the class’s field</p>
+</div></blockquote>
+</section>
+<section id="raises">
+<h3>Raises<a class="headerlink" href="#raises" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>ValueError: if the name of the field is not in the class</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.FilterBase.update_field_by_name">
+<span class="sig-name descname"><span class="pre">update_field_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#teleop_sensing.cv_filers.FilterBase.update_field_by_name" title="Link to this definition"></a></dt>
+<dd><p>Update field by its name.</p>
+<section id="id8">
+<h3>Args<a class="headerlink" href="#id8" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>field_name (str): The name of the field
+value (float): New value for the field</p>
+</div></blockquote>
+</section>
+<section id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>list[str]: List of fields that are linked and should also be called by caller to update</p>
+</div></blockquote>
+</section>
+<section id="id10">
+<h3>Raises<a class="headerlink" href="#id10" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>ValueError: if the name of the field is not in the class</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HOnlyFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">teleop_sensing.cv_filers.</span></span><span class="sig-name descname"><span class="pre">HOnlyFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">26</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.HOnlyFilter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase" title="teleop_sensing.cv_filers.FilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FilterBase</span></code></a></p>
+<p>This class only does the H in HSV filter.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HOnlyFilter.H_MAX">
+<span class="sig-name descname"><span class="pre">H_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">179</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HOnlyFilter.H_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HOnlyFilter.H_MIN">
+<span class="sig-name descname"><span class="pre">H_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HOnlyFilter.H_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HOnlyFilter.apply_filter">
+<span class="sig-name descname"><span class="pre">apply_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bgr_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.HOnlyFilter.apply_filter" title="Link to this definition"></a></dt>
+<dd><p>Apply only the H channel for hsv filter.</p>
+<section id="id11">
+<h2>Args<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>bgr_image (np.ndarray): numpy array</p>
+</div></blockquote>
+</section>
+<section id="id12">
+<h2>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>np.ndarray: mask after applying the filter</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HOnlyFilter.h_high">
+<span class="sig-name descname"><span class="pre">h_high</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">26</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HOnlyFilter.h_high" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HOnlyFilter.h_low">
+<span class="sig-name descname"><span class="pre">h_low</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HOnlyFilter.h_low" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HOnlyFilter.update_field_by_name">
+<span class="sig-name descname"><span class="pre">update_field_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#teleop_sensing.cv_filers.HOnlyFilter.update_field_by_name" title="Link to this definition"></a></dt>
+<dd><p>Instance specific implementation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">teleop_sensing.cv_filers.</span></span><span class="sig-name descname"><span class="pre">HSVFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">26</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">255</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">118</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">255</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">170</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase" title="teleop_sensing.cv_filers.FilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FilterBase</span></code></a></p>
+<p>Full hsv filter with all three channels.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.H_MAX">
+<span class="sig-name descname"><span class="pre">H_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">179</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.H_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.H_MIN">
+<span class="sig-name descname"><span class="pre">H_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.H_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.S_MAX">
+<span class="sig-name descname"><span class="pre">S_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.S_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.S_MIN">
+<span class="sig-name descname"><span class="pre">S_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.S_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.V_MAX">
+<span class="sig-name descname"><span class="pre">V_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.V_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.V_MIN">
+<span class="sig-name descname"><span class="pre">V_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.V_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.apply_filter">
+<span class="sig-name descname"><span class="pre">apply_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bgr_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.apply_filter" title="Link to this definition"></a></dt>
+<dd><p>Apply the HSV filter.</p>
+<section id="id13">
+<h2>Returns<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>HSV mask after applying</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.h_high">
+<span class="sig-name descname"><span class="pre">h_high</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">26</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.h_high" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.h_low">
+<span class="sig-name descname"><span class="pre">h_low</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.h_low" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.s_high">
+<span class="sig-name descname"><span class="pre">s_high</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.s_high" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.s_low">
+<span class="sig-name descname"><span class="pre">s_low</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">118</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.s_low" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.update_field_by_name">
+<span class="sig-name descname"><span class="pre">update_field_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.update_field_by_name" title="Link to this definition"></a></dt>
+<dd><p>Update a filed (and update its linked counter part if needed).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.v_high">
+<span class="sig-name descname"><span class="pre">v_high</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.v_high" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter.v_low">
+<span class="sig-name descname"><span class="pre">v_low</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">170</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter.v_low" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">teleop_sensing.cv_filers.</span></span><span class="sig-name descname"><span class="pre">HSVFilter_SVBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">255</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">118</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">255</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">170</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase" title="teleop_sensing.cv_filers.FilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FilterBase</span></code></a></p>
+<p>S and V channel in HSV filter.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.S_MAX">
+<span class="sig-name descname"><span class="pre">S_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.S_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.S_MIN">
+<span class="sig-name descname"><span class="pre">S_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.S_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.V_MAX">
+<span class="sig-name descname"><span class="pre">V_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.V_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.V_MIN">
+<span class="sig-name descname"><span class="pre">V_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.V_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.apply_filter">
+<span class="sig-name descname"><span class="pre">apply_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bgr_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.apply_filter" title="Link to this definition"></a></dt>
+<dd><p>Apply the HSV filter (only limiting in S and V channel).</p>
+<section id="id14">
+<h2>Args<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>bgr_image (np.ndarray): input image</p>
+</div></blockquote>
+</section>
+<section id="id15">
+<h2>Returns<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>np.ndarray: The HSV mask</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.s_high">
+<span class="sig-name descname"><span class="pre">s_high</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.s_high" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.s_low">
+<span class="sig-name descname"><span class="pre">s_low</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">118</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.s_low" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.update_field_by_name">
+<span class="sig-name descname"><span class="pre">update_field_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.update_field_by_name" title="Link to this definition"></a></dt>
+<dd><p>Update value in field by its name.</p>
+<p>The counter part of the field will also be updated</p>
+<section id="id16">
+<h2>Args<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>field_name (str): field name
+value (float): new values</p>
+</div></blockquote>
+</section>
+<section id="id17">
+<h2>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>list[str]: counter part field that also have been update</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.v_high">
+<span class="sig-name descname"><span class="pre">v_high</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">255</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.v_high" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.HSVFilter_SVBase.v_low">
+<span class="sig-name descname"><span class="pre">v_low</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">170</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.HSVFilter_SVBase.v_low" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.RedHFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">teleop_sensing.cv_filers.</span></span><span class="sig-name descname"><span class="pre">RedHFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h_low</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">170</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_high</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.RedHFilter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase" title="teleop_sensing.cv_filers.FilterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FilterBase</span></code></a></p>
+<p>Specific H only filter for red color (H_high and H_low wrapped around).</p>
+<p>Since RED is at two ends of the HSV filter, actually need the filter value to wrap-around.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.RedHFilter.H_MAX">
+<span class="sig-name descname"><span class="pre">H_MAX</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">179</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.RedHFilter.H_MAX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.RedHFilter.H_MIN">
+<span class="sig-name descname"><span class="pre">H_MIN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.RedHFilter.H_MIN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.RedHFilter.apply_filter">
+<span class="sig-name descname"><span class="pre">apply_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bgr_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.RedHFilter.apply_filter" title="Link to this definition"></a></dt>
+<dd><p>Sspecial way of applying HSV filter with lower half for RED, then upper half.</p>
+<section id="id18">
+<h2>Args<a class="headerlink" href="#id18" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>bgr_image input image</p>
+</div></blockquote>
+</section>
+<section id="id19">
+<h2>Returns<a class="headerlink" href="#id19" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>combined mask (or combined)</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.RedHFilter.h_high">
+<span class="sig-name descname"><span class="pre">h_high</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.RedHFilter.h_high" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.RedHFilter.h_low">
+<span class="sig-name descname"><span class="pre">h_low</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">170</span></em><a class="headerlink" href="#teleop_sensing.cv_filers.RedHFilter.h_low" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.TrackBarHelper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">teleop_sensing.cv_filers.</span></span><span class="sig-name descname"><span class="pre">TrackBarHelper</span></span><a class="headerlink" href="#teleop_sensing.cv_filers.TrackBarHelper" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.TrackBarHelper.scale_image_down">
+<span class="sig-name descname"><span class="pre">scale_image_down</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_width</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.TrackBarHelper.scale_image_down" title="Link to this definition"></a></dt>
+<dd><p>Scale the image down so it’s display-able on smaller screen when having track bars.</p>
+<section id="id20">
+<h2>Args<a class="headerlink" href="#id20" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>image (np.ndarray): cv2 image
+expected_width (int): width after scaling</p>
+</div></blockquote>
+</section>
+<section id="id21">
+<h2>Returns<a class="headerlink" href="#id21" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>np.ndarray: scaled image</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.TrackBarHelper.setup_cv_trackbar">
+<span class="sig-name descname"><span class="pre">setup_cv_trackbar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase" title="teleop_sensing.cv_filers.FilterBase"><span class="pre">FilterBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'trackbars'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.TrackBarHelper.setup_cv_trackbar" title="Link to this definition"></a></dt>
+<dd><p>Set up trackbars on window for each field in the Filter object.</p>
+<section id="id22">
+<h2>Args:<a class="headerlink" href="#id22" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>filter (FilterBase): The filter object
+window_name (str, optional): Name of the window to attach the trackbar
+to Will create the window internally.
+Defaults to “trackbars”.</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="teleop_sensing.cv_filers.TrackBarHelper.update_field_callback">
+<span class="sig-name descname"><span class="pre">update_field_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#teleop_sensing.cv_filers.FilterBase" title="teleop_sensing.cv_filers.FilterBase"><span class="pre">FilterBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#teleop_sensing.cv_filers.TrackBarHelper.update_field_callback" title="Link to this definition"></a></dt>
+<dd><p>Ccallback function to update a field when its value changes.</p>
+<p>Should use argument binding before give it to cv2.createTrackbar.
+Last argument is the one given by cv2 during callback.</p>
+<section id="id23">
+<h2>Args:<a class="headerlink" href="#id23" title="Link to this heading"></a></h2>
+<blockquote>
+<div><p>window_name (str): name of the
+filter (FilterBase): The filer
+field_name (str): name of the field
+new_value (float): value</p>
+</div></blockquote>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="teleop_sensing.html" class="btn btn-neutral float-left" title="teleop_sensing package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="teleop_sensing.cv_process.html" class="btn btn-neutral float-right" title="teleop_sensing.cv_process module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, LGPL-3.0-only.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

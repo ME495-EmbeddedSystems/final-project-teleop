@@ -1,0 +1,15 @@
+Welcome to the documentation for teleop
+=======================================
+
+.. toctree::
+   :maxdepth: 2
+
+   teleop <modules>
+
+
+Indices and Search
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+

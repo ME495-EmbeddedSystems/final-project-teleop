@@ -1,0 +1,15 @@
+Welcome to the documentation for teleop_haptics
+===============================================
+
+.. toctree::
+   :maxdepth: 2
+
+   teleop_haptics <modules>
+
+
+Indices and Search
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+

@@ -1,0 +1,19 @@
+teleop\_sensing package
+=======================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   teleop_sensing.cv_filers
+   teleop_sensing.cv_process
+
+Module contents
+---------------
+
+.. automodule:: teleop_sensing
+   :members:
+   :undoc-members:
+   :show-inheritance:

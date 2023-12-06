@@ -1,0 +1,15 @@
+Welcome to the documentation for teleop_sensing
+===============================================
+
+.. toctree::
+   :maxdepth: 2
+
+   teleop_sensing <modules>
+
+
+Indices and Search
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+

@@ -1,0 +1,7 @@
+teleop\_haptics.haptx\_feedback module
+======================================
+
+.. automodule:: teleop_haptics.haptx_feedback
+   :members:
+   :undoc-members:
+   :show-inheritance:

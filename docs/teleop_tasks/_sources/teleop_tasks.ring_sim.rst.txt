@@ -1,0 +1,7 @@
+teleop\_tasks.ring\_sim module
+==============================
+
+.. automodule:: teleop_tasks.ring_sim
+   :members:
+   :undoc-members:
+   :show-inheritance:

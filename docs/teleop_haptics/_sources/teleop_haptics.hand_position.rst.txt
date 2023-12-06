@@ -1,0 +1,7 @@
+teleop\_haptics.hand\_position module
+=====================================
+
+.. automodule:: teleop_haptics.hand_position
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,15 @@
+Welcome to the documentation for teleop_avatar
+==============================================
+
+.. toctree::
+   :maxdepth: 2
+
+   teleop_avatar <modules>
+
+
+Indices and Search
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+

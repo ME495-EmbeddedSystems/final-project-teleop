@@ -1,0 +1,22 @@
+teleop\_tasks package
+=====================
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 4
+
+   teleop_tasks.finger_joint_mapper
+   teleop_tasks.hand
+   teleop_tasks.objects
+   teleop_tasks.ring_sim
+   teleop_tasks.ros_gz_joint_client
+
+Module contents
+---------------
+
+.. automodule:: teleop_tasks
+   :members:
+   :undoc-members:
+   :show-inheritance:

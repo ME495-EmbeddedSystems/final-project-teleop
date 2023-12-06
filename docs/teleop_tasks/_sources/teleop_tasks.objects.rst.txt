@@ -1,0 +1,7 @@
+teleop\_tasks.objects module
+============================
+
+.. automodule:: teleop_tasks.objects
+   :members:
+   :undoc-members:
+   :show-inheritance:
